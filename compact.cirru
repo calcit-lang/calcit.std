@@ -8,13 +8,13 @@
       :ns $ quote
         ns calcit.std.process $ :require
           calcit.std.$meta :refer $ calcit-dirname
-          calcit.std.fs :refer $ get-dylib-ext
+          calcit.std.fs :refer $ get-dylib-ext or-current-path
       :defs $ {}
         |execute! $ quote
           defn execute! (command ? dir)
             assert "\"command in list" $ and (list? command) (every? command string?)
             &call-dylib:str:str->str
-              str calcit-dirname "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
               , "\"execute_command"
                 .join-str command $ char-from-code 12
                 either dir "\"./"
@@ -29,7 +29,7 @@
           defn read-dir! (name)
             let
                 files $ &call-dylib:str->str
-                  str calcit-dirname "\"/dylibs/libcalcit_std" $ get-dylib-ext
+                  str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
                   , "\"read_dir" name
               .split-lines files
         |write-file! $ quote
@@ -40,13 +40,16 @@
         |read-file! $ quote
           defn read-file! (name)
             &call-dylib:str->str
-              str calcit-dirname "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
               , "\"read_file" name
         |path-exists? $ quote
           defn path-exists? (name)
             &call-dylib:str->bool
-              str calcit-dirname "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
               , "\"path_exists" name
+        |or-current-path $ quote
+          defn or-current-path (p)
+            if (blank? p) "\"." p
     |calcit.std.demo $ {}
       :ns $ quote
         ns calcit.std.demo $ :require
@@ -56,8 +59,8 @@
       :defs $ {}
         |main! $ quote
           defn main! () (println calcit-filename calcit-dirname)
-            println $ read-file! "\"build.js"
-            println (path-exists? "\"build.js") (path-exists? "\"build.jsx")
+            println $ read-file! "\"README.md"
+            println (path-exists? "\"README.md") (path-exists? "\"build.js")
             println $ read-dir! "\"./"
             println $ execute! ([] "\"ls")
         |reload! $ quote
