@@ -20,6 +20,8 @@ calcit.std.fs/read-file! a
 calcit.std.fs/write-file! a b
 calcit.std.fs/path-exists? a
 calcit.std.fs/read-dir? a
+
+calcit.std.process/excute! a
 ```
 
 ### License

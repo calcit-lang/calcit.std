@@ -2,6 +2,7 @@ use std::ffi::{CStr, CString};
 use std::fs;
 use std::os::raw::c_char;
 use std::path::Path;
+use std::process::Command;
 
 #[no_mangle]
 pub extern "C" fn add(x: usize, y: usize) -> usize {
@@ -60,4 +61,41 @@ pub unsafe extern "C" fn read_dir(name_a: *const c_char) -> *mut c_char {
       panic!("Failed to read dir {:?}: {}", name, e)
     }
   }
+}
+
+// not sure, but use this for now, thich is `(char-from-code 12)`
+const ARGS_SEP: char = '\u{000C}';
+
+#[no_mangle]
+pub unsafe extern "C" fn execute_command(
+  command_bytes: *const c_char,
+  dir_bytes: *const c_char,
+) -> *mut c_char {
+  let command_chunk = CStr::from_ptr(command_bytes).to_str().unwrap();
+
+  let dir = CStr::from_ptr(dir_bytes).to_str().unwrap();
+
+  let pieces = command_chunk.split(ARGS_SEP).collect::<Vec<&str>>();
+
+  let mut cmd = String::from("");
+  let mut args: Vec<String> = vec![];
+
+  for (idx, piece) in pieces.iter().enumerate() {
+    if idx == 0 {
+      cmd = piece.to_string();
+    } else {
+      args.push(piece.to_string());
+    }
+  }
+
+  let task = Command::new(cmd)
+    .current_dir(dir)
+    .args(&args)
+    .output()
+    .expect("failed to execute process");
+
+  let content = String::from_utf8(task.stdout).unwrap();
+
+  let c_content = CString::new(content.trim()).unwrap();
+  CString::into_raw(c_content)
 }

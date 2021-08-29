@@ -19,5 +19,4 @@ jobs:
 
       - run: cargo build --release
 
-      - run: mkdir dylibs/ && ls target/release/
-      # - run: mkdir dylibs/ && cp -v target/release/libcalcit_std.dylib dylibs/
+      - run: mkdir dylibs/ && ls target/release/ && cp -v target/release/libcalcit_std.* dylibs/
