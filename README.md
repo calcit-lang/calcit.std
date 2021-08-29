@@ -16,8 +16,10 @@ mkdir dylibs/ && cp -v target/release/libcalcit_std.dylib dylibs/ # supported ma
 Providing:
 
 ```cirru
-calcit.std.fs/read-file!
-calcit.std.fs/write-file!
+calcit.std.fs/read-file! a
+calcit.std.fs/write-file! a b
+calcit.std.fs/path-exists? a
+calcit.std.fs/read-dir? a
 ```
 
 ### License

@@ -1,6 +1,7 @@
 use std::ffi::{CStr, CString};
 use std::fs;
 use std::os::raw::c_char;
+use std::path::Path;
 
 #[no_mangle]
 pub extern "C" fn add(x: usize, y: usize) -> usize {
@@ -31,6 +32,32 @@ pub unsafe extern "C" fn write_file(raw_name: *const c_char, raw_content: *const
     Ok(()) => {}
     Err(e) => {
       panic!("Failed to write to file {:?}: {}", name, e)
+    }
+  }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn path_exists(name_a: *const c_char) -> bool {
+  let name = CStr::from_ptr(name_a).to_str().unwrap();
+  return Path::new(name).exists();
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn read_dir(name_a: *const c_char) -> *mut c_char {
+  let name = CStr::from_ptr(name_a).to_str().unwrap();
+  let task = fs::read_dir(&name);
+  match task {
+    Ok(children) => {
+      let mut content = String::from("");
+      for c in children {
+        content = format!("{}\n{}", content, c.unwrap().path().display());
+      }
+      // println!("child dir: {:?}", content);
+      let c_content = CString::new(content.trim()).unwrap();
+      CString::into_raw(c_content)
+    }
+    Err(e) => {
+      panic!("Failed to read dir {:?}: {}", name, e)
     }
   }
 }
