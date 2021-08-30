@@ -4,6 +4,12 @@ version = "0.1.0"
 authors = ["jiyinyiyong <jiyinyiyong@gmail.com>"]
 edition = "2018"
 
+[lib]
+name = "calcit_std"
+path = "src/lib.rs"
+crate-type = ["dylib"] # Creates dynamic lib
+
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]

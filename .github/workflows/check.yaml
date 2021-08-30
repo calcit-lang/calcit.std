@@ -1,0 +1,36 @@
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request: {}
+
+name: Test
+
+jobs:
+  build_and_test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: ACTIONS_ALLOW_UNSECURE_COMMANDS
+        id: ACTIONS_ALLOW_UNSECURE_COMMANDS
+        run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
+
+      - name: add cr
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/bin
+          wget -O $GITHUB_WORKSPACE/bin/cr http://repo.calcit-lang.org/binaries/linux/cr
+          chmod +x $GITHUB_WORKSPACE/bin/cr
+          echo "::add-path::$GITHUB_WORKSPACE/bin"
+
+      - uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - run: cargo build --release
+
+      - run: mkdir dylibs/ && ls target/release/ && cp -v target/release/libcalcit_std.* dylibs/
+
+      - run: cr -1
