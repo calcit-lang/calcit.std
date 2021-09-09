@@ -13,11 +13,9 @@
         |execute! $ quote
           defn execute! (command ? dir)
             assert "\"command in list" $ and (list? command) (every? command string?)
-            &call-dylib:str:str->str
+            &call-dylib:str-vec-str->tuple-str2
               str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"execute_command"
-                .join-str command $ char-from-code 12
-                either dir "\"./"
+              , "\"execute_command" (either dir "\"./") command
     |calcit.std.fs $ {}
       :ns $ quote
         ns calcit.std.fs $ :require
@@ -27,11 +25,9 @@
           defmacro get-dylib-ext () $ case-default (&get-os) "\".so" (:macos "\".dylib") (:windows "\".dll")
         |read-dir! $ quote
           defn read-dir! (name)
-            let
-                files $ &call-dylib:str->str
-                  str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-                  , "\"read_dir" name
-              .split-lines files
+            &call-dylib:str->vec-str
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              , "\"read_dir" name
         |write-file! $ quote
           defn write-file! (name content)
             &call-dylib:str:str->str
