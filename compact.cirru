@@ -13,9 +13,9 @@
         |execute! $ quote
           defn execute! (command ? dir)
             assert "\"command in list" $ and (list? command) (every? command string?)
-            &call-dylib:vec-str->tuple-str2
+            &call-dylib:str-vec-str->tuple-str2
               str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"execute_command" command $ either dir "\"./"
+              , "\"execute_command" (either dir "\"./") command
     |calcit.std.fs $ {}
       :ns $ quote
         ns calcit.std.fs $ :require

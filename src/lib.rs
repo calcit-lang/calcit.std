@@ -47,7 +47,7 @@ pub fn read_dir(name: String) -> Result<Vec<String>, String> {
 }
 
 #[no_mangle]
-pub fn execute_command(pieces: Vec<String>, dir: String) -> Result<(String, String), String> {
+pub fn execute_command(dir: String, pieces: Vec<String>) -> Result<(String, String), String> {
   let mut cmd = String::from("");
   let mut args: Vec<String> = vec![];
 

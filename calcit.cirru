@@ -49,7 +49,7 @@
                 :by |u0
               |x $ {}
                 :data $ {}
-                  |T $ {} (:text |&call-dylib:vec-str->tuple-str2) (:type :leaf) (:at 1631165074396) (:by |u0)
+                  |T $ {} (:text |&call-dylib:str-vec-str->tuple-str2) (:type :leaf) (:at 1631166814919) (:by |u0)
                   |j $ {}
                     :data $ {}
                       |T $ {} (:text |str) (:type :leaf) (:at 1630233743657) (:by |u0)
@@ -71,15 +71,15 @@
                     :at 1630233743657
                     :by |u0
                   |r $ {} (:text "|\"execute_command") (:type :leaf) (:at 1630233743657) (:by |u0)
-                  |t $ {} (:text |command) (:type :leaf) (:at 1631164907902) (:by |u0)
-                  |x $ {}
+                  |s $ {}
                     :data $ {}
-                      |T $ {} (:text |either) (:type :leaf) (:at 1630234418614) (:by |u0)
-                      |j $ {} (:text |dir) (:type :leaf) (:at 1630234419869) (:by |u0)
-                      |r $ {} (:text "|\"./") (:type :leaf) (:at 1630234422115) (:by |u0)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1631166907802) (:text |either)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1631166907802) (:text |dir)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1631166907802) (:text "|\"./")
                     :type :expr
-                    :at 1630234417567
+                    :at 1631166907802
                     :by |u0
+                  |t $ {} (:text |command) (:type :leaf) (:at 1631164907902) (:by |u0)
                 :type :expr
                 :at 1630233743657
                 :by |u0
