@@ -1,82 +1,53 @@
-use std::ffi::{CStr, CString};
 use std::fs;
-use std::os::raw::c_char;
 use std::path::Path;
 use std::process::Command;
 
+/// CStr related
 #[no_mangle]
-pub extern "C" fn add(x: usize, y: usize) -> usize {
-  return x + y;
-}
-
-#[no_mangle]
-pub unsafe extern "C" fn read_file(name_a: *const c_char) -> *mut c_char {
-  let name = CStr::from_ptr(name_a).to_str().unwrap();
+pub fn read_file(name: String) -> Result<String, String> {
   let task = fs::read_to_string(&name);
   match task {
-    Ok(s) => {
-      let a = CString::new(s).unwrap();
-      CString::into_raw(a)
-    }
-    Err(e) => {
-      panic!("Failed to read file {:?}: {}", name, e)
-    }
+    Ok(s) => Ok(s),
+    Err(e) => Err(format!("Failed to read file {:?}: {}", name, e)),
   }
 }
 
+/// CStr related
 #[no_mangle]
-pub unsafe extern "C" fn write_file(raw_name: *const c_char, raw_content: *const c_char) {
-  let name = CStr::from_ptr(raw_name).to_str().unwrap();
-  let content = CStr::from_ptr(raw_content).to_str().unwrap();
-  let task = fs::write(&name, content);
+pub fn write_file(name: String, content: String) -> Result<(), String> {
+  let task = fs::write(name.to_owned(), content.to_owned());
   match task {
-    Ok(()) => {}
-    Err(e) => {
-      panic!("Failed to write to file {:?}: {}", name, e)
-    }
+    Ok(()) => Ok(()),
+    Err(e) => Err(format!("Failed to write to file {:?}: {}", name, e)),
   }
 }
 
+/// CStr related
 #[no_mangle]
-pub unsafe extern "C" fn path_exists(name_a: *const c_char) -> bool {
-  let name = CStr::from_ptr(name_a).to_str().unwrap();
-  return Path::new(name).exists();
+pub fn path_exists(name: String) -> Result<bool, String> {
+  return Ok(Path::new(&name).exists());
 }
 
+/// CStr related
 #[no_mangle]
-pub unsafe extern "C" fn read_dir(name_a: *const c_char) -> *mut c_char {
-  let name = CStr::from_ptr(name_a).to_str().unwrap();
+pub fn read_dir(name: String) -> Result<Vec<String>, String> {
   let task = fs::read_dir(&name);
   match task {
     Ok(children) => {
-      let mut content = String::from("");
+      let mut content = vec![];
       for c in children {
-        content = format!("{}\n{}", content, c.unwrap().path().display());
+        content.push(format!("{}", c.unwrap().path().display()));
       }
       // println!("child dir: {:?}", content);
-      let c_content = CString::new(content.trim()).unwrap();
-      CString::into_raw(c_content)
+
+      Ok(content)
     }
-    Err(e) => {
-      panic!("Failed to read dir {:?}: {}", name, e)
-    }
+    Err(e) => Err(format!("Failed to read dir {:?}: {}", name, e)),
   }
 }
 
-// not sure, but use this for now, thich is `(char-from-code 12)`
-const ARGS_SEP: char = '\u{000C}';
-
 #[no_mangle]
-pub unsafe extern "C" fn execute_command(
-  command_bytes: *const c_char,
-  dir_bytes: *const c_char,
-) -> *mut c_char {
-  let command_chunk = CStr::from_ptr(command_bytes).to_str().unwrap();
-
-  let dir = CStr::from_ptr(dir_bytes).to_str().unwrap();
-
-  let pieces = command_chunk.split(ARGS_SEP).collect::<Vec<&str>>();
-
+pub fn execute_command(pieces: Vec<String>, dir: String) -> Result<(String, String), String> {
   let mut cmd = String::from("");
   let mut args: Vec<String> = vec![];
 
@@ -88,14 +59,12 @@ pub unsafe extern "C" fn execute_command(
     }
   }
 
-  let task = Command::new(cmd)
-    .current_dir(dir)
-    .args(&args)
-    .output()
-    .expect("failed to execute process");
-
-  let content = String::from_utf8(task.stdout).unwrap();
-
-  let c_content = CString::new(content.trim()).unwrap();
-  CString::into_raw(c_content)
+  match Command::new(cmd).current_dir(dir).args(&args).output() {
+    Ok(t) => {
+      let content = String::from_utf8(t.stdout).unwrap();
+      let stderr = String::from_utf8(t.stderr).unwrap();
+      Ok((content, stderr))
+    }
+    Err(e) => Err(format!("Failed to excute: {}", e)),
+  }
 }
