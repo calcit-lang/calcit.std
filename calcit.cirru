@@ -1,10 +1,600 @@
 
 {}
-  :configs $ {} (:reload-fn |calcit.std.demo/reload!) (:port 6001) (:version |0.0.1)
+  :configs $ {} (:reload-fn |calcit.std.test/reload!) (:port 6001) (:version |0.0.1)
     :modules $ []
-    :init-fn |calcit.std.demo/main!
+    :init-fn |calcit.std.test/main!
   :ir $ {} (:package |calcit.std)
     :files $ {}
+      |calcit.std.test.date $ {}
+        :ns $ {}
+          :data $ {}
+            |T $ {} (:text |ns) (:type :leaf) (:at 1633181502356) (:by |u0)
+            |j $ {} (:text |calcit.std.test.date) (:type :leaf) (:at 1633181502356) (:by |u0)
+            |r $ {}
+              :data $ {}
+                |T $ {} (:text |:require) (:type :leaf) (:at 1633181537744) (:by |u0)
+                |j $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.date) (:type :leaf) (:at 1633181544672) (:by |u0)
+                    |j $ {} (:text |:refer) (:type :leaf) (:at 1633181545419) (:by |u0)
+                    |r $ {}
+                      :data $ {}
+                        |T $ {} (:text |parse-time) (:type :leaf) (:at 1633181552779) (:by |u0)
+                        |j $ {} (:text |format-time) (:type :leaf) (:at 1633181554153) (:by |u0)
+                        |r $ {} (:text |get-time!) (:type :leaf) (:at 1633181563305) (:by |u0)
+                      :type :expr
+                      :at 1633181545728
+                      :by |u0
+                  :type :expr
+                  :at 1633181537979
+                  :by |u0
+              :type :expr
+              :at 1633181536910
+              :by |u0
+          :type :expr
+          :at 1633181502356
+          :by |u0
+        :defs $ {}
+          |main! $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633181508087) (:by |u0)
+              |j $ {} (:text |main!) (:type :leaf) (:at 1633181508087) (:by |u0)
+              |r $ {}
+                :data $ {}
+                :type :expr
+                :at 1633181508087
+                :by |u0
+              |t $ {}
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633182683895) (:text |println)
+                  |j $ {} (:text "|\"%%%% test date") (:type :leaf) (:at 1633182694863) (:by |u0)
+                :type :expr
+                :at 1633182683895
+                :by |u0
+              |u $ {}
+                :data $ {}
+                  |T $ {} (:text |println) (:type :leaf) (:at 1633182724062) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633182726288) (:text |get-time!)
+                    :type :expr
+                    :at 1633182726288
+                    :by |u0
+                :type :expr
+                :at 1633182723200
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |echo) (:type :leaf) (:at 1633181525316) (:by |u0)
+                  |j $ {} (:text ||time:) (:type :leaf) (:at 1633181525316) (:by |u0)
+                  |r $ {}
+                    :data $ {}
+                      |T $ {} (:text |format-time) (:type :leaf) (:at 1633181525316) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181525316) (:text |get-time!)
+                        :type :expr
+                        :at 1633181525316
+                        :by |u0
+                      |r $ {} (:text "||%Y-%m-%d %H:%M:%S %z") (:type :leaf) (:at 1633181525316) (:by |u0)
+                    :type :expr
+                    :at 1633181525316
+                    :by |u0
+                :type :expr
+                :at 1633181525316
+                :by |u0
+              |x $ {}
+                :data $ {}
+                  |T $ {} (:text |assert=) (:type :leaf) (:at 1633181525316) (:by |u0)
+                  |j $ {} (:type :leaf) (:by |u0) (:at 1633181525316) (:text |1417176009000)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1633181525316)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181525316) (:text |parse-time)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633181525316) (:text "||2014-11-28 21:00:09 +09:00")
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181525316) (:text "||%Y-%m-%d %H:%M:%S %z")
+                :type :expr
+                :at 1633181525316
+                :by |u0
+              |y $ {}
+                :data $ {}
+                  |T $ {} (:text |assert=) (:type :leaf) (:at 1633181525316) (:by |u0)
+                  |j $ {} (:text "||2014-11-28 12:00:09 +0000") (:type :leaf) (:at 1633181525316) (:by |u0)
+                  |r $ {}
+                    :data $ {}
+                      |T $ {} (:text |format-time) (:type :leaf) (:at 1633181525316) (:by |u0)
+                      |j $ {} (:text |1417176009000) (:type :leaf) (:at 1633181525316) (:by |u0)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181525316) (:text "||%Y-%m-%d %H:%M:%S %z")
+                    :type :expr
+                    :at 1633181525316
+                    :by |u0
+                :type :expr
+                :at 1633181525316
+                :by |u0
+            :type :expr
+            :at 1633181508087
+            :by |u0
+        :proc $ {} (:type :expr) (:by |u0) (:at 1633181502356)
+          :data $ {}
+        :configs $ {}
+      |calcit.std.test.json $ {}
+        :ns $ {}
+          :data $ {}
+            |T $ {} (:text |ns) (:type :leaf) (:at 1633181626356) (:by |u0)
+            |j $ {} (:text |calcit.std.test.json) (:type :leaf) (:at 1633181626356) (:by |u0)
+            |r $ {}
+              :data $ {}
+                |T $ {} (:text |:require) (:type :leaf) (:at 1633181742270) (:by |u0)
+                |j $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.json) (:type :leaf) (:at 1633181746103) (:by |u0)
+                    |j $ {} (:text |:refer) (:type :leaf) (:at 1633181747444) (:by |u0)
+                    |r $ {}
+                      :data $ {}
+                        |T $ {} (:text |parse-json) (:type :leaf) (:at 1633181749646) (:by |u0)
+                        |j $ {} (:text |stringify-json) (:type :leaf) (:at 1633181755342) (:by |u0)
+                      :type :expr
+                      :at 1633181748344
+                      :by |u0
+                  :type :expr
+                  :at 1633181742515
+                  :by |u0
+              :type :expr
+              :at 1633181741419
+              :by |u0
+          :type :expr
+          :at 1633181626356
+          :by |u0
+        :defs $ {}
+          |main! $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633181629879) (:by |u0)
+              |j $ {} (:text |main!) (:type :leaf) (:at 1633181629879) (:by |u0)
+              |r $ {}
+                :data $ {}
+                :type :expr
+                :at 1633181629879
+                :by |u0
+              |t $ {}
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633182698162) (:text |println)
+                  |j $ {} (:text "|\"%%%% test for json") (:type :leaf) (:at 1633182701816) (:by |u0)
+                :type :expr
+                :at 1633182698162
+                :by |u0
+              |u $ {}
+                :data $ {}
+                  |T $ {} (:text |println) (:type :leaf) (:at 1633197976808) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |stringify-json) (:type :leaf) (:at 1633197978748) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:text |[]) (:type :leaf) (:at 1633197981400) (:by |u0)
+                          |j $ {} (:text |1) (:type :leaf) (:at 1633197981639) (:by |u0)
+                          |r $ {} (:text |2) (:type :leaf) (:at 1633197981958) (:by |u0)
+                          |v $ {} (:text |3) (:type :leaf) (:at 1633197982183) (:by |u0)
+                          |x $ {} (:text |:a) (:type :leaf) (:at 1633198868517) (:by |u0)
+                        :type :expr
+                        :at 1633197979285
+                        :by |u0
+                    :type :expr
+                    :at 1633197977182
+                    :by |u0
+                :type :expr
+                :at 1633197974934
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |assert=) (:type :leaf) (:at 1633181735860) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |parse-json) (:type :leaf) (:at 1633181735860) (:by |u0)
+                      |j $ {} (:text "||{\"a\": [1, 2], \":b\": 3}") (:type :leaf) (:at 1633181735860) (:by |u0)
+                    :type :expr
+                    :at 1633181735860
+                    :by |u0
+                  |r $ {}
+                    :data $ {}
+                      |T $ {} (:text |{}) (:type :leaf) (:at 1633181735860) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:text ||a) (:type :leaf) (:at 1633181735860) (:by |u0)
+                          |j $ {}
+                            :data $ {}
+                              |T $ {} (:text |[]) (:type :leaf) (:at 1633181735860) (:by |u0)
+                              |j $ {} (:text |1) (:type :leaf) (:at 1633181735860) (:by |u0)
+                              |r $ {} (:text |2) (:type :leaf) (:at 1633181735860) (:by |u0)
+                            :type :expr
+                            :at 1633181735860
+                            :by |u0
+                        :type :expr
+                        :at 1633181735860
+                        :by |u0
+                      |r $ {}
+                        :data $ {}
+                          |T $ {} (:text |:b) (:type :leaf) (:at 1633181735860) (:by |u0)
+                          |j $ {} (:text |3) (:type :leaf) (:at 1633181735860) (:by |u0)
+                        :type :expr
+                        :at 1633181735860
+                        :by |u0
+                    :type :expr
+                    :at 1633181735860
+                    :by |u0
+                :type :expr
+                :at 1633181735860
+                :by |u0
+              |x $ {}
+                :data $ {}
+                  |T $ {} (:text |&let) (:type :leaf) (:at 1633181735860) (:by |u0)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1633181735860)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |data)
+                      |j $ {} (:type :expr) (:by |u0) (:at 1633181735860)
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |{})
+                          |j $ {} (:type :expr) (:by |u0) (:at 1633181735860)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text ||a)
+                              |j $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |1)
+                          |r $ {} (:type :expr) (:by |u0) (:at 1633181735860)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |:b)
+                              |j $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |2)
+                          |v $ {} (:type :expr) (:by |u0) (:at 1633181735860)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |:c)
+                              |j $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |:k)
+                  |r $ {}
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |assert=)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |data)
+                      |r $ {}
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |parse-json)
+                          |j $ {}
+                            :data $ {}
+                              |D $ {} (:text |w-log) (:type :leaf) (:at 1633198977764) (:by |u0)
+                              |T $ {}
+                                :data $ {}
+                                  |T $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |stringify-json)
+                                  |j $ {} (:type :leaf) (:by |u0) (:at 1633181735860) (:text |data)
+                                  |r $ {} (:text |true) (:type :leaf) (:at 1633199064959) (:by |u0)
+                                :type :expr
+                                :at 1633181735860
+                                :by |u0
+                            :type :expr
+                            :at 1633198975983
+                            :by |u0
+                        :type :expr
+                        :at 1633181735860
+                        :by |u0
+                    :type :expr
+                    :at 1633181735860
+                    :by |u0
+                :type :expr
+                :at 1633181735860
+                :by |u0
+              |y $ {}
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |&let)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |data)
+                      |j $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |{})
+                          |j $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text ||a)
+                              |j $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |1)
+                          |r $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |:b)
+                              |j $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |2)
+                          |v $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |:c)
+                              |j $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |:k)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |assert=)
+                      |j $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |parse-json)
+                          |j $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |stringify-json)
+                              |j $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |data)
+                      |r $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |{})
+                          |j $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text ||a)
+                              |j $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |1)
+                          |r $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text ||b)
+                              |j $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text |2)
+                          |v $ {} (:type :expr) (:by |u0) (:at 1633187033835)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text ||c)
+                              |j $ {} (:type :leaf) (:by |u0) (:at 1633187033835) (:text ||k)
+                :type :expr
+                :at 1633187033835
+                :by |u0
+            :type :expr
+            :at 1633181629879
+            :by |u0
+          |try-large-json $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633181636524) (:by |u0)
+              |j $ {} (:text |try-large-json) (:type :leaf) (:at 1633181636524) (:by |u0)
+              |r $ {}
+                :data $ {}
+                :type :expr
+                :at 1633181636524
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |slurp-cirru-edn) (:type :leaf) (:at 1633181656855) (:by |u0)
+                  |j $ {} (:text ||/Users/chen/repo/calcit-lang/apis/docs/apis.cirru) (:type :leaf) (:at 1633181656855) (:by |u0)
+                :type :expr
+                :at 1633181656855
+                :by |u0
+            :type :expr
+            :at 1633181636524
+            :by |u0
+          |slurp-cirru-edn $ {}
+            :data $ {}
+              |T $ {} (:text |defmacro) (:type :leaf) (:at 1633181663658) (:by |u0)
+              |j $ {} (:text |slurp-cirru-edn) (:type :leaf) (:at 1633181663658) (:by |u0)
+              |r $ {}
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633181663658) (:text |file)
+                :type :expr
+                :at 1633181663658
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |with-cpu-time) (:type :leaf) (:at 1633181663658) (:by |u0)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1633181663658)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181663658) (:text |stringify-json)
+                      |j $ {} (:type :expr) (:by |u0) (:at 1633181663658)
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181663658) (:text |first)
+                          |j $ {} (:type :expr) (:by |u0) (:at 1633181663658)
+                            :data $ {}
+                              |T $ {} (:type :leaf) (:by |u0) (:at 1633181663658) (:text |with-cpu-time)
+                              |j $ {} (:type :expr) (:by |u0) (:at 1633181663658)
+                                :data $ {}
+                                  |T $ {} (:type :leaf) (:by |u0) (:at 1633181663658) (:text |parse-cirru)
+                                  |j $ {} (:type :expr) (:by |u0) (:at 1633181663658)
+                                    :data $ {}
+                                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181663658) (:text |read-file)
+                                      |j $ {} (:type :leaf) (:by |u0) (:at 1633181663658) (:text |file)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181663658) (:text |true)
+                :type :expr
+                :at 1633181663658
+                :by |u0
+            :type :expr
+            :at 1633181663658
+            :by |u0
+        :proc $ {} (:type :expr) (:by |u0) (:at 1633181626356)
+          :data $ {}
+        :configs $ {}
+      |calcit.std.regex $ {}
+        :ns $ {}
+          :data $ {}
+            |T $ {} (:text |ns) (:type :leaf) (:at 1633168360570) (:by |u0)
+            |j $ {} (:text |calcit.std.regex) (:type :leaf) (:at 1633168360570) (:by |u0)
+            |r $ {}
+              :data $ {}
+                |T $ {} (:text |:require) (:type :leaf) (:at 1633181165895) (:by |u0)
+                |j $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.$meta) (:type :leaf) (:at 1633181165895) (:by |u0)
+                    |j $ {} (:text |:refer) (:type :leaf) (:at 1633181165895) (:by |u0)
+                    |r $ {}
+                      :data $ {}
+                        |T $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633181165895) (:by |u0)
+                      :type :expr
+                      :at 1633181165895
+                      :by |u0
+                  :type :expr
+                  :at 1633181165895
+                  :by |u0
+                |r $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.util) (:type :leaf) (:at 1633181165895) (:by |u0)
+                    |j $ {} (:text |:refer) (:type :leaf) (:at 1633181165895) (:by |u0)
+                    |r $ {}
+                      :data $ {}
+                        |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181165895) (:by |u0)
+                        |j $ {} (:text |or-current-path) (:type :leaf) (:at 1633181165895) (:by |u0)
+                      :type :expr
+                      :at 1633181165895
+                      :by |u0
+                  :type :expr
+                  :at 1633181165895
+                  :by |u0
+              :type :expr
+              :at 1633181165895
+              :by |u0
+          :type :expr
+          :at 1633168360570
+          :by |u0
+        :defs $ {}
+          |re-matches $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633168527210) (:by |u0)
+              |j $ {} (:text |re-matches) (:type :leaf) (:at 1633168527210) (:by |u0)
+              |r $ {}
+                :data $ {}
+                  |T $ {} (:text |s) (:type :leaf) (:at 1633181397547) (:by |u0)
+                  |j $ {} (:text |pattern) (:type :leaf) (:at 1633181398992) (:by |u0)
+                :type :expr
+                :at 1633168527210
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |&call-dylib:edn) (:type :leaf) (:at 1633181393853) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181393853) (:text |str)
+                      |j $ {} (:type :expr) (:by |u0) (:at 1633181393853)
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181393853) (:text |or-current-path)
+                          |j $ {} (:type :leaf) (:by |u0) (:at 1633181393853) (:text |calcit-dirname)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181393853) (:text "|\"/dylibs/libcalcit_std")
+                      |v $ {} (:type :expr) (:by |u0) (:at 1633181393853)
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181393853) (:text |get-dylib-ext)
+                    :type :expr
+                    :at 1633181393853
+                    :by |u0
+                  |r $ {} (:text "|\"re_matches") (:type :leaf) (:at 1633181403399) (:by |u0)
+                  |v $ {} (:text |s) (:type :leaf) (:at 1633181405748) (:by |u0)
+                  |x $ {} (:text |pattern) (:type :leaf) (:at 1633181406763) (:by |u0)
+                :type :expr
+                :at 1633181393853
+                :by |u0
+            :type :expr
+            :at 1633168527210
+            :by |u0
+          |re-find $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633168530433) (:by |u0)
+              |j $ {} (:text |re-find) (:type :leaf) (:at 1633168530433) (:by |u0)
+              |r $ {}
+                :data $ {}
+                  |T $ {} (:text |s) (:type :leaf) (:at 1633181346336) (:by |u0)
+                  |j $ {} (:text |pattern) (:type :leaf) (:at 1633181347718) (:by |u0)
+                :type :expr
+                :at 1633168530433
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |&call-dylib:edn) (:type :leaf) (:at 1633181336074) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |str) (:type :leaf) (:at 1633181336074) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:text |or-current-path) (:type :leaf) (:at 1633181336074) (:by |u0)
+                          |j $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633181336074) (:by |u0)
+                        :type :expr
+                        :at 1633181336074
+                        :by |u0
+                      |r $ {} (:text "|\"/dylibs/libcalcit_std") (:type :leaf) (:at 1633181336074) (:by |u0)
+                      |v $ {}
+                        :data $ {}
+                          |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181336074) (:by |u0)
+                        :type :expr
+                        :at 1633181336074
+                        :by |u0
+                    :type :expr
+                    :at 1633181336074
+                    :by |u0
+                  |r $ {} (:text "|\"re_find") (:type :leaf) (:at 1633181352127) (:by |u0)
+                  |v $ {} (:text |s) (:type :leaf) (:at 1633181353487) (:by |u0)
+                  |x $ {} (:text |pattern) (:type :leaf) (:at 1633181354508) (:by |u0)
+                :type :expr
+                :at 1633181336074
+                :by |u0
+            :type :expr
+            :at 1633168530433
+            :by |u0
+          |re-find-index $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633168535984) (:by |u0)
+              |j $ {} (:text |re-find-index) (:type :leaf) (:at 1633168535984) (:by |u0)
+              |r $ {}
+                :data $ {}
+                  |T $ {} (:text |s) (:type :leaf) (:at 1633181376705) (:by |u0)
+                  |j $ {} (:text |pattern) (:type :leaf) (:at 1633181377719) (:by |u0)
+                :type :expr
+                :at 1633168535984
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |&call-dylib:edn) (:type :leaf) (:at 1633181375127) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |str) (:type :leaf) (:at 1633181375127) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:text |or-current-path) (:type :leaf) (:at 1633181375127) (:by |u0)
+                          |j $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633181375127) (:by |u0)
+                        :type :expr
+                        :at 1633181375127
+                        :by |u0
+                      |r $ {} (:text "|\"/dylibs/libcalcit_std") (:type :leaf) (:at 1633181375127) (:by |u0)
+                      |v $ {}
+                        :data $ {}
+                          |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181375127) (:by |u0)
+                        :type :expr
+                        :at 1633181375127
+                        :by |u0
+                    :type :expr
+                    :at 1633181375127
+                    :by |u0
+                  |r $ {} (:text "|\"re_find_index") (:type :leaf) (:at 1633181381988) (:by |u0)
+                  |v $ {} (:text |s) (:type :leaf) (:at 1633181384204) (:by |u0)
+                  |x $ {} (:text |pattern) (:type :leaf) (:at 1633181385670) (:by |u0)
+                :type :expr
+                :at 1633181375127
+                :by |u0
+            :type :expr
+            :at 1633168535984
+            :by |u0
+          |re-find-all $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633168541264) (:by |u0)
+              |j $ {} (:text |re-find-all) (:type :leaf) (:at 1633168541264) (:by |u0)
+              |r $ {}
+                :data $ {}
+                  |T $ {} (:text |s) (:type :leaf) (:at 1633181360390) (:by |u0)
+                  |j $ {} (:text |pattern) (:type :leaf) (:at 1633181361636) (:by |u0)
+                :type :expr
+                :at 1633168541264
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |&call-dylib:edn) (:type :leaf) (:at 1633181358829) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |str) (:type :leaf) (:at 1633181358829) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:text |or-current-path) (:type :leaf) (:at 1633181358829) (:by |u0)
+                          |j $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633181358829) (:by |u0)
+                        :type :expr
+                        :at 1633181358829
+                        :by |u0
+                      |r $ {} (:text "|\"/dylibs/libcalcit_std") (:type :leaf) (:at 1633181358829) (:by |u0)
+                      |v $ {}
+                        :data $ {}
+                          |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181358829) (:by |u0)
+                        :type :expr
+                        :at 1633181358829
+                        :by |u0
+                    :type :expr
+                    :at 1633181358829
+                    :by |u0
+                  |r $ {} (:text "|\"re_find_all") (:type :leaf) (:at 1633181367307) (:by |u0)
+                  |v $ {} (:text |s) (:type :leaf) (:at 1633181369860) (:by |u0)
+                  |x $ {} (:text |pattern) (:type :leaf) (:at 1633181371133) (:by |u0)
+                :type :expr
+                :at 1633181358829
+                :by |u0
+            :type :expr
+            :at 1633168541264
+            :by |u0
+        :proc $ {} (:type :expr) (:by |u0) (:at 1633168360570)
+          :data $ {}
+        :configs $ {}
       |calcit.std.process $ {}
         :defs $ {}
           |execute! $ {}
@@ -73,9 +663,9 @@
                   |r $ {} (:text "|\"execute_command") (:type :leaf) (:at 1630233743657) (:by |u0)
                   |s $ {}
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1631166907802) (:text |either)
-                      |j $ {} (:type :leaf) (:by |u0) (:at 1631166907802) (:text |dir)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1631166907802) (:text "|\"./")
+                      |T $ {} (:text |either) (:type :leaf) (:at 1631166907802) (:by |u0)
+                      |j $ {} (:text |dir) (:type :leaf) (:at 1631166907802) (:by |u0)
+                      |r $ {} (:text "|\"./") (:type :leaf) (:at 1631166907802) (:by |u0)
                     :type :expr
                     :at 1631166907802
                     :by |u0
@@ -114,12 +704,12 @@
                   :by |u0
                 |r $ {}
                   :data $ {}
-                    |T $ {} (:text |calcit.std.fs) (:type :leaf) (:at 1630234680982) (:by |u0)
+                    |T $ {} (:text |calcit.std.util) (:type :leaf) (:at 1633181115150) (:by |u0)
                     |j $ {} (:text |:refer) (:type :leaf) (:at 1630234680982) (:by |u0)
                     |r $ {}
                       :data $ {}
                         |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1630234680982) (:by |u0)
-                        |j $ {} (:text |or-current-path) (:type :leaf) (:at 1630245649958) (:by |u0)
+                        |j $ {} (:text |or-current-path) (:type :leaf) (:at 1633181119954) (:by |u0)
                       :type :expr
                       :at 1630234680982
                       :by |u0
@@ -134,45 +724,6 @@
           :by |u0
       |calcit.std.fs $ {}
         :defs $ {}
-          |get-dylib-ext $ {}
-            :data $ {}
-              |T $ {} (:text |defmacro) (:type :leaf) (:at 1630231418304) (:by |u0)
-              |j $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1630231398718) (:by |u0)
-              |r $ {}
-                :data $ {}
-                :type :expr
-                :at 1630231398718
-                :by |u0
-              |v $ {}
-                :data $ {}
-                  |T $ {} (:text |case-default) (:type :leaf) (:at 1630231423910) (:by |u0)
-                  |b $ {}
-                    :data $ {}
-                      |T $ {} (:text |&get-os) (:type :leaf) (:at 1630231433951) (:by |u0)
-                    :type :expr
-                    :at 1630231429893
-                    :by |u0
-                  |j $ {} (:text "|\".so") (:type :leaf) (:at 1630231427453) (:by |u0)
-                  |r $ {}
-                    :data $ {}
-                      |T $ {} (:text |:macos) (:type :leaf) (:at 1630231439152) (:by |u0)
-                      |j $ {} (:text "|\".dylib") (:type :leaf) (:at 1630231447585) (:by |u0)
-                    :type :expr
-                    :at 1630231437150
-                    :by |u0
-                  |v $ {}
-                    :data $ {}
-                      |T $ {} (:text |:windows) (:type :leaf) (:at 1630231449901) (:by |u0)
-                      |j $ {} (:text "|\".dll") (:type :leaf) (:at 1630231461388) (:by |u0)
-                    :type :expr
-                    :at 1630231448478
-                    :by |u0
-                :type :expr
-                :at 1630231403270
-                :by |u0
-            :type :expr
-            :at 1630231398718
-            :by |u0
           |read-dir! $ {}
             :data $ {}
               |T $ {} (:text |defn) (:type :leaf) (:at 1630224735170) (:by |u0)
@@ -191,15 +742,18 @@
                       |T $ {} (:text |str) (:type :leaf) (:at 1631164877698) (:by |u0)
                       |j $ {}
                         :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text |calcit-dirname)
+                          |T $ {} (:text |or-current-path) (:type :leaf) (:at 1631164877698) (:by |u0)
+                          |j $ {} (:text |calcit-dirname) (:type :leaf) (:at 1631164877698) (:by |u0)
                         :type :expr
                         :at 1631164877698
                         :by |u0
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1631164877698)
+                      |r $ {} (:text "|\"/dylibs/libcalcit_std") (:type :leaf) (:at 1631164877698) (:by |u0)
+                      |v $ {}
                         :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text |get-dylib-ext)
+                          |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1631164877698) (:by |u0)
+                        :type :expr
+                        :at 1631164877698
+                        :by |u0
                     :type :expr
                     :at 1631164877698
                     :by |u0
@@ -260,7 +814,7 @@
                 :by |u0
               |v $ {}
                 :data $ {}
-                  |T $ {} (:text |&call-dylib:str->str) (:type :leaf) (:at 1630175111430) (:by |u0)
+                  |T $ {} (:text |&call-dylib:str->str) (:type :leaf) (:at 1633168756363) (:by |u0)
                   |j $ {}
                     :data $ {}
                       |T $ {} (:text |str) (:type :leaf) (:at 1630171417092) (:by |u0)
@@ -330,34 +884,6 @@
             :type :expr
             :at 1630219258753
             :by |u0
-          |or-current-path $ {}
-            :data $ {}
-              |T $ {} (:text |defn) (:type :leaf) (:at 1630245583936) (:by |u0)
-              |j $ {} (:text |or-current-path) (:type :leaf) (:at 1630245582276) (:by |u0)
-              |r $ {}
-                :data $ {}
-                  |T $ {} (:text |p) (:type :leaf) (:at 1630245585364) (:by |u0)
-                :type :expr
-                :at 1630245582276
-                :by |u0
-              |v $ {}
-                :data $ {}
-                  |T $ {} (:text |if) (:type :leaf) (:at 1630245586336) (:by |u0)
-                  |j $ {}
-                    :data $ {}
-                      |T $ {} (:text |blank?) (:type :leaf) (:at 1630245614560) (:by |u0)
-                      |j $ {} (:text |p) (:type :leaf) (:at 1630245615061) (:by |u0)
-                    :type :expr
-                    :at 1630245586894
-                    :by |u0
-                  |r $ {} (:text "|\".") (:type :leaf) (:at 1630245616843) (:by |u0)
-                  |v $ {} (:text |p) (:type :leaf) (:at 1630245618366) (:by |u0)
-                :type :expr
-                :at 1630245585942
-                :by |u0
-            :type :expr
-            :at 1630245582276
-            :by |u0
         :proc $ {}
           :data $ {}
           :type :expr
@@ -384,13 +910,703 @@
                   :type :expr
                   :at 1630175120856
                   :by |u0
+                |r $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.util) (:type :leaf) (:at 1633181140100) (:by |u0)
+                    |j $ {} (:text |:refer) (:type :leaf) (:at 1633181140100) (:by |u0)
+                    |r $ {}
+                      :data $ {}
+                        |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181140100) (:by |u0)
+                        |j $ {} (:text |or-current-path) (:type :leaf) (:at 1633181140100) (:by |u0)
+                      :type :expr
+                      :at 1633181140100
+                      :by |u0
+                  :type :expr
+                  :at 1633181140100
+                  :by |u0
               :type :expr
               :at 1630175118985
               :by |u0
           :type :expr
           :at 1630171366222
           :by |u0
-      |calcit.std.demo $ {}
+      |calcit.std.test.regex $ {}
+        :ns $ {}
+          :data $ {}
+            |T $ {} (:text |ns) (:type :leaf) (:at 1633168573382) (:by |u0)
+            |j $ {} (:text |calcit.std.test.regex) (:type :leaf) (:at 1633168573382) (:by |u0)
+            |r $ {}
+              :data $ {}
+                |T $ {} (:text |:require) (:type :leaf) (:at 1633168597870) (:by |u0)
+                |j $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.regex) (:type :leaf) (:at 1633168600867) (:by |u0)
+                    |j $ {} (:text |:refer) (:type :leaf) (:at 1633168602637) (:by |u0)
+                    |r $ {}
+                      :data $ {}
+                        |T $ {} (:text |re-matches) (:type :leaf) (:at 1633168611196) (:by |u0)
+                        |j $ {} (:text |re-find-index) (:type :leaf) (:at 1633168614856) (:by |u0)
+                        |n $ {} (:text |re-find) (:type :leaf) (:at 1633168633294) (:by |u0)
+                        |r $ {} (:text |re-find-all) (:type :leaf) (:at 1633168618578) (:by |u0)
+                      :type :expr
+                      :at 1633168608131
+                      :by |u0
+                  :type :expr
+                  :at 1633168598503
+                  :by |u0
+              :type :expr
+              :at 1633168596580
+              :by |u0
+          :type :expr
+          :at 1633168573382
+          :by |u0
+        :defs $ {}
+          |main! $ {}
+            :data $ {}
+              |yyT $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |assert=)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |[])
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||1)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||2)
+                      |v $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||34)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |re-find-all)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||1a2a34)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||\d+)
+              |yT $ {}
+                :data $ {}
+                  |T $ {} (:text |assert=) (:type :leaf) (:at 1633168585764) (:by |u0)
+                  |j $ {} (:text |false) (:type :leaf) (:at 1633168585764) (:by |u0)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |re-matches)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||a)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||\d)
+                :type :expr
+                :at 1633168585764
+                :by |u0
+              |yb $ {}
+                :data $ {}
+                  |T $ {} (:text |assert=) (:type :leaf) (:at 1633168585764) (:by |u0)
+                  |j $ {} (:text "|\"4") (:type :leaf) (:at 1633199660020) (:by |u0)
+                  |r $ {}
+                    :data $ {}
+                      |T $ {} (:text |re-find) (:type :leaf) (:at 1633199649649) (:by |u0)
+                      |j $ {} (:text ||a4) (:type :leaf) (:at 1633199652201) (:by |u0)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||\d)
+                    :type :expr
+                    :at 1633168585764
+                    :by |u0
+                :type :expr
+                :at 1633168585764
+                :by |u0
+              |yj $ {}
+                :data $ {}
+                  |T $ {} (:text |assert=) (:type :leaf) (:at 1633168585764) (:by |u0)
+                  |j $ {} (:text |1) (:type :leaf) (:at 1633168585764) (:by |u0)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |re-find-index)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||a1)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||\d)
+                :type :expr
+                :at 1633168585764
+                :by |u0
+              |yr $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |assert=)
+                  |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |-1)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |re-find-index)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||aa)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||\d)
+              |yv $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |assert=)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |[])
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||1)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||2)
+                      |v $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||3)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |re-find-all)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||123)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||\d)
+              |yx $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |assert=)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |[])
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||123)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |re-find-all)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||123)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||\d+)
+              |yy $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |assert=)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |[])
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||1)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||2)
+                      |v $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||3)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |re-find-all)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||1a2a3)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||\d+)
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633168582795) (:by |u0)
+              |j $ {} (:text |main!) (:type :leaf) (:at 1633168582795) (:by |u0)
+              |r $ {}
+                :data $ {}
+                :type :expr
+                :at 1633168582795
+                :by |u0
+              |t $ {}
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633182705467) (:text |println)
+                  |j $ {} (:text "|\"%%%% test for regex") (:type :leaf) (:at 1633182708552) (:by |u0)
+                :type :expr
+                :at 1633182705467
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |println) (:type :leaf) (:at 1633168595067) (:by |u0)
+                  |j $ {} (:text "||Test regular expression") (:type :leaf) (:at 1633168585764) (:by |u0)
+                :type :expr
+                :at 1633168585764
+                :by |u0
+              |x $ {}
+                :data $ {}
+                  |T $ {} (:text |assert=) (:type :leaf) (:at 1633168585764) (:by |u0)
+                  |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |true)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1633168585764)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text |re-matches)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||2)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||\d)
+                :type :expr
+                :at 1633168585764
+                :by |u0
+              |y $ {}
+                :data $ {}
+                  |T $ {} (:text |assert=) (:type :leaf) (:at 1633168585764) (:by |u0)
+                  |j $ {} (:text |true) (:type :leaf) (:at 1633168585764) (:by |u0)
+                  |r $ {}
+                    :data $ {}
+                      |T $ {} (:text |re-matches) (:type :leaf) (:at 1633168585764) (:by |u0)
+                      |j $ {} (:text ||23) (:type :leaf) (:at 1633168585764) (:by |u0)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168585764) (:text ||\d+)
+                    :type :expr
+                    :at 1633168585764
+                    :by |u0
+                :type :expr
+                :at 1633168585764
+                :by |u0
+            :type :expr
+            :at 1633168582795
+            :by |u0
+        :proc $ {} (:type :expr) (:by |u0) (:at 1633168573382)
+          :data $ {}
+        :configs $ {}
+      |calcit.std.date $ {}
+        :ns $ {}
+          :data $ {}
+            |T $ {} (:text |ns) (:type :leaf) (:at 1633168354404) (:by |u0)
+            |j $ {} (:text |calcit.std.date) (:type :leaf) (:at 1633168354404) (:by |u0)
+            |r $ {}
+              :data $ {}
+                |T $ {} (:text |:require) (:type :leaf) (:at 1633168760266) (:by |u0)
+                |j $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.$meta) (:type :leaf) (:at 1633168760630) (:by |u0)
+                    |j $ {} (:text |:refer) (:type :leaf) (:at 1633168760630) (:by |u0)
+                    |r $ {}
+                      :data $ {}
+                        |T $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633168760630) (:by |u0)
+                      :type :expr
+                      :at 1633168760630
+                      :by |u0
+                  :type :expr
+                  :at 1633168760630
+                  :by |u0
+                |r $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.util) (:type :leaf) (:at 1633181151756) (:by |u0)
+                    |j $ {} (:text |:refer) (:type :leaf) (:at 1633181151756) (:by |u0)
+                    |r $ {}
+                      :data $ {}
+                        |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181151756) (:by |u0)
+                        |j $ {} (:text |or-current-path) (:type :leaf) (:at 1633181151756) (:by |u0)
+                      :type :expr
+                      :at 1633181151756
+                      :by |u0
+                  :type :expr
+                  :at 1633181151756
+                  :by |u0
+              :type :expr
+              :at 1633168759503
+              :by |u0
+          :type :expr
+          :at 1633168354404
+          :by |u0
+        :defs $ {}
+          |parse-time $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633168493152) (:by |u0)
+              |j $ {} (:text |parse-time) (:type :leaf) (:at 1633168493152) (:by |u0)
+              |r $ {}
+                :data $ {}
+                  |T $ {} (:text |time) (:type :leaf) (:at 1633181254551) (:by |u0)
+                  |j $ {} (:text |format) (:type :leaf) (:at 1633181255231) (:by |u0)
+                :type :expr
+                :at 1633168493152
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |&call-dylib:edn) (:type :leaf) (:at 1633181255929) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |str) (:type :leaf) (:at 1633181255929) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:text |or-current-path) (:type :leaf) (:at 1633181255929) (:by |u0)
+                          |j $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633181255929) (:by |u0)
+                        :type :expr
+                        :at 1633181255929
+                        :by |u0
+                      |r $ {} (:text "|\"/dylibs/libcalcit_std") (:type :leaf) (:at 1633181255929) (:by |u0)
+                      |v $ {}
+                        :data $ {}
+                          |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181255929) (:by |u0)
+                        :type :expr
+                        :at 1633181255929
+                        :by |u0
+                    :type :expr
+                    :at 1633181255929
+                    :by |u0
+                  |r $ {} (:text "|\"parse_time") (:type :leaf) (:at 1633181261272) (:by |u0)
+                  |v $ {} (:text |time) (:type :leaf) (:at 1633181264402) (:by |u0)
+                  |x $ {} (:text |format) (:type :leaf) (:at 1633181265382) (:by |u0)
+                :type :expr
+                :at 1633181255929
+                :by |u0
+            :type :expr
+            :at 1633168493152
+            :by |u0
+          |format-time $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633168497249) (:by |u0)
+              |j $ {} (:text |format-time) (:type :leaf) (:at 1633168497249) (:by |u0)
+              |r $ {}
+                :data $ {}
+                  |T $ {} (:text |time) (:type :leaf) (:at 1633181223261) (:by |u0)
+                  |b $ {} (:text |?) (:type :leaf) (:at 1633181977855) (:by |u0)
+                  |j $ {} (:text |format) (:type :leaf) (:at 1633181224266) (:by |u0)
+                :type :expr
+                :at 1633168497249
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |&call-dylib:edn) (:type :leaf) (:at 1633181205882) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |str) (:type :leaf) (:at 1633181205882) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:text |or-current-path) (:type :leaf) (:at 1633181205882) (:by |u0)
+                          |j $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633181205882) (:by |u0)
+                        :type :expr
+                        :at 1633181205882
+                        :by |u0
+                      |r $ {} (:text "|\"/dylibs/libcalcit_std") (:type :leaf) (:at 1633181205882) (:by |u0)
+                      |v $ {}
+                        :data $ {}
+                          |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181205882) (:by |u0)
+                        :type :expr
+                        :at 1633181205882
+                        :by |u0
+                    :type :expr
+                    :at 1633181205882
+                    :by |u0
+                  |r $ {} (:text "|\"format_time") (:type :leaf) (:at 1633181229605) (:by |u0)
+                  |v $ {} (:text |time) (:type :leaf) (:at 1633181240264) (:by |u0)
+                  |x $ {} (:text |format) (:type :leaf) (:at 1633181241023) (:by |u0)
+                :type :expr
+                :at 1633181205882
+                :by |u0
+            :type :expr
+            :at 1633168497249
+            :by |u0
+          |get-time! $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633168502797) (:by |u0)
+              |j $ {} (:text |get-time!) (:type :leaf) (:at 1633168502797) (:by |u0)
+              |r $ {}
+                :data $ {}
+                :type :expr
+                :at 1633168502797
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |&call-dylib:edn) (:type :leaf) (:at 1633180993224) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |str) (:type :leaf) (:at 1633168770408) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:text |or-current-path) (:type :leaf) (:at 1633168770408) (:by |u0)
+                          |j $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633168770408) (:by |u0)
+                        :type :expr
+                        :at 1633168770408
+                        :by |u0
+                      |r $ {} (:text "|\"/dylibs/libcalcit_std") (:type :leaf) (:at 1633168770408) (:by |u0)
+                      |v $ {}
+                        :data $ {}
+                          |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633168770408) (:by |u0)
+                        :type :expr
+                        :at 1633168770408
+                        :by |u0
+                    :type :expr
+                    :at 1633168770408
+                    :by |u0
+                  |r $ {} (:text "|\"now_bang") (:type :leaf) (:at 1633181993466) (:by |u0)
+                :type :expr
+                :at 1633168770408
+                :by |u0
+            :type :expr
+            :at 1633168502797
+            :by |u0
+        :proc $ {} (:type :expr) (:by |u0) (:at 1633168354404)
+          :data $ {}
+        :configs $ {}
+      |calcit.std.json $ {}
+        :ns $ {}
+          :data $ {}
+            |T $ {} (:text |ns) (:type :leaf) (:at 1633168388260) (:by |u0)
+            |j $ {} (:text |calcit.std.json) (:type :leaf) (:at 1633168388260) (:by |u0)
+            |r $ {}
+              :data $ {}
+                |T $ {} (:text |:require) (:type :leaf) (:at 1633181160126) (:by |u0)
+                |j $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.$meta) (:type :leaf) (:at 1633181160126) (:by |u0)
+                    |j $ {} (:text |:refer) (:type :leaf) (:at 1633181160126) (:by |u0)
+                    |r $ {}
+                      :data $ {}
+                        |T $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633181160126) (:by |u0)
+                      :type :expr
+                      :at 1633181160126
+                      :by |u0
+                  :type :expr
+                  :at 1633181160126
+                  :by |u0
+                |r $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.util) (:type :leaf) (:at 1633181160126) (:by |u0)
+                    |j $ {} (:text |:refer) (:type :leaf) (:at 1633181160126) (:by |u0)
+                    |r $ {}
+                      :data $ {}
+                        |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181160126) (:by |u0)
+                        |j $ {} (:text |or-current-path) (:type :leaf) (:at 1633181160126) (:by |u0)
+                      :type :expr
+                      :at 1633181160126
+                      :by |u0
+                  :type :expr
+                  :at 1633181160126
+                  :by |u0
+              :type :expr
+              :at 1633181160126
+              :by |u0
+          :type :expr
+          :at 1633168388260
+          :by |u0
+        :defs $ {}
+          |parse-json $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633168511255) (:by |u0)
+              |j $ {} (:text |parse-json) (:type :leaf) (:at 1633168511255) (:by |u0)
+              |r $ {}
+                :data $ {}
+                  |T $ {} (:text |s) (:type :leaf) (:at 1633181287593) (:by |u0)
+                :type :expr
+                :at 1633168511255
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |&call-dylib:edn) (:type :leaf) (:at 1633181276583) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |str) (:type :leaf) (:at 1633181276583) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:text |or-current-path) (:type :leaf) (:at 1633181276583) (:by |u0)
+                          |j $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633181276583) (:by |u0)
+                        :type :expr
+                        :at 1633181276583
+                        :by |u0
+                      |r $ {} (:text "|\"/dylibs/libcalcit_std") (:type :leaf) (:at 1633181276583) (:by |u0)
+                      |v $ {}
+                        :data $ {}
+                          |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181276583) (:by |u0)
+                        :type :expr
+                        :at 1633181276583
+                        :by |u0
+                    :type :expr
+                    :at 1633181276583
+                    :by |u0
+                  |r $ {} (:text "|\"parse_json") (:type :leaf) (:at 1633184660110) (:by |u0)
+                  |v $ {} (:text |s) (:type :leaf) (:at 1633181297499) (:by |u0)
+                :type :expr
+                :at 1633181276583
+                :by |u0
+            :type :expr
+            :at 1633168511255
+            :by |u0
+          |stringify-json $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633168514525) (:by |u0)
+              |j $ {} (:text |stringify-json) (:type :leaf) (:at 1633168514525) (:by |u0)
+              |r $ {}
+                :data $ {}
+                  |T $ {} (:text |data) (:type :leaf) (:at 1633181304978) (:by |u0)
+                  |b $ {} (:text |?) (:type :leaf) (:at 1633181971377) (:by |u0)
+                  |j $ {} (:text |colon?) (:type :leaf) (:at 1633181309855) (:by |u0)
+                :type :expr
+                :at 1633168514525
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |&call-dylib:edn) (:type :leaf) (:at 1633181303734) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |str) (:type :leaf) (:at 1633181303734) (:by |u0)
+                      |j $ {}
+                        :data $ {}
+                          |T $ {} (:text |or-current-path) (:type :leaf) (:at 1633181303734) (:by |u0)
+                          |j $ {} (:text |calcit-dirname) (:type :leaf) (:at 1633181303734) (:by |u0)
+                        :type :expr
+                        :at 1633181303734
+                        :by |u0
+                      |r $ {} (:text "|\"/dylibs/libcalcit_std") (:type :leaf) (:at 1633181303734) (:by |u0)
+                      |v $ {}
+                        :data $ {}
+                          |T $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181303734) (:by |u0)
+                        :type :expr
+                        :at 1633181303734
+                        :by |u0
+                    :type :expr
+                    :at 1633181303734
+                    :by |u0
+                  |r $ {} (:text "|\"stringify_json") (:type :leaf) (:at 1633186337203) (:by |u0)
+                  |v $ {} (:text |data) (:type :leaf) (:at 1633181320287) (:by |u0)
+                  |x $ {} (:text |colon?) (:type :leaf) (:at 1633181322417) (:by |u0)
+                :type :expr
+                :at 1633181303734
+                :by |u0
+            :type :expr
+            :at 1633168514525
+            :by |u0
+        :proc $ {} (:type :expr) (:by |u0) (:at 1633168388260)
+          :data $ {}
+        :configs $ {}
+      |calcit.std.test $ {}
+        :ns $ {}
+          :data $ {}
+            |T $ {} (:text |ns) (:type :leaf) (:at 1633149625774) (:by |u0)
+            |j $ {} (:text |calcit.std.test) (:type :leaf) (:at 1633149625774) (:by |u0)
+            |r $ {}
+              :data $ {}
+                |T $ {} (:text |:require) (:type :leaf) (:at 1633149975596) (:by |u0)
+                |j $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.test.fs) (:type :leaf) (:at 1633149981735) (:by |u0)
+                    |j $ {} (:text |:as) (:type :leaf) (:at 1633149982715) (:by |u0)
+                    |r $ {} (:text |fs) (:type :leaf) (:at 1633149984197) (:by |u0)
+                  :type :expr
+                  :at 1633149976294
+                  :by |u0
+                |r $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.test.date) (:type :leaf) (:at 1633181791700) (:by |u0)
+                    |j $ {} (:text |:as) (:type :leaf) (:at 1633149982715) (:by |u0)
+                    |r $ {} (:text |date) (:type :leaf) (:at 1633181793307) (:by |u0)
+                  :type :expr
+                  :at 1633149976294
+                  :by |u0
+                |v $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.test.regex) (:type :leaf) (:at 1633181795555) (:by |u0)
+                    |j $ {} (:text |:as) (:type :leaf) (:at 1633149982715) (:by |u0)
+                    |r $ {} (:text |regex) (:type :leaf) (:at 1633181797342) (:by |u0)
+                  :type :expr
+                  :at 1633149976294
+                  :by |u0
+                |x $ {}
+                  :data $ {}
+                    |T $ {} (:text |calcit.std.test.json) (:type :leaf) (:at 1633181803641) (:by |u0)
+                    |j $ {} (:text |:as) (:type :leaf) (:at 1633149982715) (:by |u0)
+                    |r $ {} (:text |json) (:type :leaf) (:at 1633181805611) (:by |u0)
+                  :type :expr
+                  :at 1633149976294
+                  :by |u0
+              :type :expr
+              :at 1633149974572
+              :by |u0
+          :type :expr
+          :at 1633149625774
+          :by |u0
+        :defs $ {}
+          |main! $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633149996242) (:by |u0)
+              |j $ {} (:text |main!) (:type :leaf) (:at 1633149996242) (:by |u0)
+              |r $ {}
+                :data $ {}
+                :type :expr
+                :at 1633149996242
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |run-tests) (:type :leaf) (:at 1633150004371) (:by |u0)
+                :type :expr
+                :at 1633150002066
+                :by |u0
+            :type :expr
+            :at 1633149996242
+            :by |u0
+          |reload! $ {} (:type :expr) (:by |u0) (:at 1633149998862)
+            :data $ {}
+              |T $ {} (:type :leaf) (:by |u0) (:at 1633149998862) (:text |defn)
+              |j $ {} (:type :leaf) (:by |u0) (:at 1633149998862) (:text |reload!)
+              |r $ {} (:type :expr) (:by |u0) (:at 1633149998862)
+                :data $ {}
+          |run-tests $ {}
+            :data $ {}
+              |yT $ {}
+                :data $ {}
+                  |T $ {} (:text |regex/main!) (:type :leaf) (:at 1633181825110) (:by |u0)
+                :type :expr
+                :at 1633150013372
+                :by |u0
+              |T $ {} (:text |defn) (:type :leaf) (:at 1633150011172) (:by |u0)
+              |j $ {} (:text |run-tests) (:type :leaf) (:at 1633150008092) (:by |u0)
+              |r $ {}
+                :data $ {}
+                :type :expr
+                :at 1633150008092
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |fs/main!) (:type :leaf) (:at 1633150016087) (:by |u0)
+                :type :expr
+                :at 1633150013372
+                :by |u0
+              |w $ {}
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1633184626490) (:text |json/main!)
+                :type :expr
+                :at 1633184626490
+                :by |u0
+              |x $ {}
+                :data $ {}
+                  |T $ {} (:text |date/main!) (:type :leaf) (:at 1633181819102) (:by |u0)
+                :type :expr
+                :at 1633150013372
+                :by |u0
+            :type :expr
+            :at 1633150008092
+            :by |u0
+        :proc $ {} (:type :expr) (:by |u0) (:at 1633149625774)
+          :data $ {}
+        :configs $ {}
+      |calcit.std.util $ {}
+        :ns $ {} (:type :expr) (:by |u0) (:at 1633181044360)
+          :data $ {}
+            |T $ {} (:type :leaf) (:by |u0) (:at 1633181044360) (:text |ns)
+            |j $ {} (:type :leaf) (:by |u0) (:at 1633181044360) (:text |calcit.std.util)
+        :defs $ {}
+          |get-dylib-ext $ {}
+            :data $ {}
+              |T $ {} (:text |defmacro) (:type :leaf) (:at 1630231418304) (:by |u0)
+              |j $ {} (:text |get-dylib-ext) (:type :leaf) (:at 1633181058353) (:by |u0)
+              |r $ {}
+                :data $ {}
+                :type :expr
+                :at 1630231398718
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |case-default) (:type :leaf) (:at 1630231423910) (:by |u0)
+                  |b $ {}
+                    :data $ {}
+                      |T $ {} (:text |&get-os) (:type :leaf) (:at 1630231433951) (:by |u0)
+                    :type :expr
+                    :at 1630231429893
+                    :by |u0
+                  |j $ {} (:text "|\".so") (:type :leaf) (:at 1630231427453) (:by |u0)
+                  |r $ {}
+                    :data $ {}
+                      |T $ {} (:text |:macos) (:type :leaf) (:at 1630231439152) (:by |u0)
+                      |j $ {} (:text "|\".dylib") (:type :leaf) (:at 1630231447585) (:by |u0)
+                    :type :expr
+                    :at 1630231437150
+                    :by |u0
+                  |v $ {}
+                    :data $ {}
+                      |T $ {} (:text |:windows) (:type :leaf) (:at 1630231449901) (:by |u0)
+                      |j $ {} (:text "|\".dll") (:type :leaf) (:at 1630231461388) (:by |u0)
+                    :type :expr
+                    :at 1630231448478
+                    :by |u0
+                :type :expr
+                :at 1630231403270
+                :by |u0
+            :type :expr
+            :at 1630231398718
+            :by |u0
+          |or-current-path $ {}
+            :data $ {}
+              |T $ {} (:text |defn) (:type :leaf) (:at 1630245583936) (:by |u0)
+              |j $ {} (:text |or-current-path) (:type :leaf) (:at 1633181131099) (:by |u0)
+              |r $ {}
+                :data $ {}
+                  |T $ {} (:text |p) (:type :leaf) (:at 1630245585364) (:by |u0)
+                :type :expr
+                :at 1630245582276
+                :by |u0
+              |v $ {}
+                :data $ {}
+                  |T $ {} (:text |if) (:type :leaf) (:at 1630245586336) (:by |u0)
+                  |j $ {}
+                    :data $ {}
+                      |T $ {} (:text |blank?) (:type :leaf) (:at 1630245614560) (:by |u0)
+                      |j $ {} (:text |p) (:type :leaf) (:at 1630245615061) (:by |u0)
+                    :type :expr
+                    :at 1630245586894
+                    :by |u0
+                  |r $ {} (:text "|\".") (:type :leaf) (:at 1630245616843) (:by |u0)
+                  |v $ {} (:text |p) (:type :leaf) (:at 1630245618366) (:by |u0)
+                :type :expr
+                :at 1630245585942
+                :by |u0
+            :type :expr
+            :at 1630245582276
+            :by |u0
+        :proc $ {} (:type :expr) (:by |u0) (:at 1633181044360)
+          :data $ {}
+        :configs $ {}
+      |calcit.std.test.fs $ {}
         :defs $ {}
           |main! $ {}
             :data $ {}
@@ -433,6 +1649,13 @@
                 :type :expr
                 :at 1630174676216
                 :by |u0
+              |t $ {}
+                :data $ {}
+                  |T $ {} (:text |println) (:type :leaf) (:at 1633182664163) (:by |u0)
+                  |j $ {} (:text "|\"%%%% test for fs") (:type :leaf) (:at 1633182672402) (:by |u0)
+                :type :expr
+                :at 1633182663238
+                :by |u0
               |v $ {}
                 :data $ {}
                   |T $ {} (:text |println) (:type :leaf) (:at 1630174687985) (:by |u0)
@@ -446,10 +1669,23 @@
                   |D $ {} (:text |println) (:type :leaf) (:at 1630176279093) (:by |u0)
                   |T $ {}
                     :data $ {}
-                      |T $ {} (:text |read-file!) (:type :leaf) (:at 1630176262288) (:by |u0)
-                      |j $ {} (:text "|\"README.md") (:type :leaf) (:at 1630245682315) (:by |u0)
+                      |D $ {} (:text |>) (:type :leaf) (:at 1633182642813) (:by |u0)
+                      |T $ {}
+                        :data $ {}
+                          |D $ {} (:text |count) (:type :leaf) (:at 1633182646850) (:by |u0)
+                          |T $ {}
+                            :data $ {}
+                              |T $ {} (:text |read-file!) (:type :leaf) (:at 1630176262288) (:by |u0)
+                              |j $ {} (:text "|\"README.md") (:type :leaf) (:at 1630245682315) (:by |u0)
+                            :type :expr
+                            :at 1630176241192
+                            :by |u0
+                        :type :expr
+                        :at 1633182643577
+                        :by |u0
+                      |j $ {} (:text |1000) (:type :leaf) (:at 1633182648511) (:by |u0)
                     :type :expr
-                    :at 1630176241192
+                    :at 1633182641636
                     :by |u0
                 :type :expr
                 :at 1630176276151
@@ -477,25 +1713,6 @@
             :type :expr
             :at 1630174676216
             :by |u0
-          |reload! $ {}
-            :data $ {}
-              |T $ {} (:text |defn) (:type :leaf) (:at 1630174789087) (:by |u0)
-              |j $ {} (:text |reload!) (:type :leaf) (:at 1630174789087) (:by |u0)
-              |r $ {}
-                :data $ {}
-                :type :expr
-                :at 1630174789087
-                :by |u0
-              |v $ {}
-                :data $ {}
-                  |T $ {} (:text |println) (:type :leaf) (:at 1630174794944) (:by |u0)
-                  |j $ {} (:text "|\"TODO reload") (:type :leaf) (:at 1630174798689) (:by |u0)
-                :type :expr
-                :at 1630174792572
-                :by |u0
-            :type :expr
-            :at 1630174789087
-            :by |u0
         :proc $ {}
           :data $ {}
           :type :expr
@@ -505,7 +1722,7 @@
         :ns $ {}
           :data $ {}
             |T $ {} (:text |ns) (:type :leaf) (:at 1630174670374) (:by |u0)
-            |j $ {} (:text |calcit.std.demo) (:type :leaf) (:at 1630174670374) (:by |u0)
+            |j $ {} (:text |calcit.std.test.fs) (:type :leaf) (:at 1630174670374) (:by |u0)
             |r $ {}
               :data $ {}
                 |T $ {} (:text |:require) (:type :leaf) (:at 1630174699239) (:by |u0)
