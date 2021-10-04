@@ -2,7 +2,7 @@
 {} (:package |calcit.std)
   :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.2
+    :version |0.0.3
   :files $ {}
     |calcit.std.test.date $ {}
       :ns $ quote
@@ -44,6 +44,35 @@
               , true
         |try-large-json $ quote
           defn try-large-json () $ slurp-cirru-edn |/Users/chen/repo/calcit-lang/apis/docs/apis.cirru
+    |calcit.std.test.rand $ {}
+      :ns $ quote
+        ns calcit.std.test.rand $ :require
+          calcit.std.rand :refer $ rand rand-int rand-shift rand-nth rand-between nanoid!
+      :defs $ {}
+        |main! $ quote
+          defn main! () (println "\"%%%%%% test random")
+            assert-detect identity $ <= 0
+              index-of (range 10)
+                rand-nth $ range 10
+            assert= nil $ rand-nth ([])
+            assert= nil $ ;nil anything
+            ;
+            assert-detect identity $ <= 0 (rand) 100
+            assert-detect identity $ <= 0 (rand 10) 10
+            assert-detect identity $ <= 20 (rand 20 30) 30
+            assert "|try .rand-shift" $ &let
+              x $ rand-shift 10 5
+              and (>= x 5) (<= x 15)
+            assert "|try .rand-between" $ &let
+              x $ rand-between 10 5
+              and (>= x 5) (<= x 10)
+            assert-detect identity $ <= 0 (rand-int) 100
+            assert-detect identity $ <= 0 (rand-int 10) 10
+            assert-detect identity $ <= 20 (rand-int 20 30) 30
+            ;
+            println "\"%%%% test id"
+            assert= 9 $ count (nanoid! 9)
+            assert= |aaaaa $ nanoid! 5 |a
     |calcit.std.regex $ {}
       :ns $ quote
         ns calcit.std.regex $ :require
@@ -161,12 +190,44 @@
             &call-dylib-edn
               str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
               , "\"parse_json" s
+    |calcit.std.rand $ {}
+      :ns $ quote
+        ns calcit.std.rand $ :require
+          calcit.std.$meta :refer $ calcit-dirname
+          calcit.std.util :refer $ get-dylib-ext or-current-path
+      :defs $ {}
+        |rand-nth $ quote
+          defn rand-nth (xs)
+            if (&list:empty? xs) nil $ get xs
+              rand-int $ &- (&list:count xs) 1
+        |rand $ quote
+          defn rand (? from to)
+            &call-dylib-edn
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              , "\"rand" from to
+        |rand-int $ quote
+          defn rand-int (? from to)
+            &call-dylib-edn
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              , "\"rand_int" from to
+        |rand-shift $ quote
+          defn rand-shift (x y)
+            &+ (&- x y)
+              rand $ &* 2 y
+        |rand-between $ quote
+          defn rand-between (x y)
+            &+ x $ rand (&- y x)
+        |nanoid! $ quote
+          defn nanoid! (? size chars)
+            &call-dylib-edn
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              , "\"call_nanoid" size chars
     |calcit.std.test $ {}
       :ns $ quote
-        ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.regex :as regex) (calcit.std.test.json :as json)
+        ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.regex :as regex) (calcit.std.test.json :as json) (calcit.std.test.rand :as random)
       :defs $ {}
         |run-tests $ quote
-          defn run-tests () (fs/main!) (json/main!) (date/main!) (regex/main!)
+          defn run-tests () (fs/main!) (json/main!) (date/main!) (regex/main!) (random/main!)
         |main! $ quote
           defn main! () $ run-tests
         |reload! $ quote

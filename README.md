@@ -45,6 +45,24 @@ calcit.std.regex/re-find-index |a1 |\d
 calcit.std.regex/re-find-all |123 |\d+
 ```
 
+```cirru
+calcit.std.rand/rand
+calcit.std.rand/rand 10
+calcit.std.rand/rand 10 100 (; "from 10 to 100")
+
+calcit.std.rand/rand-int
+calcit.std.rand/rand-int 10
+calcit.std.rand/rand-int 10 100 (; "from 10 to 100")
+
+calcit.std.rand/rand-nth ([] 1 2 3)
+calcit.std.rand/rand-shift 10 4 (; "10+-4")
+calcit.std.rand/rand-between 10 20
+
+calcit.std.rand/nanoid!
+calcit.std.rand/nanoid! 9
+calcit.std.rand/nanoid! 9 |abcd (; "charset")
+```
+
 ### License
 
 MIT

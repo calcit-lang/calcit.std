@@ -1,7 +1,11 @@
+#[macro_use]
+extern crate nanoid;
+
 mod date;
 mod fs;
 mod json;
 mod process;
+mod random;
 mod regexp;
 
 pub use date::{format_time, now_bang, parse_time};
