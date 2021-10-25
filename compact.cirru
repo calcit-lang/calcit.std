@@ -2,7 +2,7 @@
 {} (:package |calcit.std)
   :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.3
+    :version |0.0.4
   :files $ {}
     |calcit.std.test.date $ {}
       :ns $ quote
@@ -105,6 +105,11 @@
           calcit.std.$meta :refer $ calcit-dirname
           calcit.std.util :refer $ get-dylib-ext or-current-path
       :defs $ {}
+        |on-ctrl-c $ quote
+          defn on-ctrl-c (f)
+            &call-dylib-edn-fn
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              , "\"on_ctrl_c" f
         |execute! $ quote
           defn execute! (command ? dir)
             assert "\"command in list" $ and (list? command) (every? command string?)
@@ -196,10 +201,11 @@
           calcit.std.$meta :refer $ calcit-dirname
           calcit.std.util :refer $ get-dylib-ext or-current-path
       :defs $ {}
-        |rand-nth $ quote
-          defn rand-nth (xs)
-            if (&list:empty? xs) nil $ get xs
-              rand-int $ &- (&list:count xs) 1
+        |nanoid! $ quote
+          defn nanoid! (? size chars)
+            &call-dylib-edn
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              , "\"call_nanoid" size chars
         |rand $ quote
           defn rand (? from to)
             &call-dylib-edn
@@ -210,6 +216,10 @@
             &call-dylib-edn
               str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
               , "\"rand_int" from to
+        |rand-nth $ quote
+          defn rand-nth (xs)
+            if (&list:empty? xs) nil $ get xs
+              rand-int $ &- (&list:count xs) 1
         |rand-shift $ quote
           defn rand-shift (x y)
             &+ (&- x y)
@@ -217,21 +227,41 @@
         |rand-between $ quote
           defn rand-between (x y)
             &+ x $ rand (&- y x)
-        |nanoid! $ quote
-          defn nanoid! (? size chars)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"call_nanoid" size chars
     |calcit.std.test $ {}
       :ns $ quote
         ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.regex :as regex) (calcit.std.test.json :as json) (calcit.std.test.rand :as random)
+          calcit.std.process :refer $ on-ctrl-c
+          calcit.std.time :refer $ set-timeout set-interval
       :defs $ {}
         |run-tests $ quote
           defn run-tests () (fs/main!) (json/main!) (date/main!) (regex/main!) (random/main!)
+        |try-time! $ quote
+          defn try-time! ()
+            set-timeout 4000 $ fn () (println "\"doing")
+            set-interval 2000 $ fn () (println "\"DO Do Do")
         |main! $ quote
           defn main! () $ run-tests
+        |try-ctrlc! $ quote
+          defn try-ctrlc! () $ on-ctrl-c
+            fn () $ println "\"TODO handler..."
         |reload! $ quote
           defn reload! $
+    |calcit.std.time $ {}
+      :ns $ quote
+        ns calcit.std.time $ :require
+          calcit.std.$meta :refer $ calcit-dirname
+          calcit.std.util :refer $ get-dylib-ext or-current-path
+      :defs $ {}
+        |set-interval $ quote
+          defn set-interval (t cb)
+            &call-dylib-edn-fn
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              , "\"set_interval" t cb
+        |set-timeout $ quote
+          defn set-timeout (t cb)
+            &call-dylib-edn-fn
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              , "\"set_timeout" t cb
     |calcit.std.util $ {}
       :ns $ quote (ns calcit.std.util)
       :defs $ {}
