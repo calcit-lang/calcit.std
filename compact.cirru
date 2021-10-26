@@ -2,7 +2,7 @@
 {} (:package |calcit.std)
   :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.4
+    :version |0.0.5
   :files $ {}
     |calcit.std.test.date $ {}
       :ns $ quote
@@ -77,71 +77,51 @@
       :ns $ quote
         ns calcit.std.regex $ :require
           calcit.std.$meta :refer $ calcit-dirname
-          calcit.std.util :refer $ get-dylib-ext or-current-path
+          calcit.std.util :refer $ get-dylib-path
       :defs $ {}
         |re-find-all $ quote
           defn re-find-all (s pattern)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"re_find_all" s pattern
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_find_all" s pattern
         |re-matches $ quote
           defn re-matches (s pattern)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"re_matches" s pattern
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_matches" s pattern
         |re-find-index $ quote
           defn re-find-index (s pattern)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"re_find_index" s pattern
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_find_index" s pattern
         |re-find $ quote
           defn re-find (s pattern)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"re_find" s pattern
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_find" s pattern
     |calcit.std.process $ {}
       :ns $ quote
         ns calcit.std.process $ :require
           calcit.std.$meta :refer $ calcit-dirname
-          calcit.std.util :refer $ get-dylib-ext or-current-path
+          calcit.std.util :refer $ get-dylib-path
       :defs $ {}
         |on-ctrl-c $ quote
           defn on-ctrl-c (f)
-            &call-dylib-edn-fn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"on_ctrl_c" f
+            &call-dylib-edn-fn (get-dylib-path "\"/dylibs/libcalcit_std") "\"on_ctrl_c" f
         |execute! $ quote
           defn execute! (command ? dir)
             assert "\"command in list" $ and (list? command) (every? command string?)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"execute_command" (either dir "\"./") command
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"execute_command" (either dir "\"./") command
     |calcit.std.fs $ {}
       :ns $ quote
         ns calcit.std.fs $ :require
           calcit.std.$meta :refer $ calcit-dirname
-          calcit.std.util :refer $ get-dylib-ext or-current-path
+          calcit.std.util :refer $ get-dylib-path
       :defs $ {}
         |read-dir! $ quote
           defn read-dir! (name)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"read_dir" name
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"read_dir" name
         |write-file! $ quote
           defn write-file! (name content)
-            &call-dylib-edn
-              str calcit-dirname "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"write_file" name content
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"write_file" name content
         |read-file! $ quote
           defn read-file! (name)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"read_file" name
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"read_file" name
         |path-exists? $ quote
           defn path-exists? (name)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"path_exists" name
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"path_exists" name
     |calcit.std.test.regex $ {}
       :ns $ quote
         ns calcit.std.test.regex $ :require
@@ -163,59 +143,52 @@
       :ns $ quote
         ns calcit.std.date $ :require
           calcit.std.$meta :refer $ calcit-dirname
-          calcit.std.util :refer $ get-dylib-ext or-current-path
+          calcit.std.util :refer $ get-dylib-path
       :defs $ {}
         |get-time! $ quote
-          defn get-time! () $ &call-dylib-edn
-            str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-            , "\"now_bang"
+          defn get-time! () $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"now_bang"
         |parse-time $ quote
           defn parse-time (time format)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"parse_time" time format
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_time" time format
         |format-time $ quote
           defn format-time (time ? format)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"format_time" time format
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"format_time" time format
+    |calcit.std.hash $ {}
+      :ns $ quote
+        ns calcit.std.hash $ :require
+          calcit.std.$meta :refer $ calcit-dirname
+          calcit.std.util :refer $ get-dylib-path
+      :defs $ {}
+        |md5 $ quote
+          defn md5 (s)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"md5" s
     |calcit.std.json $ {}
       :ns $ quote
         ns calcit.std.json $ :require
           calcit.std.$meta :refer $ calcit-dirname
-          calcit.std.util :refer $ get-dylib-ext or-current-path
+          calcit.std.util :refer $ get-dylib-path
       :defs $ {}
         |stringify-json $ quote
           defn stringify-json (data ? colon?)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"stringify_json" data colon?
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"stringify_json" data colon?
         |parse-json $ quote
           defn parse-json (s)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"parse_json" s
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_json" s
     |calcit.std.rand $ {}
       :ns $ quote
         ns calcit.std.rand $ :require
           calcit.std.$meta :refer $ calcit-dirname
-          calcit.std.util :refer $ get-dylib-ext or-current-path
+          calcit.std.util :refer $ get-dylib-path
       :defs $ {}
         |nanoid! $ quote
           defn nanoid! (? size chars)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"call_nanoid" size chars
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"call_nanoid" size chars
         |rand $ quote
           defn rand (? from to)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"rand" from to
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"rand" from to
         |rand-int $ quote
           defn rand-int (? from to)
-            &call-dylib-edn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"rand_int" from to
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"rand_int" from to
         |rand-nth $ quote
           defn rand-nth (xs)
             if (&list:empty? xs) nil $ get xs
@@ -232,15 +205,20 @@
         ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.regex :as regex) (calcit.std.test.json :as json) (calcit.std.test.rand :as random)
           calcit.std.process :refer $ on-ctrl-c
           calcit.std.time :refer $ set-timeout set-interval
+          calcit.std.hash :refer $ md5
       :defs $ {}
         |run-tests $ quote
           defn run-tests () (fs/main!) (json/main!) (date/main!) (regex/main!) (random/main!)
+        |try-demos $ quote
+          defn try-demos ()
+            println $ md5 "\""
+            println $ md5 "\"5"
         |try-time! $ quote
           defn try-time! ()
             set-timeout 4000 $ fn () (println "\"doing")
             set-interval 2000 $ fn () (println "\"DO Do Do")
         |main! $ quote
-          defn main! () $ run-tests
+          defn main! () (run-tests) (try-demos)
         |try-ctrlc! $ quote
           defn try-ctrlc! () $ on-ctrl-c
             fn () $ println "\"TODO handler..."
@@ -250,23 +228,24 @@
       :ns $ quote
         ns calcit.std.time $ :require
           calcit.std.$meta :refer $ calcit-dirname
-          calcit.std.util :refer $ get-dylib-ext or-current-path
+          calcit.std.util :refer $ get-dylib-path
       :defs $ {}
         |set-interval $ quote
           defn set-interval (t cb)
-            &call-dylib-edn-fn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"set_interval" t cb
+            &call-dylib-edn-fn (get-dylib-path "\"/dylibs/libcalcit_std") "\"set_interval" t cb
         |set-timeout $ quote
           defn set-timeout (t cb)
-            &call-dylib-edn-fn
-              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
-              , "\"set_timeout" t cb
+            &call-dylib-edn-fn (get-dylib-path "\"/dylibs/libcalcit_std") "\"set_timeout" t cb
     |calcit.std.util $ {}
-      :ns $ quote (ns calcit.std.util)
+      :ns $ quote
+        ns calcit.std.util $ :require
+          calcit.std.$meta :refer $ calcit-dirname
       :defs $ {}
         |get-dylib-ext $ quote
           defmacro get-dylib-ext () $ case-default (&get-os) "\".so" (:macos "\".dylib") (:windows "\".dll")
+        |get-dylib-path $ quote
+          defn get-dylib-path (p)
+            str (or-current-path calcit-dirname) p $ get-dylib-ext
         |or-current-path $ quote
           defn or-current-path (p)
             if (blank? p) "\"." p

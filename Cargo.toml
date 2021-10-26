@@ -1,6 +1,6 @@
 [package]
 name = "calcit_std"
-version = "0.0.4"
+version = "0.0.5"
 authors = ["jiyinyiyong <jiyinyiyong@gmail.com>"]
 edition = "2018"
 
@@ -22,3 +22,4 @@ cirru_parser = "0.1.8"
 nanoid = "0.4.0"
 rand = "0.8.4"
 ctrlc = "3.2.1"
+md5 = "0.7.0"

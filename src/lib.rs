@@ -3,6 +3,7 @@ extern crate nanoid;
 
 mod date;
 mod fs;
+mod hash;
 mod json;
 mod process;
 mod random;
