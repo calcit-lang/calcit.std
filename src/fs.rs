@@ -71,6 +71,6 @@ pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
       Err(format!("read-dir expected a string, {}", &args[0]))
     }
   } else {
-    Err(format!("read-dir expected 2 args {:?}", args))
+    Err(format!("read-dir expected 1 argument, got: {:?}", args))
   }
 }

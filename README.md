@@ -71,6 +71,10 @@ calcit.std.time/set-interval 1000 $ fn ()
   println |repeated
 ```
 
+```cirru
+calcit.std.hash/md5 |content
+```
+
 ### License
 
 MIT

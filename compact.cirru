@@ -179,6 +179,17 @@
             &call-dylib-edn
               str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
               , "\"format_time" time format
+    |calcit.std.hash $ {}
+      :ns $ quote
+        ns calcit.std.hash $ :require
+          calcit.std.$meta :refer $ calcit-dirname
+          calcit.std.util :refer $ get-dylib-ext or-current-path
+      :defs $ {}
+        |md5 $ quote
+          defn md5 (s)
+            &call-dylib-edn
+              str (or-current-path calcit-dirname) "\"/dylibs/libcalcit_std" $ get-dylib-ext
+              , "\"md5" s
     |calcit.std.json $ {}
       :ns $ quote
         ns calcit.std.json $ :require
@@ -232,15 +243,20 @@
         ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.regex :as regex) (calcit.std.test.json :as json) (calcit.std.test.rand :as random)
           calcit.std.process :refer $ on-ctrl-c
           calcit.std.time :refer $ set-timeout set-interval
+          calcit.std.hash :refer $ md5
       :defs $ {}
         |run-tests $ quote
           defn run-tests () (fs/main!) (json/main!) (date/main!) (regex/main!) (random/main!)
+        |try-demos $ quote
+          defn try-demos ()
+            println $ md5 "\""
+            println $ md5 "\"5"
         |try-time! $ quote
           defn try-time! ()
             set-timeout 4000 $ fn () (println "\"doing")
             set-interval 2000 $ fn () (println "\"DO Do Do")
         |main! $ quote
-          defn main! () $ run-tests
+          defn main! () (run-tests) (try-demos)
         |try-ctrlc! $ quote
           defn try-ctrlc! () $ on-ctrl-c
             fn () $ println "\"TODO handler..."
