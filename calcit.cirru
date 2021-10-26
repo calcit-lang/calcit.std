@@ -513,8 +513,7 @@
                     |j $ {} (:type :leaf) (:by |u0) (:at 1633181165895) (:text |:refer)
                     |r $ {} (:type :expr) (:by |u0) (:at 1633181165895)
                       :data $ {}
-                        |T $ {} (:type :leaf) (:by |u0) (:at 1633181165895) (:text |get-dylib-ext)
-                        |j $ {} (:type :leaf) (:by |u0) (:at 1633181165895) (:text |or-current-path)
+                        |T $ {} (:type :leaf) (:by |u0) (:at 1635220955330) (:text |get-dylib-path)
         :configs $ {}
         :defs $ {}
           |re-find-all $ {} (:type :expr) (:by |u0) (:at 1633168541264)
@@ -528,17 +527,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1633181358829)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253314302) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633181358829)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220960951)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181358829) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633181358829)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181358829) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633181358829) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181358829) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633181358829)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181358829) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220961244) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220962775) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633181367307) (:text "|\"re_find_all")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633181369860) (:text |s)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1633181371133) (:text |pattern)
@@ -553,17 +545,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1633181393853)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253320897) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633181393853)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220977908)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181393853) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633181393853)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181393853) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633181393853) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181393853) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633181393853)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181393853) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220978155) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220979691) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633181403399) (:text "|\"re_matches")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633181405748) (:text |s)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1633181406763) (:text |pattern)
@@ -578,17 +563,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1633181375127)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253317546) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633181375127)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220968598)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181375127) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633181375127)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181375127) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633181375127) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181375127) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633181375127)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181375127) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220968853) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220970418) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633181381988) (:text "|\"re_find_index")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633181384204) (:text |s)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1633181385670) (:text |pattern)
@@ -603,17 +581,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1633181336074)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253310212) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633181336074)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220949126)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181336074) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633181336074)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181336074) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633181336074) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181336074) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633181336074)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181336074) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220949516) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220951394) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633181352127) (:text "|\"re_find")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633181353487) (:text |s)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1633181354508) (:text |pattern)
@@ -640,8 +611,7 @@
                     |j $ {} (:type :leaf) (:by |u0) (:at 1630234680982) (:text |:refer)
                     |r $ {} (:type :expr) (:by |u0) (:at 1630234680982)
                       :data $ {}
-                        |T $ {} (:type :leaf) (:by |u0) (:at 1630234680982) (:text |get-dylib-ext)
-                        |j $ {} (:type :leaf) (:by |u0) (:at 1633181119954) (:text |or-current-path)
+                        |T $ {} (:type :leaf) (:by |u0) (:at 1635220886442) (:text |get-dylib-path)
         :configs $ {}
         :defs $ {}
           |on-ctrl-c $ {} (:type :expr) (:by |u0) (:at 1635175970470)
@@ -654,17 +624,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1635176024086)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1635176033216) (:text |&call-dylib-edn-fn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1635176024086)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220895031)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1635176024086) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1635176024086)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1635176024086) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1635176024086) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1635176024086) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1635176024086)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1635176024086) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220895334) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220896873) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1635176045304) (:text "|\"on_ctrl_c")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1635176047010) (:text |f)
           |execute! $ {} (:type :expr) (:by |u0) (:at 1630233671273)
@@ -695,17 +658,10 @@
               |x $ {} (:type :expr) (:by |u0) (:at 1630233743657)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253274875) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1630233743657)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220881209)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1630233743657) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1630245636440)
-                        :data $ {}
-                          |D $ {} (:type :leaf) (:by |u0) (:at 1630245637034) (:text |or-current-path)
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1630233743657) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1630233743657) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1630234592549)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1630234600186) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220881501) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220883082) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1630233743657) (:text "|\"execute_command")
                   |s $ {} (:type :expr) (:by |u0) (:at 1631166907802)
                     :data $ {}
@@ -736,8 +692,7 @@
                     |j $ {} (:type :leaf) (:by |u0) (:at 1633181140100) (:text |:refer)
                     |r $ {} (:type :expr) (:by |u0) (:at 1633181140100)
                       :data $ {}
-                        |T $ {} (:type :leaf) (:by |u0) (:at 1633181140100) (:text |get-dylib-ext)
-                        |j $ {} (:type :leaf) (:by |u0) (:at 1633181140100) (:text |or-current-path)
+                        |T $ {} (:type :leaf) (:by |u0) (:at 1635220832816) (:text |get-dylib-path)
         :configs $ {}
         :defs $ {}
           |read-dir! $ {} (:type :expr) (:by |u0) (:at 1630224735170)
@@ -750,17 +705,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1631164877698)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253257459) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1631164877698)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220814122)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1631164877698)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1631164877698)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220814427) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220816762) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text "|\"read_dir")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1631164877698) (:text |name)
           |write-file! $ {} (:type :expr) (:by |u0) (:at 1630171482098)
@@ -774,14 +722,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1630171491979)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253266538) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1630171491979)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220844025)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1630171491979) (:text |str)
-                      |j $ {} (:type :leaf) (:by |u0) (:at 1630175139198) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1630231496823) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1630231497547)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1630231497547) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220844329) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220846470) (:text "|\"/dylibs/libcalcit_std")
                   |n $ {} (:type :leaf) (:by |u0) (:at 1630176312321) (:text "|\"write_file")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1630171491979) (:text |name)
                   |v $ {} (:type :leaf) (:by |u0) (:at 1630171494451) (:text |content)
@@ -795,17 +739,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1630171376690)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253268620) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1630171415642)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220823192)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1630171417092) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1630245565638)
-                        :data $ {}
-                          |D $ {} (:type :leaf) (:by |u0) (:at 1630245580749) (:text |or-current-path)
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1630175134914) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1630231491522) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1630231492086)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1630231492086) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220823513) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220825098) (:text "|\"/dylibs/libcalcit_std")
                   |n $ {} (:type :leaf) (:by |u0) (:at 1630176304763) (:text "|\"read_file")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1630171465347) (:text |name)
           |path-exists? $ {} (:type :expr) (:by |u0) (:at 1630219258753)
@@ -818,17 +755,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1630219268038)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253263271) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1630219268038)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220806002)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1630219268038) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1630245626564)
-                        :data $ {}
-                          |D $ {} (:type :leaf) (:by |u0) (:at 1630245627140) (:text |or-current-path)
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1630219268038) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1630231388580) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1630231389815)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1630231396884) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220806407) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220808067) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1630219282714) (:text "|\"path_exists")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1630219268038) (:text |name)
         :proc $ {} (:type :expr) (:by |u0) (:at 1630171366222)
@@ -998,8 +928,7 @@
                     |j $ {} (:type :leaf) (:by |u0) (:at 1633181151756) (:text |:refer)
                     |r $ {} (:type :expr) (:by |u0) (:at 1633181151756)
                       :data $ {}
-                        |T $ {} (:type :leaf) (:by |u0) (:at 1633181151756) (:text |get-dylib-ext)
-                        |j $ {} (:type :leaf) (:by |u0) (:at 1633181151756) (:text |or-current-path)
+                        |T $ {} (:type :leaf) (:by |u0) (:at 1635220775131) (:text |get-dylib-path)
         :configs $ {}
         :defs $ {}
           |get-time! $ {} (:type :expr) (:by |u0) (:at 1633168502797)
@@ -1011,17 +940,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1633168770408)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253286256) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633168770408)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220782278)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633168770408) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633168770408)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633168770408) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633168770408) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633168770408) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633168770408)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633168770408) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220782559) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220784327) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633181993466) (:text "|\"now_bang")
           |parse-time $ {} (:type :expr) (:by |u0) (:at 1633168493152)
             :data $ {}
@@ -1034,17 +956,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1633181255929)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253289856) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633181255929)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220791280)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181255929) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633181255929)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181255929) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633181255929) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181255929) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633181255929)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181255929) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220790930) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220793173) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633181261272) (:text "|\"parse_time")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633181264402) (:text |time)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1633181265382) (:text |format)
@@ -1060,17 +975,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1633181205882)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253280420) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633181205882)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220768381)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181205882) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633181205882)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181205882) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633181205882) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181205882) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633181205882)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181205882) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220768675) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220771306) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633181229605) (:text "|\"format_time")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633181240264) (:text |time)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1633181241023) (:text |format)
@@ -1097,8 +1005,7 @@
                     |j $ {} (:type :leaf) (:by |u0) (:at 1635220595836) (:text |:refer)
                     |r $ {} (:type :expr) (:by |u0) (:at 1635220595836)
                       :data $ {}
-                        |T $ {} (:type :leaf) (:by |u0) (:at 1635220595836) (:text |get-dylib-ext)
-                        |j $ {} (:type :leaf) (:by |u0) (:at 1635220595836) (:text |or-current-path)
+                        |r $ {} (:type :leaf) (:by |u0) (:at 1635220746259) (:text |get-dylib-path)
         :defs $ {}
           |md5 $ {} (:type :expr) (:by |u0) (:at 1635220490864)
             :data $ {}
@@ -1110,17 +1017,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1635220498556)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1635220498556) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1635220498556)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220734199)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220498556) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1635220498556)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1635220498556) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1635220498556) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1635220498556) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1635220498556)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1635220498556) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220737683) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220739344) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1635220504848) (:text "|\"md5")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1635220498556) (:text |s)
         :proc $ {} (:type :expr) (:by |u0) (:at 1635220487680)
@@ -1147,8 +1047,7 @@
                     |j $ {} (:type :leaf) (:by |u0) (:at 1633181160126) (:text |:refer)
                     |r $ {} (:type :expr) (:by |u0) (:at 1633181160126)
                       :data $ {}
-                        |T $ {} (:type :leaf) (:by |u0) (:at 1633181160126) (:text |get-dylib-ext)
-                        |j $ {} (:type :leaf) (:by |u0) (:at 1633181160126) (:text |or-current-path)
+                        |T $ {} (:type :leaf) (:by |u0) (:at 1635220862556) (:text |get-dylib-path)
         :configs $ {}
         :defs $ {}
           |stringify-json $ {} (:type :expr) (:by |u0) (:at 1633168514525)
@@ -1163,17 +1062,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1633181303734)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253302295) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633181303734)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220866916)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181303734) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633181303734)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181303734) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633181303734) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181303734) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633181303734)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181303734) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220867182) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220869351) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633186337203) (:text "|\"stringify_json")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633181320287) (:text |data)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1633181322417) (:text |colon?)
@@ -1187,17 +1079,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1633181276583)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633253299123) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633181276583)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220856435)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633181276583) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633181276583)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181276583) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633181276583) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633181276583) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633181276583)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633181276583) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220856713) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220857947) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633184660110) (:text "|\"parse_json")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633181297499) (:text |s)
         :proc $ {} (:type :expr) (:by |u0) (:at 1633168388260)
@@ -1223,8 +1108,7 @@
                     |j $ {} (:type :leaf) (:by |u0) (:at 1633343524902) (:text |:refer)
                     |r $ {} (:type :expr) (:by |u0) (:at 1633343524902)
                       :data $ {}
-                        |T $ {} (:type :leaf) (:by |u0) (:at 1633343524902) (:text |get-dylib-ext)
-                        |j $ {} (:type :leaf) (:by |u0) (:at 1633343524902) (:text |or-current-path)
+                        |T $ {} (:type :leaf) (:by |u0) (:at 1635220911694) (:text |get-dylib-path)
         :configs $ {}
         :defs $ {}
           |nanoid! $ {} (:type :expr) (:by |u0) (:at 1633344066690)
@@ -1239,17 +1123,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1633344069288)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633344069288) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633344069288)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220913739)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633344069288) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633344069288)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633344069288) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633344069288) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633344069288) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633344069288)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633344069288) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220914029) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220915717) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633344271797) (:text "|\"call_nanoid")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633344294685) (:text |size)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1633344296969) (:text |chars)
@@ -1265,17 +1142,10 @@
               |x $ {} (:type :expr) (:by |u0) (:at 1633344011182)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633344011182) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633344011182)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220922099)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633344011182) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633344011182)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633344011182) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633344011182) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633344011182) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633344011182)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633344011182) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220922368) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220923924) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633344036924) (:text "|\"rand")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633344033560) (:text |from)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1633344033993) (:text |to)
@@ -1291,17 +1161,10 @@
               |x $ {} (:type :expr) (:by |u0) (:at 1633344047273)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633344047273) (:text |&call-dylib-edn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1633344047273)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635220935737)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633344047273) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1633344047273)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633344047273) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1633344047273) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633344047273) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1633344047273)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1633344047273) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220935987) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220937473) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1633344056421) (:text "|\"rand_int")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1633344047273) (:text |from)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1633344047273) (:text |to)
@@ -1570,8 +1433,7 @@
                     |j $ {} (:type :leaf) (:by |u0) (:at 1635179663484) (:text |:refer)
                     |r $ {} (:type :expr) (:by |u0) (:at 1635179663484)
                       :data $ {}
-                        |T $ {} (:type :leaf) (:by |u0) (:at 1635179663484) (:text |get-dylib-ext)
-                        |j $ {} (:type :leaf) (:by |u0) (:at 1635179663484) (:text |or-current-path)
+                        |T $ {} (:type :leaf) (:by |u0) (:at 1635221003887) (:text |get-dylib-path)
         :configs $ {}
         :defs $ {}
           |set-interval $ {} (:type :expr) (:by |u0) (:at 1635179641143)
@@ -1585,17 +1447,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1635179643672)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1635179752229) (:text |&call-dylib-edn-fn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1635179643672)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635221008204)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1635179643672) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1635179643672)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1635179643672) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1635179643672) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1635179643672) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1635179643672)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1635179643672) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635221008473) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635221009985) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1635179651332) (:text "|\"set_interval")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1635179643672) (:text |t)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1635179643672) (:text |cb)
@@ -1610,17 +1465,10 @@
               |v $ {} (:type :expr) (:by |u0) (:at 1635179604841)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1635179757223) (:text |&call-dylib-edn-fn)
-                  |j $ {} (:type :expr) (:by |u0) (:at 1635179604841)
+                  |b $ {} (:type :expr) (:by |u0) (:at 1635221014849)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1635179604841) (:text |str)
-                      |j $ {} (:type :expr) (:by |u0) (:at 1635179604841)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1635179604841) (:text |or-current-path)
-                          |j $ {} (:type :leaf) (:by |u0) (:at 1635179604841) (:text |calcit-dirname)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1635179604841) (:text "|\"/dylibs/libcalcit_std")
-                      |v $ {} (:type :expr) (:by |u0) (:at 1635179604841)
-                        :data $ {}
-                          |T $ {} (:type :leaf) (:by |u0) (:at 1635179604841) (:text |get-dylib-ext)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635221015096) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635221016675) (:text "|\"/dylibs/libcalcit_std")
                   |r $ {} (:type :leaf) (:by |u0) (:at 1635179626283) (:text "|\"set_timeout")
                   |v $ {} (:type :leaf) (:by |u0) (:at 1635179619080) (:text |t)
                   |x $ {} (:type :leaf) (:by |u0) (:at 1635179620417) (:text |cb)
@@ -1631,6 +1479,16 @@
           :data $ {}
             |T $ {} (:type :leaf) (:by |u0) (:at 1633181044360) (:text |ns)
             |j $ {} (:type :leaf) (:by |u0) (:at 1633181044360) (:text |calcit.std.util)
+            |r $ {} (:type :expr) (:by |u0) (:at 1635220717892)
+              :data $ {}
+                |T $ {} (:type :leaf) (:by |u0) (:at 1635220717892) (:text |:require)
+                |j $ {} (:type :expr) (:by |u0) (:at 1635220717892)
+                  :data $ {}
+                    |T $ {} (:type :leaf) (:by |u0) (:at 1635220717892) (:text |calcit.std.$meta)
+                    |j $ {} (:type :leaf) (:by |u0) (:at 1635220717892) (:text |:refer)
+                    |r $ {} (:type :expr) (:by |u0) (:at 1635220717892)
+                      :data $ {}
+                        |T $ {} (:type :leaf) (:by |u0) (:at 1635220717892) (:text |calcit-dirname)
         :configs $ {}
         :defs $ {}
           |get-dylib-ext $ {} (:type :expr) (:by |u0) (:at 1630231398718)
@@ -1654,6 +1512,24 @@
                     :data $ {}
                       |T $ {} (:type :leaf) (:by |u0) (:at 1630231449901) (:text |:windows)
                       |j $ {} (:type :leaf) (:by |u0) (:at 1630231461388) (:text "|\".dll")
+          |get-dylib-path $ {} (:type :expr) (:by |u0) (:at 1635220682827)
+            :data $ {}
+              |T $ {} (:type :leaf) (:by |u0) (:at 1635220682827) (:text |defn)
+              |j $ {} (:type :leaf) (:by |u0) (:at 1635220682827) (:text |get-dylib-path)
+              |r $ {} (:type :expr) (:by |u0) (:at 1635220682827)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1635220697524) (:text |p)
+              |v $ {} (:type :expr) (:by |u0) (:at 1635220685851)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1635220685851) (:text |str)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1635220685851)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220685851) (:text |or-current-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1635220685851) (:text |calcit-dirname)
+                  |r $ {} (:type :leaf) (:by |u0) (:at 1635220702274) (:text |p)
+                  |v $ {} (:type :expr) (:by |u0) (:at 1635220685851)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1635220685851) (:text |get-dylib-ext)
           |or-current-path $ {} (:type :expr) (:by |u0) (:at 1630245582276)
             :data $ {}
               |T $ {} (:type :leaf) (:by |u0) (:at 1630245583936) (:text |defn)
