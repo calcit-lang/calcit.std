@@ -63,6 +63,14 @@ calcit.std.rand/nanoid! 9
 calcit.std.rand/nanoid! 9 |abcd (; "charset")
 ```
 
+```cirru
+calcit.std.time/set-timeout 1000 $ fn ()
+  println |timeout
+
+calcit.std.time/set-interval 1000 $ fn ()
+  println |repeated
+```
+
 ### License
 
 MIT
