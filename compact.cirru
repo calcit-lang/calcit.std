@@ -2,7 +2,7 @@
 {} (:package |calcit.std)
   :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.5
+    :version |0.0.6
   :files $ {}
     |calcit.std.test.date $ {}
       :ns $ quote
@@ -223,7 +223,7 @@
           defn try-ctrlc! () $ on-ctrl-c
             fn () $ println "\"TODO handler..."
         |reload! $ quote
-          defn reload! $
+          defn reload! () $ println "\"reload not handled yet"
     |calcit.std.time $ {}
       :ns $ quote
         ns calcit.std.time $ :require

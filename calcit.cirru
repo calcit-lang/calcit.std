@@ -1006,6 +1006,7 @@
                     |r $ {} (:type :expr) (:by |u0) (:at 1635220595836)
                       :data $ {}
                         |r $ {} (:type :leaf) (:by |u0) (:at 1635220746259) (:text |get-dylib-path)
+        :configs $ {}
         :defs $ {}
           |md5 $ {} (:type :expr) (:by |u0) (:at 1635220490864)
             :data $ {}
@@ -1025,7 +1026,6 @@
                   |v $ {} (:type :leaf) (:by |u0) (:at 1635220498556) (:text |s)
         :proc $ {} (:type :expr) (:by |u0) (:at 1635220487680)
           :data $ {}
-        :configs $ {}
       |calcit.std.json $ {}
         :ns $ {} (:type :expr) (:by |u0) (:at 1633168388260)
           :data $ {}
@@ -1410,6 +1410,10 @@
               |j $ {} (:type :leaf) (:by |u0) (:at 1633149998862) (:text |reload!)
               |r $ {} (:type :expr) (:by |u0) (:at 1633149998862)
                 :data $ {}
+              |v $ {} (:type :expr) (:by |u0) (:at 1635313996363)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1635313997339) (:text |println)
+                  |j $ {} (:type :leaf) (:by |u0) (:at 1635314003548) (:text "|\"reload not handled yet")
         :proc $ {} (:type :expr) (:by |u0) (:at 1633149625774)
           :data $ {}
       |calcit.std.time $ {}
@@ -1645,4 +1649,4 @@
           :data $ {}
   :configs $ {} (:port 6001) (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.5
+    :version |0.0.6

@@ -16,3 +16,8 @@ pub use json::{parse_json, stringify_json};
 pub use process::execute_command;
 pub use regexp::{re_find, re_find_all, re_find_index, re_matches};
 pub use time::{set_interval, set_timeout};
+
+#[no_mangle]
+pub fn abi_version() -> String {
+  String::from("0.0.1")
+}
