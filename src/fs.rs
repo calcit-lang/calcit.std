@@ -6,9 +6,9 @@ use std::path::Path;
 pub fn read_file(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
-      let task = fs::read_to_string(&name);
+      let task = fs::read_to_string(&**name);
       match task {
-        Ok(s) => Ok(Edn::Str(s)),
+        Ok(s) => Ok(Edn::Str(s.into_boxed_str())),
         Err(e) => Err(format!("Failed to read file {:?}: {}", name, e)),
       }
     } else {
@@ -24,7 +24,7 @@ pub fn write_file(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
       (Edn::Str(name), Edn::Str(content)) => {
-        let task = fs::write(name.to_owned(), content.to_owned());
+        let task = fs::write(&**name, &**content);
         match task {
           Ok(()) => Ok(Edn::Nil),
           Err(e) => Err(format!("Failed to write to file {:?}: {}", name, e)),
@@ -41,7 +41,7 @@ pub fn write_file(args: Vec<Edn>) -> Result<Edn, String> {
 pub fn path_exists(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
-      Ok(Edn::Bool(Path::new(&name).exists()))
+      Ok(Edn::Bool(Path::new(&**name).exists()))
     } else {
       Err(format!("path-exists? expected 1 filename, got {:?}", args))
     }
@@ -54,12 +54,14 @@ pub fn path_exists(args: Vec<Edn>) -> Result<Edn, String> {
 pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
-      let task = fs::read_dir(&name);
+      let task = fs::read_dir(&**name);
       match task {
         Ok(children) => {
           let mut content: Vec<Edn> = vec![];
           for c in children {
-            content.push(Edn::Str(format!("{}", c.unwrap().path().display())));
+            content.push(Edn::Str(
+              format!("{}", c.unwrap().path().display()).into_boxed_str(),
+            ));
           }
           // println!("child dir: {:?}", content);
 

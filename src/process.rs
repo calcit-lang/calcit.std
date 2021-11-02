@@ -12,9 +12,9 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
         for (idx, piece) in ys.iter().enumerate() {
           if let Edn::Str(s) = piece {
             if idx == 0 {
-              cmd = s.to_owned();
+              cmd = (**s).to_owned();
             } else {
-              xs.push(s.to_owned());
+              xs.push((**s).to_owned());
             }
           } else {
             return Err(format!(
@@ -24,11 +24,14 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
           }
         }
 
-        match Command::new(cmd).current_dir(dir).args(&xs).output() {
+        match Command::new(cmd).current_dir(&**dir).args(&xs).output() {
           Ok(t) => {
             let content = String::from_utf8(t.stdout).unwrap();
             let stderr = String::from_utf8(t.stderr).unwrap();
-            Ok(Edn::List(vec![Edn::Str(content), Edn::Str(stderr)]))
+            Ok(Edn::List(vec![
+              Edn::Str(content.into_boxed_str()),
+              Edn::Str(stderr.into_boxed_str()),
+            ]))
           }
           Err(e) => Err(format!("Failed to excute: {}", e)),
         }

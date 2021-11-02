@@ -46,8 +46,8 @@ pub fn re_find(args: Vec<Edn>) -> Result<Edn, String> {
           Ok(p) => {
             let mut matched = p.find_iter(s);
             match matched.next() {
-              Some(v) => Ok(Edn::Str(v.as_str().to_string())),
-              None => Ok(Edn::Str("".to_owned())), // TODO maybe nil
+              Some(v) => Ok(Edn::Str(v.as_str().to_string().into_boxed_str())),
+              None => Ok(Edn::Str("".to_owned().into_boxed_str())), // TODO maybe nil
             }
           }
           Err(e) => Err(format!("re-find failed, {}", e)),
@@ -68,7 +68,7 @@ pub fn re_find_all(args: Vec<Edn>) -> Result<Edn, String> {
         Ok(p) => {
           let mut ys: Vec<Edn> = vec![];
           for v in p.find_iter(s) {
-            ys.push(Edn::Str(v.as_str().to_string()))
+            ys.push(Edn::Str(v.as_str().to_string().into_boxed_str()))
           }
           Ok(Edn::List(ys))
         }
