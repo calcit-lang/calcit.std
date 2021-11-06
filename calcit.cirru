@@ -1649,4 +1649,4 @@
           :data $ {}
   :configs $ {} (:port 6001) (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.6
+    :version |0.0.7

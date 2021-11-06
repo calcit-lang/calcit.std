@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde_json::Value;
 
-use cirru_edn::Edn;
+use cirru_edn::{Edn, EdnKwd};
 
 pub fn json_to_edn(data: &Value) -> Edn {
   match data {
@@ -12,9 +12,9 @@ pub fn json_to_edn(data: &Value) -> Edn {
     Value::String(s) => {
       if s.starts_with(':') {
         // special logic to parse keyword
-        Edn::Keyword(s.strip_prefix(':').unwrap().to_owned())
+        Edn::Keyword(EdnKwd::from(&s.strip_prefix(':').unwrap().to_owned()))
       } else {
-        Edn::Str(s.to_owned())
+        Edn::Str(s.to_owned().into_boxed_str())
       }
     }
     Value::Array(xs) => {
@@ -28,9 +28,9 @@ pub fn json_to_edn(data: &Value) -> Edn {
       let mut ys: HashMap<Edn, Edn> = HashMap::new();
       for (k, v) in xs {
         let key = if k.starts_with(':') {
-          Edn::Keyword(k.strip_prefix(':').unwrap().to_owned())
+          Edn::kwd(k.strip_prefix(':').unwrap())
         } else {
-          Edn::Str(k.to_owned())
+          Edn::Str(k.to_owned().into_boxed_str())
         };
         ys.insert(key, json_to_edn(v));
       }
@@ -48,15 +48,15 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
       Some(v) => Ok(Value::Number(v)),
       None => Err(format!("failed to convert to number: {}", n)),
     },
-    Edn::Symbol(s, ..) => Ok(Value::String(s.to_owned())),
+    Edn::Symbol(s, ..) => Ok(Value::String((*s).to_string())),
     Edn::Keyword(s) => {
       if add_colon {
         Ok(Value::String(format!(":{}", s.to_owned())))
       } else {
-        Ok(Value::String(s.to_owned()))
+        Ok(Value::String((*s.to_str()).to_string()))
       }
     }
-    Edn::Str(s) => Ok(Value::String(s.to_owned())),
+    Edn::Str(s) => Ok(Value::String((*s).to_string())),
     Edn::List(xs) => {
       let mut ys: Vec<Value> = vec![];
       for x in xs {
@@ -69,13 +69,13 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
       for (k, v) in xs {
         match k {
           Edn::Str(s) => {
-            data.insert(s.to_owned(), edn_to_json(v, add_colon)?);
+            data.insert(s.to_string(), edn_to_json(v, add_colon)?);
           }
           Edn::Keyword(s) => {
             if add_colon {
               data.insert(format!(":{}", s.to_owned()), edn_to_json(v, add_colon)?);
             } else {
-              data.insert(s.to_owned(), edn_to_json(v, add_colon)?);
+              data.insert(s.to_string(), edn_to_json(v, add_colon)?);
             }
           }
           a => return Err(format!("expected string/keyword for json keys, got: {}", a)),
@@ -88,7 +88,7 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
       let mut data = serde_json::Map::new();
       for entry in entries {
         data.insert(
-          entry.0.to_owned(),
+          entry.0.to_string(),
           edn_to_json(entry.1.to_owned(), add_colon)?,
         );
       }
@@ -103,7 +103,7 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
 pub fn parse_json(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     match &args[0] {
-      Edn::Str(s) => match serde_json::from_str::<Value>(s.as_str()) {
+      Edn::Str(s) => match serde_json::from_str::<Value>(&s.to_string()) {
         Ok(v) => Ok(json_to_edn(&v)),
         Err(e) => Err(format!("failed to parse JSON: {}", e)),
       },
@@ -121,14 +121,14 @@ pub fn stringify_json(args: Vec<Edn>) -> Result<Edn, String> {
       Edn::Bool(add_colon) => {
         let ret = edn_to_json(args[0].to_owned(), *add_colon)?;
         match serde_json::to_string(&ret) {
-          Ok(s) => Ok(Edn::Str(s.to_owned())),
+          Ok(s) => Ok(Edn::Str(s.to_owned().into_boxed_str())),
           Err(e) => Err(format!("failed to generate string: {}", e)),
         }
       }
       Edn::Nil => {
         let ret = edn_to_json(args[0].to_owned(), false)?;
         match serde_json::to_string(&ret) {
-          Ok(s) => Ok(Edn::Str(s.to_owned())),
+          Ok(s) => Ok(Edn::Str(s.to_owned().into_boxed_str())),
           Err(e) => Err(format!("failed to generate string: {}", e)),
         }
       }

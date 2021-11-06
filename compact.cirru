@@ -2,7 +2,7 @@
 {} (:package |calcit.std)
   :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.6
+    :version |0.0.7
   :files $ {}
     |calcit.std.test.date $ {}
       :ns $ quote

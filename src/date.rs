@@ -38,14 +38,14 @@ pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
           (n.floor() / 1000.0) as i64,
           (n.fract() * 1_000_000.0) as u32,
         );
-        Ok(Edn::Str(time.to_rfc3339()))
+        Ok(Edn::Str(time.to_rfc3339().into_boxed_str()))
       }
       (Edn::Number(n), Edn::Str(f)) => {
         let time = Utc.timestamp(
           (n.floor() / 1000.0) as i64,
           (n.fract() * 1_000_000.0) as u32,
         );
-        Ok(Edn::Str(time.format(f).to_string()))
+        Ok(Edn::Str(time.format(f).to_string().into_boxed_str()))
       }
       (_, _) => Err(format!(
         "format-time expected f64 and string, got: {:?}",
