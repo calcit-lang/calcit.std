@@ -19,5 +19,5 @@ pub use time::{set_interval, set_timeout};
 
 #[no_mangle]
 pub fn abi_version() -> String {
-  String::from("0.0.5")
+  String::from("0.0.6")
 }
