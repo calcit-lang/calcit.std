@@ -1,4 +1,7 @@
+use std::collections::HashMap;
+
 use chrono::{DateTime, TimeZone, Utc};
+use chrono::{Datelike, Timelike};
 use cirru_edn::Edn;
 
 /// calcit represents DateTime in f64
@@ -30,7 +33,6 @@ pub fn now_bang(_args: Vec<Edn>) -> Result<Edn, String> {
 /// nil for no format
 #[no_mangle]
 pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
-  println!("format time: {:?}", args);
   if args.len() == 2 {
     match (&args[0], &args[1]) {
       (Edn::Number(n), Edn::Nil) => {
@@ -54,5 +56,35 @@ pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
     }
   } else {
     Err(format!("format-time expected 2 args, got: {:?}", args))
+  }
+}
+
+/// nil for no format
+#[no_mangle]
+pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
+  if args.len() == 1 {
+    match &args[0] {
+      Edn::Number(n) => {
+        let time = Utc.timestamp(
+          (n.floor() / 1000.0) as i64,
+          (n.fract() * 1_000_000.0) as u32,
+        );
+
+        let mut data: HashMap<Edn, Edn> = HashMap::new();
+        data.insert(Edn::kwd("month"), Edn::Number(time.date().month() as f64));
+        data.insert(Edn::kwd("day"), Edn::Number(time.date().day() as f64));
+        data.insert(Edn::kwd("hour"), Edn::Number(time.hour() as f64));
+        data.insert(Edn::kwd("minute"), Edn::Number(time.minute() as f64));
+        data.insert(Edn::kwd("second"), Edn::Number(time.second() as f64));
+
+        Ok(Edn::Map(data))
+      }
+      _ => Err(format!(
+        "extract-time expected f64 and string, got: {:?}",
+        args
+      )),
+    }
+  } else {
+    Err(format!("extract-time expected 2 args, got: {:?}", args))
   }
 }
