@@ -7,11 +7,11 @@ use std::time;
 pub fn set_timeout(
   args: Vec<Edn>,
   handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
-  finish: Arc<dyn Fn() + Send + Sync + 'static>,
+  finish: Box<dyn FnOnce() + Send + Sync + 'static>,
 ) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Number(n) = args[0] {
-      spawn(move || {
+      let task = spawn(move || {
         sleep(time::Duration::from_millis(n as u64));
 
         if let Err(e) = handler(vec![]) {
@@ -19,6 +19,8 @@ pub fn set_timeout(
         }
         finish();
       });
+
+      task.join().expect("timer task");
 
       Ok(Edn::Nil)
     } else {
@@ -33,16 +35,18 @@ pub fn set_timeout(
 pub fn set_interval(
   args: Vec<Edn>,
   handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
-  _finish: Arc<dyn Fn() + Send + Sync + 'static>,
+  _finish: Box<dyn Fn() + Send + Sync + 'static>,
 ) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Number(n) = args[0] {
-      spawn(move || loop {
+      let task = spawn(move || loop {
         if let Err(e) = handler(vec![]) {
           println!("error for interval: {}", e);
         }
         sleep(time::Duration::from_millis(n as u64));
       });
+
+      task.join().expect("timer task");
 
       Ok(Edn::Nil)
     } else {
