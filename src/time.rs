@@ -7,7 +7,7 @@ use std::time;
 pub fn set_timeout(
   args: Vec<Edn>,
   handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
-  finish: Box<dyn FnOnce() + Send + Sync + 'static>,
+  finish: Arc<dyn Fn() + Send + Sync + 'static>,
 ) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Number(n) = args[0] {
@@ -33,7 +33,7 @@ pub fn set_timeout(
 pub fn set_interval(
   args: Vec<Edn>,
   handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
-  _finish: Box<dyn FnOnce() + Send + Sync + 'static>,
+  _finish: Arc<dyn Fn() + Send + Sync + 'static>,
 ) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Number(n) = args[0] {
