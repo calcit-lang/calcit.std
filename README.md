@@ -16,8 +16,14 @@ Providing:
 ```cirru
 calcit.std.fs/read-file! a
 calcit.std.fs/write-file! a b
+calcit.std.fs/check-write-file! a b
 calcit.std.fs/path-exists? a
-calcit.std.fs/read-dir? a
+calcit.std.fs/read-dir! a
+
+calcit.std.fs/create-dir! path
+calcit.std.fs/create-dir-all! path
+
+calcit.std.fs/rename! from to
 ```
 
 ```cirru
@@ -36,6 +42,9 @@ calcit.std.date/get-time!
 calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
 
 calcit.std.date/format-time 1417176009000 "|%Y-%m-%d %H:%M:%S %z"
+
+calcit.std.date/extract-time (get-time!)
+; {} (:minute 6) (:hour 16) (:month 11) (:second 48) (:day 10)
 ```
 
 ```cirru
@@ -73,6 +82,16 @@ calcit.std.time/set-interval 1000 $ fn ()
 
 ```cirru
 calcit.std.hash/md5 |content
+```
+
+```cirru
+calcit.std.path/join-path & xs
+
+calcit.std.path/path-dirname |a/b/c
+; |a/b
+
+calcit.std.path/path-basename |a/b/c
+; |c
 ```
 
 ### License
