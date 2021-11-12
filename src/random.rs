@@ -87,3 +87,11 @@ pub fn call_nanoid(xs: Vec<Edn>) -> Result<Edn, String> {
     Err(format!("nanoid! expected 2 args, got: {:?}", xs))
   }
 }
+
+// cheap way creating hex color
+#[no_mangle]
+pub fn rand_hex_color(_xs: Vec<Edn>) -> Result<Edn, String> {
+  let mut rng = rand::thread_rng();
+  let y: u32 = rng.gen();
+  Ok(Edn::str(format!("#{:06x}", y >> 8)))
+}
