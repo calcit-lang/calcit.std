@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
-use chrono::{DateTime, TimeZone, Utc};
-use chrono::{Datelike, Timelike};
+use chrono::{DateTime, Datelike, TimeZone, Timelike, Utc};
+use chrono_tz::Asia::Shanghai;
 use cirru_edn::Edn;
 
 /// calcit represents DateTime in f64
@@ -65,17 +65,34 @@ pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     match &args[0] {
       Edn::Number(n) => {
-        let time = Utc.timestamp(
-          (n.floor() / 1000.0) as i64,
-          (n.fract() * 1_000_000.0) as u32,
-        );
+        let time = Utc
+          .timestamp(
+            (n.floor() / 1000.0) as i64,
+            (n.fract() * 1_000_000.0) as u32,
+          )
+          // TODO need to store timezone inside data structure, and use buffer
+          .with_timezone(&Shanghai);
 
         let mut data: HashMap<Edn, Edn> = HashMap::new();
+        data.insert(Edn::kwd("year"), Edn::Number(time.date().year() as f64));
         data.insert(Edn::kwd("month"), Edn::Number(time.date().month() as f64));
+        data.insert(Edn::kwd("month0"), Edn::Number(time.date().month0() as f64));
         data.insert(Edn::kwd("day"), Edn::Number(time.date().day() as f64));
         data.insert(Edn::kwd("hour"), Edn::Number(time.hour() as f64));
         data.insert(Edn::kwd("minute"), Edn::Number(time.minute() as f64));
         data.insert(Edn::kwd("second"), Edn::Number(time.second() as f64));
+        data.insert(
+          Edn::kwd("weekday"),
+          Edn::Number(time.date().weekday().num_days_from_sunday() as f64),
+        );
+        data.insert(
+          Edn::kwd("week"),
+          Edn::Number(time.date().iso_week().week() as f64),
+        );
+        data.insert(
+          Edn::kwd("week0"),
+          Edn::Number(time.date().iso_week().week0() as f64),
+        );
 
         Ok(Edn::Map(data))
       }
