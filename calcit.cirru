@@ -284,6 +284,7 @@
                         |v $ {} (:type :leaf) (:by |u0) (:at 1633344447143) (:text |rand-nth)
                         |x $ {} (:type :leaf) (:by |u0) (:at 1633344451455) (:text |rand-between)
                         |y $ {} (:type :leaf) (:by |u0) (:at 1633344907417) (:text |nanoid!)
+                        |yT $ {} (:type :leaf) (:by |u0) (:at 1636711587670) (:text |rand-hex-color!)
         :configs $ {}
         :defs $ {}
           |main! $ {} (:type :expr) (:by |u0) (:at 1633343514818)
@@ -345,15 +346,21 @@
                         :data $ {}
                           |T $ {} (:type :leaf) (:by |u0) (:at 1633344895870) (:text |nanoid!)
                           |j $ {} (:type :leaf) (:by |u0) (:at 1633343584459) (:text |9)
-              |yyyT $ {} (:type :expr) (:by |u0) (:at 1633343584459)
+              |yyy5 $ {} (:type :expr) (:by |u0) (:at 1636711583228)
                 :data $ {}
-                  |T $ {} (:type :leaf) (:by |u0) (:at 1633343584459) (:text |assert=)
-                  |j $ {} (:type :leaf) (:by |u0) (:at 1633343584459) (:text ||aaaaa)
-                  |r $ {} (:type :expr) (:by |u0) (:at 1633343584459)
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1636711583228) (:text |assert=)
+                  |j $ {} (:type :leaf) (:by |u0) (:at 1636711583228) (:text ||aaaaa)
+                  |r $ {} (:type :expr) (:by |u0) (:at 1636711583228)
                     :data $ {}
-                      |T $ {} (:type :leaf) (:by |u0) (:at 1633344898696) (:text |nanoid!)
-                      |j $ {} (:type :leaf) (:by |u0) (:at 1633343584459) (:text |5)
-                      |r $ {} (:type :leaf) (:by |u0) (:at 1633343584459) (:text ||a)
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1636711583228) (:text |nanoid!)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1636711583228) (:text |5)
+                      |r $ {} (:type :leaf) (:by |u0) (:at 1636711583228) (:text ||a)
+              |yyyD $ {} (:type :expr) (:by |u0) (:at 1636711580034)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1636711580034) (:text |println)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1636711580034)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1636711580034) (:text |rand-hex-color!)
               |yT $ {} (:type :expr) (:by |u0) (:at 1633343563103)
                 :data $ {}
                   |T $ {} (:type :leaf) (:by |u0) (:at 1633345060367) (:text |;)
@@ -1412,6 +1419,20 @@
                           |T $ {} (:type :leaf) (:by |u0) (:at 1633344347956) (:text |&-)
                           |j $ {} (:type :leaf) (:by |u0) (:at 1633344347956) (:text |y)
                           |r $ {} (:type :leaf) (:by |u0) (:at 1633344347956) (:text |x)
+          |rand-hex-color! $ {} (:type :expr) (:by |u0) (:at 1636711454257)
+            :data $ {}
+              |T $ {} (:type :leaf) (:by |u0) (:at 1636711454257) (:text |defn)
+              |j $ {} (:type :leaf) (:by |u0) (:at 1636711454257) (:text |rand-hex-color!)
+              |r $ {} (:type :expr) (:by |u0) (:at 1636711454257)
+                :data $ {}
+              |x $ {} (:type :expr) (:by |u0) (:at 1636711461043)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1636711461043) (:text |&call-dylib-edn)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1636711461043)
+                    :data $ {}
+                      |T $ {} (:type :leaf) (:by |u0) (:at 1636711461043) (:text |get-dylib-path)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1636711461043) (:text "|\"/dylibs/libcalcit_std")
+                  |r $ {} (:type :leaf) (:by |u0) (:at 1636711475178) (:text "|\"rand_hex_color")
         :proc $ {} (:type :expr) (:by |u0) (:at 1633343497577)
           :data $ {}
       |calcit.std.test $ {}
@@ -1902,4 +1923,5 @@
           :data $ {}
   :configs $ {} (:port 6001) (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.10
+    :version |0.0.12
+  :entries $ {}

@@ -70,6 +70,8 @@ calcit.std.rand/rand-between 10 20
 calcit.std.rand/nanoid!
 calcit.std.rand/nanoid! 9
 calcit.std.rand/nanoid! 9 |abcd (; "charset")
+
+calcit.std.rand/rand-hex-color!
 ```
 
 ```cirru

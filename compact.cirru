@@ -2,7 +2,8 @@
 {} (:package |calcit.std)
   :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.10
+    :version |0.0.12
+  :entries $ {}
   :files $ {}
     |calcit.std.test.date $ {}
       :ns $ quote
@@ -48,7 +49,7 @@
     |calcit.std.test.rand $ {}
       :ns $ quote
         ns calcit.std.test.rand $ :require
-          calcit.std.rand :refer $ rand rand-int rand-shift rand-nth rand-between nanoid!
+          calcit.std.rand :refer $ rand rand-int rand-shift rand-nth rand-between nanoid! rand-hex-color!
       :defs $ {}
         |main! $ quote
           defn main! () (println "\"%%%%%% test random")
@@ -74,6 +75,7 @@
             println "\"%%%% test id"
             assert= 9 $ count (nanoid! 9)
             assert= |aaaaa $ nanoid! 5 |a
+            println $ rand-hex-color!
     |calcit.std.regex $ {}
       :ns $ quote
         ns calcit.std.regex $ :require
@@ -231,6 +233,8 @@
         |rand-between $ quote
           defn rand-between (x y)
             &+ x $ rand (&- y x)
+        |rand-hex-color! $ quote
+          defn rand-hex-color! () $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"rand_hex_color"
     |calcit.std.test $ {}
       :ns $ quote
         ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.regex :as regex) (calcit.std.test.json :as json) (calcit.std.test.rand :as random)
