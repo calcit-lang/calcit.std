@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use chrono::{DateTime, Datelike, TimeZone, Timelike, Utc};
+use chrono::{DateTime, Datelike, Local, LocalResult, NaiveDate, TimeZone, Timelike, Utc, Weekday};
 use chrono_tz::Asia::Shanghai;
 use cirru_edn::Edn;
 
@@ -103,5 +103,77 @@ pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
     }
   } else {
     Err(format!("extract-time expected 2 args, got: {:?}", args))
+  }
+}
+
+/// create date from year/month/day
+#[no_mangle]
+pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
+  if args.len() == 3 {
+    match (&args[0], &args[1], &args[2]) {
+      (Edn::Number(y), Edn::Number(m), Edn::Number(d)) => {
+        // from local time
+        match Local.from_local_datetime(
+          &NaiveDate::from_ymd(*y as i32, *m as u32, *d as u32).and_hms(0, 0, 0),
+        ) {
+          LocalResult::None => Ok(Edn::List(vec![Edn::kwd("none")])),
+          LocalResult::Single(d) => Ok(Edn::List(vec![
+            Edn::kwd("single"),
+            Edn::Number(d.timestamp_millis() as f64),
+          ])),
+          LocalResult::Ambiguous(d, d2) => Ok(Edn::List(vec![
+            Edn::kwd("single"),
+            Edn::Number(d.timestamp_millis() as f64),
+            Edn::Number(d2.timestamp_millis() as f64),
+          ])),
+        }
+      }
+      (a, b, c) => Err(format!("from-ymd expected 2 args, got: {} {} {}", a, b, c)),
+    }
+  } else {
+    Err(format!("from-ymd expected 3 args, got: {:?}", args))
+  }
+}
+
+/// create date from year/week/day
+#[no_mangle]
+pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
+  if args.len() == 3 {
+    match (&args[0], &args[1], &args[2]) {
+      (Edn::Number(y), Edn::Number(w), Edn::Number(d)) => {
+        let weekday = match *d as u8 {
+          0 => Weekday::Sun,
+          1 => Weekday::Mon,
+          2 => Weekday::Tue,
+          3 => Weekday::Wed,
+          4 => Weekday::Thu,
+          5 => Weekday::Fri,
+          6 => Weekday::Sat,
+          _ => {
+            return Ok(Edn::List(vec![
+              Edn::kwd("err"),
+              Edn::str(format!("invalid digit for weekday: {}", d)),
+            ]))
+          }
+        };
+        match Local.from_local_datetime(
+          &NaiveDate::from_isoywd(*y as i32, *w as u32, weekday).and_hms(0, 0, 0),
+        ) {
+          LocalResult::None => Ok(Edn::List(vec![Edn::kwd("none")])),
+          LocalResult::Single(d) => Ok(Edn::List(vec![
+            Edn::kwd("single"),
+            Edn::Number(d.timestamp_millis() as f64),
+          ])),
+          LocalResult::Ambiguous(d, d2) => Ok(Edn::List(vec![
+            Edn::kwd("single"),
+            Edn::Number(d.timestamp_millis() as f64),
+            Edn::Number(d2.timestamp_millis() as f64),
+          ])),
+        }
+      }
+      (a, b, c) => Err(format!("from-ymd expected 2 args, got: {} {} {}", a, b, c)),
+    }
+  } else {
+    Err(format!("from-ymd expected 3 args, got: {:?}", args))
   }
 }

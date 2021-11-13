@@ -45,6 +45,11 @@ calcit.std.date/format-time 1417176009000 "|%Y-%m-%d %H:%M:%S %z"
 
 calcit.std.date/extract-time (get-time!)
 ; {} (:minute 6) (:hour 16) (:month 11) (:second 48) (:day 10)
+
+calcit.std.date/from-ymd 2021 11 11
+; ([] :single 1636560000000)
+calcit.std.date/from-ywd 2021 45 6)
+; ([] :single 1636732800000)
 ```
 
 ```cirru

@@ -2,13 +2,13 @@
 {} (:package |calcit.std)
   :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.12
+    :version |0.0.13
   :entries $ {}
   :files $ {}
     |calcit.std.test.date $ {}
       :ns $ quote
         ns calcit.std.test.date $ :require
-          calcit.std.date :refer $ parse-time format-time get-time! extract-time
+          calcit.std.date :refer $ parse-time format-time get-time! extract-time from-ymd from-ywd
       :defs $ {}
         |main! $ quote
           defn main! () (println "\"%%%% test date")
@@ -17,6 +17,8 @@
             assert= 1417176009000 $ parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
             assert= "|2014-11-28 12:00:09 +0000" $ format-time 1417176009000 "|%Y-%m-%d %H:%M:%S %z"
             w-log $ extract-time (get-time!)
+            w-log $ from-ymd 2021 11 11
+            w-log $ from-ywd 2021 45 6
     |calcit.std.test.json $ {}
       :ns $ quote
         ns calcit.std.test.json $ :require
@@ -171,6 +173,12 @@
         |format-time $ quote
           defn format-time (time ? format)
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"format_time" time format
+        |from-ymd $ quote
+          defn from-ymd (y m d)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ymd" y m d
+        |from-ywd $ quote
+          defn from-ywd (y w d)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ywd" y w d
     |calcit.std.hash $ {}
       :ns $ quote
         ns calcit.std.hash $ :require
