@@ -8,16 +8,14 @@ mod json;
 mod path;
 mod process;
 mod random;
-mod regexp;
 mod time;
 
-pub use date::{format_time, now_bang, parse_time};
+pub use date::{add_duration, format_time, now_bang, parse_time};
 pub use fs::{path_exists, read_dir, read_file, write_file};
 pub use json::{parse_json, stringify_json};
 pub use path::join_path;
 pub use process::execute_command;
 pub use random::{call_nanoid, rand, rand_hex_color, rand_int};
-pub use regexp::{re_find, re_find_all, re_find_index, re_matches};
 pub use time::{set_interval, set_timeout};
 
 #[no_mangle]

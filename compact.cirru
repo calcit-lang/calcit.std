@@ -2,23 +2,35 @@
 {} (:package |calcit.std)
   :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.13
+    :version |0.0.14
   :entries $ {}
   :files $ {}
     |calcit.std.test.date $ {}
       :ns $ quote
         ns calcit.std.test.date $ :require
-          calcit.std.date :refer $ parse-time format-time get-time! extract-time from-ymd from-ywd
+          calcit.std.date :refer $ parse-time format-time get-time! extract-time from-ymd from-ywd add-duration Date get-timestamp
       :defs $ {}
         |main! $ quote
           defn main! () (println "\"%%%% test date")
             println $ get-time!
             echo |time: $ format-time (get-time!) "|%Y-%m-%d %H:%M:%S %z"
-            assert= 1417176009000 $ parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
-            assert= "|2014-11-28 12:00:09 +0000" $ format-time 1417176009000 "|%Y-%m-%d %H:%M:%S %z"
+            assert= 1417176009000 $ get-timestamp (parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z")
+            ; assert= "|2014-11-28 12:00:09 +0000" $ format-time (:: Date 1417176009000) "|%Y-%m-%d %H:%M:%S %z"
             w-log $ extract-time (get-time!)
             w-log $ from-ymd 2021 11 11
             w-log $ from-ywd 2021 45 6
+            let
+                d $ from-ymd 2021 11 11
+              do (println "\"single....")
+                ; assert= "\"2021-11-12" $ -> d (.add 1 :days) (format-time "\"%Y-%m-%d")
+                ; assert= "\"2021-11-11 01-00" $ -> d (.add 1 :hours) (format-time "\"%Y-%m-%d %H-%M")
+                ; assert= "\"2021-11-11 00-01" $ -> d (.add 1 :minutes) (format-time "\"%Y-%m-%d %H-%M")
+                ; assert= "\"2021-11-10 16-00" $ -> d (.add -8 :hours) (format-time "\"%Y-%m-%d %H-%M")
+            println $ ->
+                :now Date
+              .add 1 :hours
+              .add 2 :minutes
+              .format "\"%Y-%m-%d %H-%M"
     |calcit.std.test.json $ {}
       :ns $ quote
         ns calcit.std.test.json $ :require
@@ -78,24 +90,6 @@
             assert= 9 $ count (nanoid! 9)
             assert= |aaaaa $ nanoid! 5 |a
             println $ rand-hex-color!
-    |calcit.std.regex $ {}
-      :ns $ quote
-        ns calcit.std.regex $ :require
-          calcit.std.$meta :refer $ calcit-dirname
-          calcit.std.util :refer $ get-dylib-path
-      :defs $ {}
-        |re-find-all $ quote
-          defn re-find-all (s pattern)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_find_all" s pattern
-        |re-matches $ quote
-          defn re-matches (s pattern)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_matches" s pattern
-        |re-find-index $ quote
-          defn re-find-index (s pattern)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_find_index" s pattern
-        |re-find $ quote
-          defn re-find (s pattern)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_find" s pattern
     |calcit.std.process $ {}
       :ns $ quote
         ns calcit.std.process $ :require
@@ -139,46 +133,50 @@
         |check-write-file! $ quote
           defn check-write-file! (name content)
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"check_write_file" name content
-    |calcit.std.test.regex $ {}
-      :ns $ quote
-        ns calcit.std.test.regex $ :require
-          calcit.std.regex :refer $ re-matches re-find-index re-find re-find-all
-      :defs $ {}
-        |main! $ quote
-          defn main! () (println "\"%%%% test for regex") (println "|Test regular expression")
-            assert= true $ re-matches |2 |\d
-            assert= true $ re-matches |23 |\d+
-            assert= false $ re-matches |a |\d
-            assert= "\"4" $ re-find |a4 |\d
-            assert= 1 $ re-find-index |a1 |\d
-            assert= -1 $ re-find-index |aa |\d
-            assert= ([] |1 |2 |3) (re-find-all |123 |\d)
-            assert= ([] |123) (re-find-all |123 |\d+)
-            assert= ([] |1 |2 |3) (re-find-all |1a2a3 |\d+)
-            assert= ([] |1 |2 |34) (re-find-all |1a2a34 |\d+)
     |calcit.std.date $ {}
       :ns $ quote
         ns calcit.std.date $ :require
           calcit.std.$meta :refer $ calcit-dirname
           calcit.std.util :refer $ get-dylib-path
       :defs $ {}
+        |add-duration $ quote
+          defn add-duration (date n k)
+            :: Date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"add_duration" (nth date 1) n k
+        |get-timestamp $ quote
+          defn get-timestamp (date)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"get_timestamp" $ nth date 1
         |extract-time $ quote
           defn extract-time (x)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"extract_time" x
-        |get-time! $ quote
-          defn get-time! () $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"now_bang"
-        |parse-time $ quote
-          defn parse-time (time format)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_time" time format
-        |format-time $ quote
-          defn format-time (time ? format)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"format_time" time format
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"extract_time" $ nth x 1
+        |Date $ quote
+          defrecord! Date (:now get-time!) (:parse parse-time) (:timestamp get-timestamp) (:add add-duration) (:format format-time) (:from-ymd from-ymd) (:from-ywd from-ywd) (:extract extract-time)
         |from-ymd $ quote
           defn from-ymd (y m d)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ymd" y m d
+            key-match
+              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ymd" y m d
+              (:single d) (:: Date d)
+              (:ambiguous a b)
+                raise $ str "\"ambiguous: " a "\" " b
+              (:none) (raise "\"cannot construct")
+              _ $ raise "\"unreachable!"
         |from-ywd $ quote
           defn from-ywd (y w d)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ywd" y w d
+            key-match
+              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ywd" y w d
+              (:single d) (:: Date d)
+              (:ambiguous a b)
+                raise $ str "\"ambiguous: " a "\" " b
+              (:none) (raise "\"cannot construct")
+              _ $ raise "\"unreachable!"
+        |get-time! $ quote
+          defn get-time! () $ :: Date
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"now_bang"
+        |parse-time $ quote
+          defn parse-time (time format)
+            :: Date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_time" time format
+        |format-time $ quote
+          defn format-time (time ? format)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"format_time" (nth time 1) format
     |calcit.std.hash $ {}
       :ns $ quote
         ns calcit.std.hash $ :require
@@ -245,14 +243,14 @@
           defn rand-hex-color! () $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"rand_hex_color"
     |calcit.std.test $ {}
       :ns $ quote
-        ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.regex :as regex) (calcit.std.test.json :as json) (calcit.std.test.rand :as random)
+        ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.json :as json) (calcit.std.test.rand :as random)
           calcit.std.process :refer $ on-ctrl-c
           calcit.std.time :refer $ set-timeout set-interval
           calcit.std.hash :refer $ md5
           calcit.std.path :refer $ join-path path-dirname path-basename
       :defs $ {}
         |run-tests $ quote
-          defn run-tests () (fs/main!) (json/main!) (date/main!) (regex/main!) (random/main!) (test-path)
+          defn run-tests () (fs/main!) (json/main!) (date/main!) (random/main!) (test-path)
         |test-path $ quote
           defn test-path ()
             assert= |a/b $ join-path |a |b

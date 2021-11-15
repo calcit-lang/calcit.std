@@ -36,27 +36,28 @@ calcit.std.json/stringify-json data true
 calcit.std.json/parse-json "|{\"a\": [1, 2], \":b\": 3}"
 ```
 
+Date object is wrapped as `(:: Date <timestamp>)`:
+
 ```cirru
+calcit.std.date/Date
+; virtual data for Date
+
 calcit.std.date/get-time!
+; (:: Date ...)
 
 calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
 
-calcit.std.date/format-time 1417176009000 "|%Y-%m-%d %H:%M:%S %z"
+calcit.std.date/format-time (:: Date 1417176009000) "|%Y-%m-%d %H:%M:%S %z"
 
 calcit.std.date/extract-time (get-time!)
 ; {} (:minute 6) (:hour 16) (:month 11) (:second 48) (:day 10)
 
 calcit.std.date/from-ymd 2021 11 11
-; ([] :single 1636560000000)
+; (:: Date ([] :single 1636560000000))
 calcit.std.date/from-ywd 2021 45 6)
-; ([] :single 1636732800000)
-```
+; (:: Date ([] :single 1636732800000))
 
-```cirru
-calcit.std.regex/re-matches |2 |\d
-calcit.std.regex/re-find |a4 |\d
-calcit.std.regex/re-find-index |a1 |\d
-calcit.std.regex/re-find-all |123 |\d+
+calcit.std.date/add-duration time 4 :days
 ```
 
 ```cirru
