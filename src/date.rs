@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 use chrono::{DateTime, Datelike, Local, LocalResult, NaiveDate, TimeZone, Timelike, Utc, Weekday};
-use chrono_tz::Asia::Shanghai;
 use cirru_edn::Edn;
 
 /// calcit represents DateTime in f64
@@ -65,13 +64,10 @@ pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     match &args[0] {
       Edn::Number(n) => {
-        let time = Utc
-          .timestamp(
-            (n.floor() / 1000.0) as i64,
-            (n.fract() * 1_000_000.0) as u32,
-          )
-          // TODO need to store timezone inside data structure, and use buffer
-          .with_timezone(&Shanghai);
+        let time = Local.timestamp(
+          (n.floor() / 1000.0) as i64,
+          (n.fract() * 1_000_000.0) as u32,
+        );
 
         let mut data: HashMap<Edn, Edn> = HashMap::new();
         data.insert(Edn::kwd("year"), Edn::Number(time.date().year() as f64));

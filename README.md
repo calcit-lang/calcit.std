@@ -53,13 +53,6 @@ calcit.std.date/from-ywd 2021 45 6)
 ```
 
 ```cirru
-calcit.std.regex/re-matches |2 |\d
-calcit.std.regex/re-find |a4 |\d
-calcit.std.regex/re-find-index |a1 |\d
-calcit.std.regex/re-find-all |123 |\d+
-```
-
-```cirru
 calcit.std.rand/rand
 calcit.std.rand/rand 10
 calcit.std.rand/rand 10 100 (; "from 10 to 100")

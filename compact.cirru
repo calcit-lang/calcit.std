@@ -78,24 +78,6 @@
             assert= 9 $ count (nanoid! 9)
             assert= |aaaaa $ nanoid! 5 |a
             println $ rand-hex-color!
-    |calcit.std.regex $ {}
-      :ns $ quote
-        ns calcit.std.regex $ :require
-          calcit.std.$meta :refer $ calcit-dirname
-          calcit.std.util :refer $ get-dylib-path
-      :defs $ {}
-        |re-find-all $ quote
-          defn re-find-all (s pattern)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_find_all" s pattern
-        |re-matches $ quote
-          defn re-matches (s pattern)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_matches" s pattern
-        |re-find-index $ quote
-          defn re-find-index (s pattern)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_find_index" s pattern
-        |re-find $ quote
-          defn re-find (s pattern)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"re_find" s pattern
     |calcit.std.process $ {}
       :ns $ quote
         ns calcit.std.process $ :require
@@ -139,23 +121,6 @@
         |check-write-file! $ quote
           defn check-write-file! (name content)
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"check_write_file" name content
-    |calcit.std.test.regex $ {}
-      :ns $ quote
-        ns calcit.std.test.regex $ :require
-          calcit.std.regex :refer $ re-matches re-find-index re-find re-find-all
-      :defs $ {}
-        |main! $ quote
-          defn main! () (println "\"%%%% test for regex") (println "|Test regular expression")
-            assert= true $ re-matches |2 |\d
-            assert= true $ re-matches |23 |\d+
-            assert= false $ re-matches |a |\d
-            assert= "\"4" $ re-find |a4 |\d
-            assert= 1 $ re-find-index |a1 |\d
-            assert= -1 $ re-find-index |aa |\d
-            assert= ([] |1 |2 |3) (re-find-all |123 |\d)
-            assert= ([] |123) (re-find-all |123 |\d+)
-            assert= ([] |1 |2 |3) (re-find-all |1a2a3 |\d+)
-            assert= ([] |1 |2 |34) (re-find-all |1a2a34 |\d+)
     |calcit.std.date $ {}
       :ns $ quote
         ns calcit.std.date $ :require
@@ -245,14 +210,14 @@
           defn rand-hex-color! () $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"rand_hex_color"
     |calcit.std.test $ {}
       :ns $ quote
-        ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.regex :as regex) (calcit.std.test.json :as json) (calcit.std.test.rand :as random)
+        ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.json :as json) (calcit.std.test.rand :as random)
           calcit.std.process :refer $ on-ctrl-c
           calcit.std.time :refer $ set-timeout set-interval
           calcit.std.hash :refer $ md5
           calcit.std.path :refer $ join-path path-dirname path-basename
       :defs $ {}
         |run-tests $ quote
-          defn run-tests () (fs/main!) (json/main!) (date/main!) (regex/main!) (random/main!) (test-path)
+          defn run-tests () (fs/main!) (json/main!) (date/main!) (random/main!) (test-path)
         |test-path $ quote
           defn test-path ()
             assert= |a/b $ join-path |a |b
