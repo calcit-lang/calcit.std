@@ -8,17 +8,29 @@
     |calcit.std.test.date $ {}
       :ns $ quote
         ns calcit.std.test.date $ :require
-          calcit.std.date :refer $ parse-time format-time get-time! extract-time from-ymd from-ywd
+          calcit.std.date :refer $ parse-time format-time get-time! extract-time from-ymd from-ywd add-duration Date get-timestamp
       :defs $ {}
         |main! $ quote
           defn main! () (println "\"%%%% test date")
             println $ get-time!
             echo |time: $ format-time (get-time!) "|%Y-%m-%d %H:%M:%S %z"
-            assert= 1417176009000 $ parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
-            assert= "|2014-11-28 12:00:09 +0000" $ format-time 1417176009000 "|%Y-%m-%d %H:%M:%S %z"
+            assert= 1417176009000 $ get-timestamp (parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z")
+            ; assert= "|2014-11-28 12:00:09 +0000" $ format-time (:: Date 1417176009000) "|%Y-%m-%d %H:%M:%S %z"
             w-log $ extract-time (get-time!)
             w-log $ from-ymd 2021 11 11
             w-log $ from-ywd 2021 45 6
+            let
+                d $ from-ymd 2021 11 11
+              do (println "\"single....")
+                ; assert= "\"2021-11-12" $ -> d (.add 1 :days) (format-time "\"%Y-%m-%d")
+                ; assert= "\"2021-11-11 01-00" $ -> d (.add 1 :hours) (format-time "\"%Y-%m-%d %H-%M")
+                ; assert= "\"2021-11-11 00-01" $ -> d (.add 1 :minutes) (format-time "\"%Y-%m-%d %H-%M")
+                ; assert= "\"2021-11-10 16-00" $ -> d (.add -8 :hours) (format-time "\"%Y-%m-%d %H-%M")
+            println $ ->
+                :now Date
+              .add 1 :hours
+              .add 2 :minutes
+              .format "\"%Y-%m-%d %H-%M"
     |calcit.std.test.json $ {}
       :ns $ quote
         ns calcit.std.test.json $ :require
@@ -127,23 +139,44 @@
           calcit.std.$meta :refer $ calcit-dirname
           calcit.std.util :refer $ get-dylib-path
       :defs $ {}
+        |add-duration $ quote
+          defn add-duration (date n k)
+            :: Date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"add_duration" (nth date 1) n k
+        |get-timestamp $ quote
+          defn get-timestamp (date)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"get_timestamp" $ nth date 1
         |extract-time $ quote
           defn extract-time (x)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"extract_time" x
-        |get-time! $ quote
-          defn get-time! () $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"now_bang"
-        |parse-time $ quote
-          defn parse-time (time format)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_time" time format
-        |format-time $ quote
-          defn format-time (time ? format)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"format_time" time format
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"extract_time" $ nth x 1
+        |Date $ quote
+          defrecord! Date (:now get-time!) (:parse parse-time) (:timestamp get-timestamp) (:add add-duration) (:format format-time) (:from-ymd from-ymd) (:from-ywd from-ywd) (:extract extract-time)
         |from-ymd $ quote
           defn from-ymd (y m d)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ymd" y m d
+            key-match
+              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ymd" y m d
+              (:single d) (:: Date d)
+              (:ambiguous a b)
+                raise $ str "\"ambiguous: " a "\" " b
+              (:none) (raise "\"cannot construct")
+              _ $ raise "\"unreachable!"
         |from-ywd $ quote
           defn from-ywd (y w d)
-            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ywd" y w d
+            key-match
+              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ywd" y w d
+              (:single d) (:: Date d)
+              (:ambiguous a b)
+                raise $ str "\"ambiguous: " a "\" " b
+              (:none) (raise "\"cannot construct")
+              _ $ raise "\"unreachable!"
+        |get-time! $ quote
+          defn get-time! () $ :: Date
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"now_bang"
+        |parse-time $ quote
+          defn parse-time (time format)
+            :: Date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_time" time format
+        |format-time $ quote
+          defn format-time (time ? format)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"format_time" (nth time 1) format
     |calcit.std.hash $ {}
       :ns $ quote
         ns calcit.std.hash $ :require

@@ -10,7 +10,7 @@ mod process;
 mod random;
 mod time;
 
-pub use date::{format_time, now_bang, parse_time};
+pub use date::{add_duration, format_time, now_bang, parse_time};
 pub use fs::{path_exists, read_dir, read_file, write_file};
 pub use json::{parse_json, stringify_json};
 pub use path::join_path;
