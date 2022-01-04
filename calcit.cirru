@@ -58,6 +58,19 @@
                       |j $ {} (:type :leaf) (:by |u0) (:at 1636792913348) (:text |2021)
                       |r $ {} (:type :leaf) (:by |u0) (:at 1636793165469) (:text |45)
                       |v $ {} (:type :leaf) (:by |u0) (:at 1636793961759) (:text |6)
+              |yu $ {} (:type :expr) (:by |u0) (:at 1641266583675)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1641266583675) (:text |w-log)
+                  |j $ {} (:type :expr) (:by |u0) (:at 1641266611249)
+                    :data $ {}
+                      |T $ {} (:type :expr) (:by |u0) (:at 1641266583675)
+                        :data $ {}
+                          |T $ {} (:type :leaf) (:by |u0) (:at 1641266583675) (:text |from-ywd)
+                          |j $ {} (:type :leaf) (:by |u0) (:at 1641266583675) (:text |2022)
+                          |r $ {} (:type :leaf) (:by |u0) (:at 1641267566820) (:text |1)
+                          |v $ {} (:type :leaf) (:by |u0) (:at 1641267569648) (:text |2)
+                      |D $ {} (:type :leaf) (:by |u0) (:at 1641266620376) (:text |.format)
+                      |j $ {} (:type :leaf) (:by |u0) (:at 1641266622730) (:text "|\"%Y-%m-%d %H-%M")
               |yv $ {} (:type :expr) (:by |u0) (:at 1636966457977)
                 :data $ {}
                   |T $ {} (:type :expr) (:by |u0) (:at 1636966575165)
@@ -228,6 +241,15 @@
                           |L $ {} (:type :leaf) (:by |u0) (:at 1636967840920) (:text |Date)
                       |r $ {} (:type :leaf) (:by |u0) (:at 1633181525316) (:text "||%Y-%m-%d %H:%M:%S %z")
                   |D $ {} (:type :leaf) (:by |u0) (:at 1636966386825) (:text |;)
+          |reload! $ {} (:type :expr) (:by |u0) (:at 1641266526980)
+            :data $ {}
+              |T $ {} (:type :leaf) (:by |u0) (:at 1641266526980) (:text |defn)
+              |j $ {} (:type :leaf) (:by |u0) (:at 1641266526980) (:text |reload!)
+              |r $ {} (:type :expr) (:by |u0) (:at 1641266526980)
+                :data $ {}
+              |v $ {} (:type :expr) (:by |u0) (:at 1641266529182)
+                :data $ {}
+                  |T $ {} (:type :leaf) (:by |u0) (:at 1641266530491) (:text |main!)
         :proc $ {} (:type :expr) (:by |u0) (:at 1633181502356)
           :data $ {}
       |calcit.std.test.json $ {}
@@ -2057,5 +2079,5 @@
           :data $ {}
   :configs $ {} (:port 6001) (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.14
+    :version |0.0.15
   :entries $ {}

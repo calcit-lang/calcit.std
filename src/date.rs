@@ -168,25 +168,29 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
             ]))
           }
         };
-        match Local.from_local_datetime(
-          &NaiveDate::from_isoywd(*y as i32, *w as u32, weekday).and_hms(0, 0, 0),
-        ) {
-          LocalResult::None => Ok(Edn::List(vec![Edn::kwd("none")])),
-          LocalResult::Single(d) => Ok(Edn::List(vec![
-            Edn::kwd("single"),
-            Edn::Number(d.timestamp_millis() as f64),
-          ])),
-          LocalResult::Ambiguous(d, d2) => Ok(Edn::List(vec![
-            Edn::kwd("single"),
-            Edn::Number(d.timestamp_millis() as f64),
-            Edn::Number(d2.timestamp_millis() as f64),
-          ])),
+        match NaiveDate::from_isoywd_opt(*y as i32, *w as u32, weekday) {
+          Some(time) => match Local.from_local_datetime(&time.and_hms(0, 0, 0)) {
+            LocalResult::None => Ok(Edn::List(vec![Edn::kwd("none")])),
+            LocalResult::Single(d) => Ok(Edn::List(vec![
+              Edn::kwd("single"),
+              Edn::Number(d.timestamp_millis() as f64),
+            ])),
+            LocalResult::Ambiguous(d, d2) => Ok(Edn::List(vec![
+              Edn::kwd("single"),
+              Edn::Number(d.timestamp_millis() as f64),
+              Edn::Number(d2.timestamp_millis() as f64),
+            ])),
+          },
+          None => Err(format!(
+            "from-ywd got invalid args: {} {} {}",
+            y, w, weekday
+          )),
         }
       }
-      (a, b, c) => Err(format!("from-ymd expected 2 args, got: {} {} {}", a, b, c)),
+      (a, b, c) => Err(format!("from-ywd expected 3 args, got: {} {} {}", a, b, c)),
     }
   } else {
-    Err(format!("from-ymd expected 3 args, got: {:?}", args))
+    Err(format!("from-ywd expected 3 args, got: {:?}", args))
   }
 }
 
