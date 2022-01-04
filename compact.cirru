@@ -2,7 +2,7 @@
 {} (:package |calcit.std)
   :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!)
     :modules $ []
-    :version |0.0.14
+    :version |0.0.15
   :entries $ {}
   :files $ {}
     |calcit.std.test.date $ {}
@@ -19,6 +19,7 @@
             w-log $ extract-time (get-time!)
             w-log $ from-ymd 2021 11 11
             w-log $ from-ywd 2021 45 6
+            w-log $ .format (from-ywd 2022 1 2) "\"%Y-%m-%d %H-%M"
             let
                 d $ from-ymd 2021 11 11
               do (println "\"single....")
@@ -31,6 +32,8 @@
               .add 1 :hours
               .add 2 :minutes
               .format "\"%Y-%m-%d %H-%M"
+        |reload! $ quote
+          defn reload! () $ main!
     |calcit.std.test.json $ {}
       :ns $ quote
         ns calcit.std.test.json $ :require
