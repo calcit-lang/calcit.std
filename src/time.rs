@@ -15,7 +15,7 @@ pub fn set_timeout(
         sleep(time::Duration::from_millis(n as u64));
 
         if let Err(e) = handler(vec![]) {
-          println!("error for timeout: {}", e);
+          println!("error for timeout: {e}");
         }
         finish();
       });
@@ -24,10 +24,10 @@ pub fn set_timeout(
 
       Ok(Edn::Nil)
     } else {
-      Err(format!("set-timeout expected 1 number {:?}", args))
+      Err(format!("set-timeout expected 1 number {args:?}"))
     }
   } else {
-    Err(format!("set-timeout expected 1 argument {:?}", args))
+    Err(format!("set-timeout expected 1 argument {args:?}"))
   }
 }
 
@@ -41,7 +41,7 @@ pub fn set_interval(
     if let Edn::Number(n) = args[0] {
       let task = spawn(move || loop {
         if let Err(e) = handler(vec![]) {
-          println!("error for interval: {}", e);
+          println!("error for interval: {e}");
         }
         sleep(time::Duration::from_millis(n as u64));
       });
@@ -50,9 +50,9 @@ pub fn set_interval(
 
       Ok(Edn::Nil)
     } else {
-      Err(format!("set-interval expected 1 number {:?}", args))
+      Err(format!("set-interval expected 1 number {args:?}"))
     }
   } else {
-    Err(format!("set-interval expected 1 argument {:?}", args))
+    Err(format!("set-interval expected 1 argument {args:?}"))
   }
 }

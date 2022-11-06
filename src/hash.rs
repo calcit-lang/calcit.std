@@ -11,6 +11,6 @@ pub fn md5(args: Vec<Edn>) -> Result<Edn, String> {
       Err(format!("md5 expected a string, {}", &args[0]))
     }
   } else {
-    Err(format!("md5 expected 1 arguement, got: {:?}", args))
+    Err(format!("md5 expected 1 arguement, got: {args:?}"))
   }
 }

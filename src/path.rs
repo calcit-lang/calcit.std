@@ -20,7 +20,7 @@ pub fn join_path(args: Vec<Edn>) -> Result<Edn, String> {
           buf = buf.join(PathBuf::from(&*s));
         }
       } else {
-        return Err(format!("expected string path: {}", p));
+        return Err(format!("expected string path: {p}"));
       }
     }
     Ok(Edn::str(buf.display().to_string()))
@@ -40,7 +40,7 @@ pub fn path_dirname(args: Vec<Edn>) -> Result<Edn, String> {
       Err(format!("path-dirname expected 1 path, got: {}", args[0]))
     }
   } else {
-    Err(format!("path-dirname expected 1 arg, got: {:?}", args))
+    Err(format!("path-dirname expected 1 arg, got: {args:?}"))
   }
 }
 
@@ -57,6 +57,6 @@ pub fn path_basename(args: Vec<Edn>) -> Result<Edn, String> {
       Err(format!("path-basename expected 1 path, got: {}", args[0]))
     }
   } else {
-    Err(format!("path-basename expected 1 arg, got: {:?}", args))
+    Err(format!("path-basename expected 1 arg, got: {args:?}"))
   }
 }

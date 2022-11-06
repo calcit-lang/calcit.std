@@ -19,10 +19,10 @@ pub fn rand(xs: Vec<Edn>) -> Result<Edn, String> {
 
         Ok(Edn::Number(from + rand_number(delta)))
       }
-      (a, b) => Err(format!("rand expected 2 numbers: {:?} {:?}", a, b)),
+      (a, b) => Err(format!("rand expected 2 numbers: {a:?} {b:?}")),
     }
   } else {
-    Err(format!("rand expected 2 numbers: {:?}", xs))
+    Err(format!("rand expected 2 numbers: {xs:?}"))
   }
 }
 
@@ -37,10 +37,10 @@ pub fn rand_int(xs: Vec<Edn>) -> Result<Edn, String> {
 
         Ok(Edn::Number((from + rand_number(delta)).floor()))
       }
-      (a, b) => Err(format!("rand-int expected 2 numbers: {:?} {:?}", a, b)),
+      (a, b) => Err(format!("rand-int expected 2 numbers: {a:?} {b:?}")),
     }
   } else {
-    Err(format!("rand-int expected 2 arguments, got: {:?}", xs))
+    Err(format!("rand-int expected 2 arguments, got: {xs:?}"))
   }
 }
 
@@ -49,10 +49,10 @@ pub fn f64_to_usize(f: f64) -> Result<usize, String> {
     if f >= 0.0 {
       Ok(f as usize)
     } else {
-      Err(format!("usize expected a positive number, but got: {}", f))
+      Err(format!("usize expected a positive number, but got: {f}"))
     }
   } else {
-    Err(format!("cannot extract usize from float: {}", f))
+    Err(format!("cannot extract usize from float: {f}"))
   }
 }
 
@@ -65,7 +65,7 @@ pub fn call_nanoid(xs: Vec<Edn>) -> Result<Edn, String> {
         Err(e) => return Err(e),
       },
       Edn::Nil => None, // nanoid defaults to 21
-      a => return Err(format!("expected usize, got: {}", a)),
+      a => return Err(format!("expected usize, got: {a}")),
     };
 
     match (size, &xs[1]) {
@@ -84,7 +84,7 @@ pub fn call_nanoid(xs: Vec<Edn>) -> Result<Edn, String> {
       )),
     }
   } else {
-    Err(format!("nanoid! expected 2 args, got: {:?}", xs))
+    Err(format!("nanoid! expected 2 args, got: {xs:?}"))
   }
 }
 
