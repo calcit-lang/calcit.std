@@ -12,7 +12,7 @@ pub fn json_to_edn(data: &Value) -> Edn {
     Value::String(s) => {
       if s.starts_with(':') {
         // special logic to parse keyword
-        Edn::Keyword(EdnKwd::from(&s.strip_prefix(':').unwrap().to_owned()))
+        Edn::Keyword(EdnKwd::new(s.strip_prefix(':').unwrap()))
       } else {
         Edn::Str(s.to_owned().into_boxed_str())
       }
@@ -46,12 +46,12 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
     Edn::Bool(b) => Ok(Value::Bool(b)),
     Edn::Number(n) => match serde_json::value::Number::from_f64(n) {
       Some(v) => Ok(Value::Number(v)),
-      None => Err(format!("failed to convert to number: {}", n)),
+      None => Err(format!("failed to convert to number: {n}")),
     },
     Edn::Symbol(s, ..) => Ok(Value::String((*s).to_string())),
     Edn::Keyword(s) => {
       if add_colon {
-        Ok(Value::String(format!(":{}", s.to_owned())))
+        Ok(Value::String(format!(":{s}")))
       } else {
         Ok(Value::String((*s.to_str()).to_string()))
       }
@@ -78,7 +78,7 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
               data.insert(s.to_string(), edn_to_json(v, add_colon)?);
             }
           }
-          a => return Err(format!("expected string/keyword for json keys, got: {}", a)),
+          a => return Err(format!("expected string/keyword for json keys, got: {a}")),
         }
       }
 
@@ -87,14 +87,11 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
     Edn::Record(_, entries) => {
       let mut data = serde_json::Map::new();
       for entry in entries {
-        data.insert(
-          entry.0.to_string(),
-          edn_to_json(entry.1.to_owned(), add_colon)?,
-        );
+        data.insert(entry.0.to_string(), edn_to_json(entry.1.to_owned(), add_colon)?);
       }
       Ok(Value::Object(data))
     }
-    a => Err(format!("cannot convert to json: {}", a)),
+    a => Err(format!("cannot convert to json: {a}")),
   }
 }
 
@@ -103,14 +100,14 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
 pub fn parse_json(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     match &args[0] {
-      Edn::Str(s) => match serde_json::from_str::<Value>(&s.to_string()) {
+      Edn::Str(s) => match serde_json::from_str::<Value>(s) {
         Ok(v) => Ok(json_to_edn(&v)),
-        Err(e) => Err(format!("failed to parse JSON: {}", e)),
+        Err(e) => Err(format!("failed to parse JSON: {e}")),
       },
-      _ => Err(format!("parse-json expected 1 string, got {:?}", args)),
+      _ => Err(format!("parse-json expected 1 string, got {args:?}")),
     }
   } else {
-    Err(format!("parse-json expected 1 argument, got {:?}", args))
+    Err(format!("parse-json expected 1 argument, got {args:?}"))
   }
 }
 
@@ -121,26 +118,20 @@ pub fn stringify_json(args: Vec<Edn>) -> Result<Edn, String> {
       Edn::Bool(add_colon) => {
         let ret = edn_to_json(args[0].to_owned(), *add_colon)?;
         match serde_json::to_string(&ret) {
-          Ok(s) => Ok(Edn::Str(s.to_owned().into_boxed_str())),
-          Err(e) => Err(format!("failed to generate string: {}", e)),
+          Ok(s) => Ok(Edn::Str(s.into_boxed_str())),
+          Err(e) => Err(format!("failed to generate string: {e}")),
         }
       }
       Edn::Nil => {
         let ret = edn_to_json(args[0].to_owned(), false)?;
         match serde_json::to_string(&ret) {
-          Ok(s) => Ok(Edn::Str(s.to_owned().into_boxed_str())),
-          Err(e) => Err(format!("failed to generate string: {}", e)),
+          Ok(s) => Ok(Edn::Str(s.into_boxed_str())),
+          Err(e) => Err(format!("failed to generate string: {e}")),
         }
       }
-      _ => Err(format!(
-        "stringify-json expected add_colon in bool, got {:?}",
-        args[1]
-      )),
+      _ => Err(format!("stringify-json expected add_colon in bool, got {:?}", args[1])),
     }
   } else {
-    Err(format!(
-      "stringify-json expected 2 arguments, got {:?}",
-      args
-    ))
+    Err(format!("stringify-json expected 2 arguments, got {args:?}"))
   }
 }

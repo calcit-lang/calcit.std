@@ -33,7 +33,7 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
               Edn::Str(stderr.into_boxed_str()),
             ]))
           }
-          Err(e) => Err(format!("Failed to excute: {}", e)),
+          Err(e) => Err(format!("Failed to excute: {e}")),
         }
       }
       (_, _) => Err(format!(
@@ -42,6 +42,6 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
       )),
     }
   } else {
-    Err(format!("excute-command expected 2 args: {:?}", args))
+    Err(format!("excute-command expected 2 args: {args:?}"))
   }
 }

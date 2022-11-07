@@ -11,13 +11,13 @@ pub fn read_file(args: Vec<Edn>) -> Result<Edn, String> {
       let task = fs::read_to_string(&**name);
       match task {
         Ok(s) => Ok(Edn::Str(s.into_boxed_str())),
-        Err(e) => Err(format!("Failed to read file {:?}: {}", name, e)),
+        Err(e) => Err(format!("Failed to read file {name:?}: {e}")),
       }
     } else {
       Err(format!("read-file expected 1 filename, got {:?}", &args[0]))
     }
   } else {
-    Err(format!("read-file expected 1 argument, got {:?}", args))
+    Err(format!("read-file expected 1 argument, got {args:?}"))
   }
 }
 
@@ -29,13 +29,13 @@ pub fn write_file(args: Vec<Edn>) -> Result<Edn, String> {
         let task = fs::write(&**name, &**content);
         match task {
           Ok(()) => Ok(Edn::Nil),
-          Err(e) => Err(format!("Failed to write to file {:?}: {}", name, e)),
+          Err(e) => Err(format!("Failed to write to file {name:?}: {e}")),
         }
       }
-      (_, _) => Err(format!("write-file expected 2 strings, got {:?}", args)),
+      (_, _) => Err(format!("write-file expected 2 strings, got {args:?}")),
     }
   } else {
-    Err(format!("write-file expected 2 args, got {:?}", args))
+    Err(format!("write-file expected 2 args, got {args:?}"))
   }
 }
 
@@ -45,10 +45,10 @@ pub fn path_exists(args: Vec<Edn>) -> Result<Edn, String> {
     if let Edn::Str(name) = &args[0] {
       Ok(Edn::Bool(Path::new(&**name).exists()))
     } else {
-      Err(format!("path-exists? expected 1 filename, got {:?}", args))
+      Err(format!("path-exists? expected 1 filename, got {args:?}"))
     }
   } else {
-    Err(format!("path-exists? expected 1 arg, got {:?}", args))
+    Err(format!("path-exists? expected 1 arg, got {args:?}"))
   }
 }
 
@@ -69,13 +69,13 @@ pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
 
           Ok(Edn::List(content))
         }
-        Err(e) => Err(format!("Failed to read dir {:?}: {}", name, e)),
+        Err(e) => Err(format!("Failed to read dir {name:?}: {e}")),
       }
     } else {
       Err(format!("read-dir expected a string, {}", &args[0]))
     }
   } else {
-    Err(format!("read-dir expected 1 argument, got: {:?}", args))
+    Err(format!("read-dir expected 1 argument, got: {args:?}"))
   }
 }
 
@@ -94,7 +94,7 @@ pub fn create_dir(args: Vec<Edn>) -> Result<Edn, String> {
       ))
     }
   } else {
-    Err(format!("create-dir! expected 1 argument, got {:?}", args))
+    Err(format!("create-dir! expected 1 argument, got {args:?}"))
   }
 }
 
@@ -134,10 +134,10 @@ pub fn rename_path(args: Vec<Edn>) -> Result<Edn, String> {
           )),
         }
       }
-      (_, _) => Err(format!("rename! expected 2 strings, got {:?}", args)),
+      (_, _) => Err(format!("rename! expected 2 strings, got {args:?}")),
     }
   } else {
-    Err(format!("rename! expected 2 args, got {:?}", args))
+    Err(format!("rename! expected 2 args, got {args:?}"))
   }
 }
 
@@ -156,7 +156,7 @@ pub fn check_write_file(args: Vec<Edn>) -> Result<Edn, String> {
                 let task = fs::write(&**name, &**content);
                 match task {
                   Ok(()) => Ok(Edn::Bool(true)),
-                  Err(e) => Err(format!("Failed to write to file {:?}: {}", name, e)),
+                  Err(e) => Err(format!("Failed to write to file {name:?}: {e}")),
                 }
               }
             }
@@ -170,7 +170,7 @@ pub fn check_write_file(args: Vec<Edn>) -> Result<Edn, String> {
           let task = fs::write(&**name, &**content);
           match task {
             Ok(()) => Ok(Edn::Bool(true)),
-            Err(e) => Err(format!("Failed to write to file {:?}: {}", name, e)),
+            Err(e) => Err(format!("Failed to write to file {name:?}: {e}")),
           }
         }
       }
@@ -180,6 +180,6 @@ pub fn check_write_file(args: Vec<Edn>) -> Result<Edn, String> {
       )),
     }
   } else {
-    Err(format!("check-write-file! expected 2 args, got {:?}", args))
+    Err(format!("check-write-file! expected 2 args, got {args:?}"))
   }
 }
