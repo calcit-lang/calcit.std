@@ -48,14 +48,16 @@ pub fn get_timestamp(args: Vec<Edn>) -> Result<Edn, String> {
 pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
-      (Edn::Number(n), Edn::Nil) => {
-        let time = Local.timestamp((n.floor() / 1000.0) as i64, (n.fract() * 1_000_000.0) as u32);
-        Ok(Edn::Str(time.to_rfc3339().into_boxed_str()))
-      }
-      (Edn::Number(n), Edn::Str(f)) => {
-        let time = Local.timestamp((n.floor() / 1000.0) as i64, (n.fract() * 1_000_000.0) as u32);
-        Ok(Edn::Str(time.format(f).to_string().into_boxed_str()))
-      }
+      (Edn::Number(n), Edn::Nil) => match Local.timestamp_opt((n.floor() / 1000.0) as i64, (n.fract() * 1_000_000.0) as u32) {
+        LocalResult::Single(time) => Ok(Edn::Str(time.to_rfc3339().into_boxed_str())),
+        LocalResult::Ambiguous(min_time, max_time) => Err(format!("format-time failed, ambiguous: {min_time} {max_time}")),
+        LocalResult::None => Err(format!("format-time out of range: {n}")),
+      },
+      (Edn::Number(n), Edn::Str(f)) => match Local.timestamp_opt((n.floor() / 1000.0) as i64, (n.fract() * 1_000_000.0) as u32) {
+        LocalResult::Single(time) => Ok(Edn::Str(time.format(f).to_string().into_boxed_str())),
+        LocalResult::None => Err(format!("format-time out of range: {n} {f}")),
+        LocalResult::Ambiguous(min_time, max_time) => Err(format!("format-time ambiguous: {min_time} {max_time}")),
+      },
       (_, _) => Err(format!("format-time expected f64 and string, got: {args:?}")),
     }
   } else {
@@ -69,22 +71,26 @@ pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     match &args[0] {
       Edn::Number(n) => {
-        let time = Local.timestamp((n.floor() / 1000.0) as i64, (n.fract() * 1_000_000.0) as u32);
+        let time = match Local.timestamp_opt((n.floor() / 1000.0) as i64, (n.fract() * 1_000_000.0) as u32) {
+          LocalResult::Single(time) => time,
+          LocalResult::Ambiguous(min_time, max_time) => return Err(format!("extract-time failed, ambiguous: {min_time} {max_time}")),
+          LocalResult::None => return Err(format!("extract-time out of range: {n}")),
+        };
 
         let mut data: HashMap<Edn, Edn> = HashMap::new();
-        data.insert(Edn::kwd("year"), Edn::Number(time.date().year() as f64));
-        data.insert(Edn::kwd("month"), Edn::Number(time.date().month() as f64));
-        data.insert(Edn::kwd("month0"), Edn::Number(time.date().month0() as f64));
-        data.insert(Edn::kwd("day"), Edn::Number(time.date().day() as f64));
+        data.insert(Edn::kwd("year"), Edn::Number(time.date_naive().year() as f64));
+        data.insert(Edn::kwd("month"), Edn::Number(time.date_naive().month() as f64));
+        data.insert(Edn::kwd("month0"), Edn::Number(time.date_naive().month0() as f64));
+        data.insert(Edn::kwd("day"), Edn::Number(time.date_naive().day() as f64));
         data.insert(Edn::kwd("hour"), Edn::Number(time.hour() as f64));
         data.insert(Edn::kwd("minute"), Edn::Number(time.minute() as f64));
         data.insert(Edn::kwd("second"), Edn::Number(time.second() as f64));
         data.insert(
           Edn::kwd("weekday"),
-          Edn::Number(time.date().weekday().num_days_from_sunday() as f64),
+          Edn::Number(time.date_naive().weekday().num_days_from_sunday() as f64),
         );
-        data.insert(Edn::kwd("week"), Edn::Number(time.date().iso_week().week() as f64));
-        data.insert(Edn::kwd("week0"), Edn::Number(time.date().iso_week().week0() as f64));
+        data.insert(Edn::kwd("week"), Edn::Number(time.date_naive().iso_week().week() as f64));
+        data.insert(Edn::kwd("week0"), Edn::Number(time.date_naive().iso_week().week0() as f64));
 
         Ok(Edn::Map(data))
       }
@@ -102,7 +108,12 @@ pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
     match (&args[0], &args[1], &args[2]) {
       (Edn::Number(y), Edn::Number(m), Edn::Number(d)) => {
         // from local time
-        match Local.from_local_datetime(&NaiveDate::from_ymd(*y as i32, *m as u32, *d as u32).and_hms(0, 0, 0)) {
+        match Local.from_local_datetime(
+          &NaiveDate::from_ymd_opt(*y as i32, *m as u32, *d as u32)
+            .ok_or("from_ymd got none")?
+            .and_hms_opt(0, 0, 0)
+            .ok_or("from_ymd got none")?,
+        ) {
           LocalResult::None => Ok(Edn::List(vec![Edn::kwd("none")])),
           LocalResult::Single(d) => Ok(Edn::List(vec![Edn::kwd("single"), Edn::Number(d.timestamp_millis() as f64)])),
           LocalResult::Ambiguous(d, d2) => Ok(Edn::List(vec![
@@ -141,7 +152,7 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
           }
         };
         match NaiveDate::from_isoywd_opt(*y as i32, *w as u32, weekday) {
-          Some(time) => match Local.from_local_datetime(&time.and_hms(0, 0, 0)) {
+          Some(time) => match Local.from_local_datetime(&time.and_hms_opt(0, 0, 0).ok_or("hms got none")?) {
             LocalResult::None => Ok(Edn::List(vec![Edn::kwd("none")])),
             LocalResult::Single(d) => Ok(Edn::List(vec![Edn::kwd("single"), Edn::Number(d.timestamp_millis() as f64)])),
             LocalResult::Ambiguous(d, d2) => Ok(Edn::List(vec![
@@ -165,7 +176,12 @@ pub fn add_duration(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 3 {
     match (&args[0], &args[1], &args[2]) {
       (Edn::Number(d), Edn::Number(n), Edn::Keyword(k)) => {
-        let time = Local.timestamp((d.floor() / 1000.0) as i64, (d.fract() * 1_000_000.0) as u32);
+        let time = match Local.timestamp_opt((d.floor() / 1000.0) as i64, (d.fract() * 1_000_000.0) as u32) {
+          LocalResult::Single(d) => d,
+          LocalResult::None => return Err(format!("add-duration out of range: {d}")),
+          LocalResult::Ambiguous(min_time, max_time) => return Err(format!("add-duration ambiguous: {min_time} {max_time}")),
+        };
+
         match &(*k.to_str()) {
           "week" | "weeks" => Ok(Edn::Number(time.add(Duration::weeks(*n as i64)).timestamp_millis() as f64)),
           "day" | "days" => Ok(Edn::Number(time.add(Duration::days(*n as i64)).timestamp_millis() as f64)),
