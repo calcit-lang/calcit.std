@@ -1,8 +1,8 @@
 [package]
 name = "calcit_std"
-version = "0.0.17"
+version = "0.0.18"
 authors = ["jiyinyiyong <jiyinyiyong@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 
 [lib]
@@ -23,6 +23,7 @@ nanoid = "0.4.0"
 rand = "0.8.5"
 ctrlc = "3.2.4"
 md5 = "0.7.0"
+walkdir = "2"
 
 # [profile.release]
 # lto = true
