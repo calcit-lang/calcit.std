@@ -3,6 +3,7 @@
 use cirru_edn::Edn;
 use std::fs;
 use std::path::Path;
+use walkdir::WalkDir;
 
 #[no_mangle]
 pub fn read_file(args: Vec<Edn>) -> Result<Edn, String> {
@@ -61,9 +62,7 @@ pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
         Ok(children) => {
           let mut content: Vec<Edn> = vec![];
           for c in children {
-            content.push(Edn::Str(
-              format!("{}", c.unwrap().path().display()).into_boxed_str(),
-            ));
+            content.push(Edn::Str(format!("{}", c.unwrap().path().display()).into_boxed_str()));
           }
           // println!("child dir: {:?}", content);
 
@@ -88,10 +87,7 @@ pub fn create_dir(args: Vec<Edn>) -> Result<Edn, String> {
       fs::create_dir(&**name).map_err(|e| e.to_string())?;
       Ok(Edn::Nil)
     } else {
-      Err(format!(
-        "create-dir! expected 1 filename, got {:?}",
-        &args[0]
-      ))
+      Err(format!("create-dir! expected 1 filename, got {:?}", &args[0]))
     }
   } else {
     Err(format!("create-dir! expected 1 argument, got {args:?}"))
@@ -106,16 +102,10 @@ pub fn create_dir_all(args: Vec<Edn>) -> Result<Edn, String> {
       fs::create_dir_all(&**name).map_err(|e| e.to_string())?;
       Ok(Edn::Nil)
     } else {
-      Err(format!(
-        "create-dir-all! expected 1 filename, got {:?}",
-        &args[0]
-      ))
+      Err(format!("create-dir-all! expected 1 filename, got {:?}", &args[0]))
     }
   } else {
-    Err(format!(
-      "create-dir-all! expected 1 argument, got {:?}",
-      args
-    ))
+    Err(format!("create-dir-all! expected 1 argument, got {:?}", args))
   }
 }
 
@@ -128,10 +118,7 @@ pub fn rename_path(args: Vec<Edn>) -> Result<Edn, String> {
         let task = fs::rename(&**name, &**next);
         match task {
           Ok(()) => Ok(Edn::Nil),
-          Err(e) => Err(format!(
-            "Failed to rename file {:?} -> {:?} {}",
-            name, next, e
-          )),
+          Err(e) => Err(format!("Failed to rename file {:?} -> {:?} {}", name, next, e)),
         }
       }
       (_, _) => Err(format!("rename! expected 2 strings, got {args:?}")),
@@ -174,12 +161,31 @@ pub fn check_write_file(args: Vec<Edn>) -> Result<Edn, String> {
           }
         }
       }
-      (_, _) => Err(format!(
-        "check-write-file! expected 2 strings, got {:?}",
-        args
-      )),
+      (_, _) => Err(format!("check-write-file! expected 2 strings, got {:?}", args)),
     }
   } else {
     Err(format!("check-write-file! expected 2 args, got {args:?}"))
+  }
+}
+
+/// walk a directory, return a list of files
+#[no_mangle]
+pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
+  if args.len() == 1 {
+    if let Edn::Str(name) = &args[0] {
+      let mut content: Vec<Edn> = vec![];
+      for entry in WalkDir::new(&**name) {
+        let entry = entry.unwrap();
+        let path = entry.path();
+        if path.is_file() {
+          content.push(Edn::Str(format!("{}", path.display()).into_boxed_str()));
+        }
+      }
+      Ok(Edn::List(content))
+    } else {
+      Err(format!("walk-dir expected a string, got: {}", &args[0]))
+    }
+  } else {
+    Err(format!("walk-dir expected 1 argument, got: {args:?}"))
   }
 }
