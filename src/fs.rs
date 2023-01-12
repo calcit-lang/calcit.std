@@ -1,6 +1,7 @@
 //! wraped some functions from std::fs https://doc.rust-lang.org/std/fs/index.html
 
 use cirru_edn::Edn;
+use glob::glob;
 use std::fs;
 use std::path::Path;
 use walkdir::WalkDir;
@@ -187,5 +188,30 @@ pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
     }
   } else {
     Err(format!("walk-dir expected 1 argument, got: {args:?}"))
+  }
+}
+
+/// use glob to match paths recursively
+#[no_mangle]
+pub fn glob_call(args: Vec<Edn>) -> Result<Edn, String> {
+  if args.len() == 1 {
+    if let Edn::Str(name) = &args[0] {
+      let mut content: Vec<Edn> = vec![];
+      for entry in glob(name).expect("expand glob result") {
+        match entry {
+          Ok(entry) => {
+            if entry.is_file() {
+              content.push(Edn::Str(format!("{}", entry.display()).into_boxed_str()));
+            }
+          }
+          Err(e) => return Err(format!("Failed to read: {}", e)),
+        }
+      }
+      Ok(Edn::List(content))
+    } else {
+      Err(format!("glob expected a string, got: {}", &args[0]))
+    }
+  } else {
+    Err(format!("glob expected 1 argument, got: {args:?}"))
   }
 }

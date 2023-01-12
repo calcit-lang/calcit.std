@@ -20,6 +20,7 @@ calcit.std.fs/check-write-file! a b
 calcit.std.fs/path-exists? a
 calcit.std.fs/read-dir! a
 calcit.std.fs/walk-dir! a
+calcit.std.fs/glob! |src/*.rs
 
 calcit.std.fs/create-dir! path
 calcit.std.fs/create-dir-all! path

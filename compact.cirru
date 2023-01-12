@@ -1,6 +1,6 @@
 
 {} (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.0.18)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.0.19)
     :modules $ []
   :entries $ {}
   :files $ {}
@@ -59,6 +59,9 @@
         |create-dir-all! $ quote
           defn create-dir-all! (name)
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"create_dir_all" name
+        |glob! $ quote
+          defn glob! (name)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"glob_call" name
         |path-exists? $ quote
           defn path-exists? (name)
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"path_exists" name
@@ -230,6 +233,7 @@
             println $ read-dir! "\"./"
             println "\"dirs:" $ execute! ([] "\"ls")
             println "\"all paths size:" $ count (walk-dir! "\"target")
+            println "\"rs files:" $ glob! "\"src/*.rs"
             create-dir! "\"target/dir1"
             rename! "\"target/dir1" "\"target/dir4"
             create-dir-all! "\"target/dir2/dir3"
@@ -237,7 +241,7 @@
       :ns $ quote
         ns calcit.std.test.fs $ :require
           calcit.std.$meta :refer $ calcit-filename calcit-dirname
-          calcit.std.fs :refer $ read-file! write-file! path-exists? read-dir! create-dir! create-dir-all! rename! check-write-file! walk-dir!
+          calcit.std.fs :refer $ read-file! write-file! path-exists? read-dir! create-dir! create-dir-all! rename! check-write-file! walk-dir! glob!
           calcit.std.process :refer $ execute!
     |calcit.std.test.json $ {}
       :defs $ {}
