@@ -16,6 +16,7 @@ Providing:
 ```cirru
 calcit.std.fs/read-file! a
 calcit.std.fs/write-file! a b
+calcit.std.fs/append-file! a b
 calcit.std.fs/check-write-file! a b
 calcit.std.fs/path-exists? a
 calcit.std.fs/read-dir! a

@@ -1,6 +1,6 @@
 
 {} (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.0.19)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.0.20)
     :modules $ []
   :entries $ {}
   :files $ {}
@@ -50,6 +50,9 @@
           calcit.std.util :refer $ get-dylib-path
     |calcit.std.fs $ {}
       :defs $ {}
+        |append-file! $ quote
+          defn append-file! (name content)
+            &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"append_file" name content
         |check-write-file! $ quote
           defn check-write-file! (name content)
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"check_write_file" name content
@@ -238,10 +241,11 @@
             rename! "\"target/dir1" "\"target/dir4"
             create-dir-all! "\"target/dir2/dir3"
             check-write-file! "\"target/dir8/dir9/file.text" "\"TODO"
+            append-file! "\"target/dir8/dir9/file.text" $ str &newline "\"NEWLINE TODO"
       :ns $ quote
         ns calcit.std.test.fs $ :require
           calcit.std.$meta :refer $ calcit-filename calcit-dirname
-          calcit.std.fs :refer $ read-file! write-file! path-exists? read-dir! create-dir! create-dir-all! rename! check-write-file! walk-dir! glob!
+          calcit.std.fs :refer $ read-file! append-file! write-file! path-exists? read-dir! create-dir! create-dir-all! rename! check-write-file! walk-dir! glob!
           calcit.std.process :refer $ execute!
     |calcit.std.test.json $ {}
       :defs $ {}

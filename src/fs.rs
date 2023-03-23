@@ -42,6 +42,29 @@ pub fn write_file(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 #[no_mangle]
+pub fn append_file(args: Vec<Edn>) -> Result<Edn, String> {
+  use std::fs::OpenOptions;
+  use std::io::prelude::*;
+
+  if args.len() == 2 {
+    match (&args[0], &args[1]) {
+      (Edn::Str(name), Edn::Str(content)) => {
+        let mut file = OpenOptions::new().write(true).append(true).open(&**name).unwrap();
+
+        if let Err(e) = writeln!(file, "{}", content) {
+          Err(format!("Failed to append to file {name:?}: {e}"))
+        } else {
+          Ok(Edn::Nil)
+        }
+      }
+      (_, _) => Err(format!("append-file expected 2 strings, got {args:?}")),
+    }
+  } else {
+    Err(format!("append-file expected 2 args, got {args:?}"))
+  }
+}
+
+#[no_mangle]
 pub fn path_exists(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
