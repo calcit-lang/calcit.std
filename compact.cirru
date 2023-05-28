@@ -1,6 +1,6 @@
 
 {} (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.0.20)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.1.0)
     :modules $ []
   :entries $ {}
   :files $ {}
@@ -10,7 +10,7 @@
           defrecord! Date (:now get-time!) (:parse parse-time) (:timestamp get-timestamp) (:add add-duration) (:format format-time) (:from-ymd from-ymd) (:from-ywd from-ywd) (:extract extract-time)
         |add-duration $ quote
           defn add-duration (date n k)
-            :: Date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"add_duration" (nth date 1) n k
+            %:: Date :date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"add_duration" (nth date 1) n k
         |extract-time $ quote
           defn extract-time (x)
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"extract_time" $ nth x 1
@@ -19,31 +19,31 @@
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"format_time" (nth time 1) format
         |from-ymd $ quote
           defn from-ymd (y m d)
-            key-match
+            tag-match
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ymd" y m d
-              (:single d) (:: Date d)
+              (:single d) (%:: Date :date d)
               (:ambiguous a b)
                 raise $ str "\"ambiguous: " a "\" " b
               (:none) (raise "\"cannot construct")
               _ $ raise "\"unreachable!"
         |from-ywd $ quote
           defn from-ywd (y w d)
-            key-match
+            tag-match
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ywd" y w d
-              (:single d) (:: Date d)
+              (:single d) (%:: Date :date d)
               (:ambiguous a b)
                 raise $ str "\"ambiguous: " a "\" " b
               (:none) (raise "\"cannot construct")
               _ $ raise "\"unreachable!"
         |get-time! $ quote
-          defn get-time! () $ :: Date
+          defn get-time! () $ %:: Date :date
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"now_bang"
         |get-timestamp $ quote
           defn get-timestamp (date)
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"get_timestamp" $ nth date 1
         |parse-time $ quote
           defn parse-time (time format)
-            :: Date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_time" time format
+            %:: Date :date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_time" time format
       :ns $ quote
         ns calcit.std.date $ :require
           calcit.std.$meta :refer $ calcit-dirname
@@ -203,7 +203,7 @@
             println $ get-time!
             echo |time: $ format-time (get-time!) "|%Y-%m-%d %H:%M:%S %z"
             assert= 1417176009000 $ get-timestamp (parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z")
-            ; assert= "|2014-11-28 12:00:09 +0000" $ format-time (:: Date 1417176009000) "|%Y-%m-%d %H:%M:%S %z"
+            ; assert= "|2014-11-28 12:00:09 +0000" $ format-time (%:: Date :date 1417176009000) "|%Y-%m-%d %H:%M:%S %z"
             w-log $ extract-time (get-time!)
             w-log $ from-ymd 2021 11 11
             w-log $ from-ywd 2021 45 6

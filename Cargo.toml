@@ -14,16 +14,16 @@ crate-type = ["dylib"] # Creates dynamic lib
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serde = { version = "1.0.152", features = ["derive"] }
-serde_json = "1.0.91"
-chrono = "0.4.23"
-cirru_edn = "0.2.21"
+serde = { version = "1.0.163", features = ["derive"] }
+serde_json = "1.0.96"
+chrono = "0.4.24"
+cirru_edn = "0.4.0"
 cirru_parser = "0.1.24"
 nanoid = "0.4.0"
 rand = "0.8.5"
-ctrlc = "3.2.4"
+ctrlc = "3.3.1"
 md5 = "0.7.0"
-walkdir = "2"
+walkdir = "2.3.3"
 glob = "0.3.0"
 
 # [profile.release]
