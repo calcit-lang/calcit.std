@@ -78,19 +78,19 @@ pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
         };
 
         let mut data: HashMap<Edn, Edn> = HashMap::new();
-        data.insert(Edn::kwd("year"), Edn::Number(time.date_naive().year() as f64));
-        data.insert(Edn::kwd("month"), Edn::Number(time.date_naive().month() as f64));
-        data.insert(Edn::kwd("month0"), Edn::Number(time.date_naive().month0() as f64));
-        data.insert(Edn::kwd("day"), Edn::Number(time.date_naive().day() as f64));
-        data.insert(Edn::kwd("hour"), Edn::Number(time.hour() as f64));
-        data.insert(Edn::kwd("minute"), Edn::Number(time.minute() as f64));
-        data.insert(Edn::kwd("second"), Edn::Number(time.second() as f64));
+        data.insert(Edn::tag("year"), Edn::Number(time.date_naive().year() as f64));
+        data.insert(Edn::tag("month"), Edn::Number(time.date_naive().month() as f64));
+        data.insert(Edn::tag("month0"), Edn::Number(time.date_naive().month0() as f64));
+        data.insert(Edn::tag("day"), Edn::Number(time.date_naive().day() as f64));
+        data.insert(Edn::tag("hour"), Edn::Number(time.hour() as f64));
+        data.insert(Edn::tag("minute"), Edn::Number(time.minute() as f64));
+        data.insert(Edn::tag("second"), Edn::Number(time.second() as f64));
         data.insert(
-          Edn::kwd("weekday"),
+          Edn::tag("weekday"),
           Edn::Number(time.date_naive().weekday().num_days_from_sunday() as f64),
         );
-        data.insert(Edn::kwd("week"), Edn::Number(time.date_naive().iso_week().week() as f64));
-        data.insert(Edn::kwd("week0"), Edn::Number(time.date_naive().iso_week().week0() as f64));
+        data.insert(Edn::tag("week"), Edn::Number(time.date_naive().iso_week().week() as f64));
+        data.insert(Edn::tag("week0"), Edn::Number(time.date_naive().iso_week().week0() as f64));
 
         Ok(Edn::Map(data))
       }
@@ -114,10 +114,10 @@ pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
             .and_hms_opt(0, 0, 0)
             .ok_or("from_ymd got none")?,
         ) {
-          LocalResult::None => Ok(Edn::List(vec![Edn::kwd("none")])),
-          LocalResult::Single(d) => Ok(Edn::List(vec![Edn::kwd("single"), Edn::Number(d.timestamp_millis() as f64)])),
+          LocalResult::None => Ok(Edn::List(vec![Edn::tag("none")])),
+          LocalResult::Single(d) => Ok(Edn::List(vec![Edn::tag("single"), Edn::Number(d.timestamp_millis() as f64)])),
           LocalResult::Ambiguous(d, d2) => Ok(Edn::List(vec![
-            Edn::kwd("ambiguous"),
+            Edn::tag("ambiguous"),
             Edn::Number(d.timestamp_millis() as f64),
             Edn::Number(d2.timestamp_millis() as f64),
           ])),
@@ -146,17 +146,17 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
           6 => Weekday::Sat,
           _ => {
             return Ok(Edn::List(vec![
-              Edn::kwd("err"),
+              Edn::tag("err"),
               Edn::str(format!("invalid digit for weekday: {d}")),
             ]))
           }
         };
         match NaiveDate::from_isoywd_opt(*y as i32, *w as u32, weekday) {
           Some(time) => match Local.from_local_datetime(&time.and_hms_opt(0, 0, 0).ok_or("hms got none")?) {
-            LocalResult::None => Ok(Edn::List(vec![Edn::kwd("none")])),
-            LocalResult::Single(d) => Ok(Edn::List(vec![Edn::kwd("single"), Edn::Number(d.timestamp_millis() as f64)])),
+            LocalResult::None => Ok(Edn::List(vec![Edn::tag("none")])),
+            LocalResult::Single(d) => Ok(Edn::List(vec![Edn::tag("single"), Edn::Number(d.timestamp_millis() as f64)])),
             LocalResult::Ambiguous(d, d2) => Ok(Edn::List(vec![
-              Edn::kwd("single"),
+              Edn::tag("single"),
               Edn::Number(d.timestamp_millis() as f64),
               Edn::Number(d2.timestamp_millis() as f64),
             ])),
@@ -175,7 +175,7 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
 pub fn add_duration(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 3 {
     match (&args[0], &args[1], &args[2]) {
-      (Edn::Number(d), Edn::Number(n), Edn::Keyword(k)) => {
+      (Edn::Number(d), Edn::Number(n), Edn::Tag(k)) => {
         let time = match Local.timestamp_opt((d.floor() / 1000.0) as i64, (d.fract() * 1_000_000.0) as u32) {
           LocalResult::Single(d) => d,
           LocalResult::None => return Err(format!("add-duration out of range: {d}")),

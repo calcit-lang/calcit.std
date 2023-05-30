@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde_json::Value;
 
-use cirru_edn::{Edn, EdnKwd};
+use cirru_edn::{Edn, EdnTag};
 
 pub fn json_to_edn(data: &Value) -> Edn {
   match data {
@@ -12,7 +12,7 @@ pub fn json_to_edn(data: &Value) -> Edn {
     Value::String(s) => {
       if s.starts_with(':') {
         // special logic to parse keyword
-        Edn::Keyword(EdnKwd::new(s.strip_prefix(':').unwrap()))
+        Edn::Tag(EdnTag::new(s.strip_prefix(':').unwrap()))
       } else {
         Edn::Str(s.to_owned().into_boxed_str())
       }
@@ -28,7 +28,7 @@ pub fn json_to_edn(data: &Value) -> Edn {
       let mut ys: HashMap<Edn, Edn> = HashMap::new();
       for (k, v) in xs {
         let key = if k.starts_with(':') {
-          Edn::kwd(k.strip_prefix(':').unwrap())
+          Edn::tag(k.strip_prefix(':').unwrap())
         } else {
           Edn::Str(k.to_owned().into_boxed_str())
         };
@@ -49,7 +49,7 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
       None => Err(format!("failed to convert to number: {n}")),
     },
     Edn::Symbol(s, ..) => Ok(Value::String((*s).to_string())),
-    Edn::Keyword(s) => {
+    Edn::Tag(s) => {
       if add_colon {
         Ok(Value::String(format!(":{s}")))
       } else {
@@ -71,7 +71,7 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
           Edn::Str(s) => {
             data.insert(s.to_string(), edn_to_json(v, add_colon)?);
           }
-          Edn::Keyword(s) => {
+          Edn::Tag(s) => {
             if add_colon {
               data.insert(format!(":{}", s.to_owned()), edn_to_json(v, add_colon)?);
             } else {
