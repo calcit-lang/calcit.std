@@ -1,6 +1,6 @@
 
 {}
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:port 6001) (:reload-fn |calcit.std.test/reload!) (:version |0.1.0)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:port 6001) (:reload-fn |calcit.std.test/reload!) (:version |0.1.1)
     :modules $ []
   :entries $ {}
   :ir $ {} (:package |calcit.std)
@@ -472,6 +472,24 @@
                       |j $ {} (:at 1635220825098) (:by |u0) (:text "|\"/dylibs/libcalcit_std") (:type :leaf)
                   |n $ {} (:at 1630176304763) (:by |u0) (:text "|\"read_file") (:type :leaf)
                   |r $ {} (:at 1630171465347) (:by |u0) (:text |name) (:type :leaf)
+          |read-file-by-line! $ {} (:at 1688447271554) (:by |u0) (:type :expr)
+            :data $ {}
+              |T $ {} (:at 1688447271554) (:by |u0) (:text |defn) (:type :leaf)
+              |b $ {} (:at 1688447422938) (:by |u0) (:text |read-file-by-line!) (:type :leaf)
+              |h $ {} (:at 1688447278540) (:by |u0) (:type :expr)
+                :data $ {}
+                  |T $ {} (:at 1688447278540) (:by |u0) (:text |name) (:type :leaf)
+                  |b $ {} (:at 1688447303653) (:by |u0) (:text |cb) (:type :leaf)
+              |l $ {} (:at 1688447278540) (:by |u0) (:type :expr)
+                :data $ {}
+                  |T $ {} (:at 1688448703272) (:by |u0) (:text |&blocking-dylib-edn-fn) (:type :leaf)
+                  |b $ {} (:at 1688447278540) (:by |u0) (:type :expr)
+                    :data $ {}
+                      |T $ {} (:at 1688447278540) (:by |u0) (:text |get-dylib-path) (:type :leaf)
+                      |b $ {} (:at 1688447278540) (:by |u0) (:text "|\"/dylibs/libcalcit_std") (:type :leaf)
+                  |h $ {} (:at 1688447428492) (:by |u0) (:text "|\"read_file_by_line") (:type :leaf)
+                  |l $ {} (:at 1688447278540) (:by |u0) (:text |name) (:type :leaf)
+                  |o $ {} (:at 1688447312392) (:by |u0) (:text |cb) (:type :leaf)
           |rename! $ {} (:at 1636553285707) (:by |u0) (:type :expr)
             :data $ {}
               |T $ {} (:at 1636553285707) (:by |u0) (:text |defn) (:type :leaf)
@@ -1484,6 +1502,44 @@
                               |T $ {} (:at 1630176262288) (:by |u0) (:text |read-file!) (:type :leaf)
                               |j $ {} (:at 1630245682315) (:by |u0) (:text "|\"README.md") (:type :leaf)
                       |j $ {} (:at 1633182648511) (:by |u0) (:text |1000) (:type :leaf)
+              |xT $ {} (:at 1688447533888) (:by |u0) (:type :expr)
+                :data $ {}
+                  |D $ {} (:at 1688447534508) (:by |u0) (:text |let) (:type :leaf)
+                  |T $ {} (:at 1688447540723) (:by |u0) (:type :expr)
+                    :data $ {}
+                      |T $ {} (:at 1688447541078) (:by |u0) (:type :expr)
+                        :data $ {}
+                          |D $ {} (:at 1688447542675) (:by |u0) (:text |*c) (:type :leaf)
+                          |L $ {} (:at 1688447543653) (:by |u0) (:type :expr)
+                            :data $ {}
+                              |T $ {} (:at 1688447544552) (:by |u0) (:text |atom) (:type :leaf)
+                              |b $ {} (:at 1688447544778) (:by |u0) (:text |0) (:type :leaf)
+                  |b $ {} (:at 1688447547831) (:by |u0) (:type :expr)
+                    :data $ {}
+                      |b $ {} (:at 1688447547831) (:by |u0) (:text |read-file-by-line!) (:type :leaf)
+                      |h $ {} (:at 1688447547831) (:by |u0) (:text "|\"README.md") (:type :leaf)
+                      |l $ {} (:at 1688447547831) (:by |u0) (:type :expr)
+                        :data $ {}
+                          |T $ {} (:at 1688447547831) (:by |u0) (:text |fn) (:type :leaf)
+                          |b $ {} (:at 1688447547831) (:by |u0) (:type :expr)
+                            :data $ {}
+                              |T $ {} (:at 1688447547831) (:by |u0) (:text |line) (:type :leaf)
+                          |h $ {} (:at 1688447547831) (:by |u0) (:type :expr)
+                            :data $ {}
+                              |D $ {} (:at 1688448734708) (:by |u0) (:text |;) (:type :leaf)
+                              |T $ {} (:at 1688447547831) (:by |u0) (:text |println) (:type :leaf)
+                              |b $ {} (:at 1688447547831) (:by |u0) (:text "|\"readling line:") (:type :leaf)
+                              |h $ {} (:at 1688447547831) (:by |u0) (:text |line) (:type :leaf)
+                          |l $ {} (:at 1688447553554) (:by |u0) (:type :expr)
+                            :data $ {}
+                              |T $ {} (:at 1688447555421) (:by |u0) (:text |swap!) (:type :leaf)
+                              |b $ {} (:at 1688447557717) (:by |u0) (:text |*c) (:type :leaf)
+                              |h $ {} (:at 1688447559107) (:by |u0) (:text |inc) (:type :leaf)
+                  |h $ {} (:at 1688447561189) (:by |u0) (:type :expr)
+                    :data $ {}
+                      |T $ {} (:at 1688447561871) (:by |u0) (:text |println) (:type :leaf)
+                      |b $ {} (:at 1688447562879) (:by |u0) (:text "|\"lines") (:type :leaf)
+                      |h $ {} (:at 1688448482279) (:by |u0) (:text |@*c) (:type :leaf)
               |y $ {} (:at 1630219294072) (:by |u0) (:type :expr)
                 :data $ {}
                   |T $ {} (:at 1630219294943) (:by |u0) (:text |println) (:type :leaf)
@@ -1591,6 +1647,7 @@
                         |yj $ {} (:at 1636559452607) (:by |u0) (:text |check-write-file!) (:type :leaf)
                         |z $ {} (:at 1672681420295) (:by |u0) (:text |walk-dir!) (:type :leaf)
                         |zD $ {} (:at 1673543378088) (:by |u0) (:text |glob!) (:type :leaf)
+                        |zP $ {} (:at 1688447406097) (:by |u0) (:text |read-file-by-line!) (:type :leaf)
                 |v $ {} (:at 1630234432423) (:by |u0) (:type :expr)
                   :data $ {}
                     |T $ {} (:at 1630234435928) (:by |u0) (:text |calcit.std.process) (:type :leaf)

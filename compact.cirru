@@ -1,6 +1,6 @@
 
 {} (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.1.0)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.1.1)
     :modules $ []
   :entries $ {}
   :files $ {}
@@ -74,6 +74,9 @@
         |read-file! $ quote
           defn read-file! (name)
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"read_file" name
+        |read-file-by-line! $ quote
+          defn read-file-by-line! (name cb)
+            &blocking-dylib-edn-fn (get-dylib-path "\"/dylibs/libcalcit_std") "\"read_file_by_line" name cb
         |rename! $ quote
           defn rename! (from to)
             &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"rename_path" from to
@@ -232,6 +235,10 @@
             println $ >
               count $ read-file! "\"README.md"
               , 1000
+            let
+                *c $ atom 0
+              read-file-by-line! "\"README.md" $ fn (line) (; println "\"readling line:" line) (swap! *c inc)
+              println "\"lines" @*c
             println (path-exists? "\"README.md") (path-exists? "\"build.js")
             println $ read-dir! "\"./"
             println "\"dirs:" $ execute! ([] "\"ls")
@@ -245,7 +252,7 @@
       :ns $ quote
         ns calcit.std.test.fs $ :require
           calcit.std.$meta :refer $ calcit-filename calcit-dirname
-          calcit.std.fs :refer $ read-file! append-file! write-file! path-exists? read-dir! create-dir! create-dir-all! rename! check-write-file! walk-dir! glob!
+          calcit.std.fs :refer $ read-file! append-file! write-file! path-exists? read-dir! create-dir! create-dir-all! rename! check-write-file! walk-dir! glob! read-file-by-line!
           calcit.std.process :refer $ execute!
     |calcit.std.test.json $ {}
       :defs $ {}

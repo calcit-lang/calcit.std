@@ -27,6 +27,8 @@ calcit.std.fs/create-dir! path
 calcit.std.fs/create-dir-all! path
 
 calcit.std.fs/rename! from to
+
+calcit.std.fs/read-file-by-line! a $ fn (line) (println line)
 ```
 
 ```cirru

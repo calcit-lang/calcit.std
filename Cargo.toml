@@ -1,6 +1,6 @@
 [package]
 name = "calcit_std"
-version = "0.0.20"
+version = "0.1.1"
 authors = ["jiyinyiyong <jiyinyiyong@gmail.com>"]
 edition = "2021"
 
