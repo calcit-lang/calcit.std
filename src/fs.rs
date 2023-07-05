@@ -2,8 +2,11 @@
 
 use cirru_edn::Edn;
 use glob::glob;
-use std::fs;
+use std::fs::File;
+use std::io::{self, BufRead};
 use std::path::Path;
+use std::sync::Arc;
+use std::{fs, vec};
 use walkdir::WalkDir;
 
 #[no_mangle]
@@ -20,6 +23,48 @@ pub fn read_file(args: Vec<Edn>) -> Result<Edn, String> {
     }
   } else {
     Err(format!("read-file expected 1 argument, got {args:?}"))
+  }
+}
+
+// The output is wrapped in a Result to allow matching on errors
+// Returns an Iterator to the Reader of the lines of the file.
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+where
+  P: AsRef<Path>,
+{
+  let file = File::open(filename)?;
+  Ok(io::BufReader::new(file).lines())
+}
+
+#[no_mangle]
+pub fn read_file_by_line(
+  args: Vec<Edn>,
+  handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
+  finish: Box<dyn FnOnce() + Send + Sync + 'static>,
+) -> Result<Edn, String> {
+  if args.len() == 1 {
+    if let Edn::Str(name) = &args[0] {
+      match read_lines(&**name) {
+        Ok(lines) => {
+          // Consumes the iterator, returns an (Optional) String
+          for line in lines {
+            if let Ok(ip) = line {
+              match handler(vec![Edn::str(ip)]) {
+                Ok(_) => {}
+                Err(e) => return Err(format!("failed reading line: {}", e)),
+              }
+            }
+          }
+          finish();
+          Ok(Edn::Nil)
+        }
+        Err(e) => Err(format!("Failed to read file {name:?}: {e}")),
+      }
+    } else {
+      Err(format!("read-file-by-line expected 1 filename, got {:?}", &args[0]))
+    }
+  } else {
+    Err(format!("read-file-by-line expected 1 argument, got {args:?}"))
   }
 }
 
