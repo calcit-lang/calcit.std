@@ -114,13 +114,15 @@ pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
             .and_hms_opt(0, 0, 0)
             .ok_or("from_ymd got none")?,
         ) {
-          LocalResult::None => Ok(Edn::List(vec![Edn::tag("none")])),
-          LocalResult::Single(d) => Ok(Edn::List(vec![Edn::tag("single"), Edn::Number(d.timestamp_millis() as f64)])),
-          LocalResult::Ambiguous(d, d2) => Ok(Edn::List(vec![
-            Edn::tag("ambiguous"),
-            Edn::Number(d.timestamp_millis() as f64),
-            Edn::Number(d2.timestamp_millis() as f64),
-          ])),
+          LocalResult::None => Ok(Edn::Tuple(Box::new(Edn::tag("none")), vec![])),
+          LocalResult::Single(d) => Ok(Edn::Tuple(
+            Box::new(Edn::tag("single")),
+            vec![Edn::Number(d.timestamp_millis() as f64)],
+          )),
+          LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(
+            Box::new(Edn::tag("ambiguous")),
+            vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
+          )),
         }
       }
       (a, b, c) => Err(format!("from-ymd expected 2 args, got: {a} {b} {c}")),
@@ -145,21 +147,23 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
           5 => Weekday::Fri,
           6 => Weekday::Sat,
           _ => {
-            return Ok(Edn::List(vec![
-              Edn::tag("err"),
-              Edn::str(format!("invalid digit for weekday: {d}")),
-            ]))
+            return Ok(Edn::Tuple(
+              Box::new(Edn::tag("err")),
+              vec![Edn::str(format!("invalid digit for weekday: {d}"))],
+            ))
           }
         };
         match NaiveDate::from_isoywd_opt(*y as i32, *w as u32, weekday) {
           Some(time) => match Local.from_local_datetime(&time.and_hms_opt(0, 0, 0).ok_or("hms got none")?) {
-            LocalResult::None => Ok(Edn::List(vec![Edn::tag("none")])),
-            LocalResult::Single(d) => Ok(Edn::List(vec![Edn::tag("single"), Edn::Number(d.timestamp_millis() as f64)])),
-            LocalResult::Ambiguous(d, d2) => Ok(Edn::List(vec![
-              Edn::tag("single"),
-              Edn::Number(d.timestamp_millis() as f64),
-              Edn::Number(d2.timestamp_millis() as f64),
-            ])),
+            LocalResult::None => Ok(Edn::Tuple(Box::new(Edn::tag("none")), vec![])),
+            LocalResult::Single(d) => Ok(Edn::Tuple(
+              Box::new(Edn::tag("single")),
+              vec![Edn::Number(d.timestamp_millis() as f64)],
+            )),
+            LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(
+              Box::new(Edn::tag("single")),
+              vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
+            )),
           },
           None => Err(format!("from-ywd got invalid args: {y} {w} {weekday}")),
         }
