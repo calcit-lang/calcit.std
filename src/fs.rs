@@ -47,12 +47,10 @@ pub fn read_file_by_line(
       match read_lines(&**name) {
         Ok(lines) => {
           // Consumes the iterator, returns an (Optional) String
-          for line in lines {
-            if let Ok(ip) = line {
-              match handler(vec![Edn::str(ip)]) {
-                Ok(_) => {}
-                Err(e) => return Err(format!("failed reading line: {}", e)),
-              }
+          for line in lines.flatten() {
+            match handler(vec![Edn::str(line)]) {
+              Ok(_) => {}
+              Err(e) => return Err(format!("failed reading line: {}", e)),
             }
           }
           finish();
