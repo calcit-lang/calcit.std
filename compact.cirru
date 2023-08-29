@@ -1,10 +1,10 @@
 
 {} (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.2.0-a1)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.2.0-a2)
     :modules $ []
   :entries $ {}
   :files $ {}
-    |calcit.std.date $ {}
+    |calcit.std.date $ %{} :FileEntry
       :defs $ {}
         |Date $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -58,7 +58,7 @@
           ns calcit.std.date $ :require
             calcit.std.$meta :refer $ calcit-dirname
             calcit.std.util :refer $ get-dylib-path
-    |calcit.std.fs $ {}
+    |calcit.std.fs $ %{} :FileEntry
       :defs $ {}
         |append-file! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -113,7 +113,7 @@
           ns calcit.std.fs $ :require
             calcit.std.$meta :refer $ calcit-dirname
             calcit.std.util :refer $ get-dylib-path
-    |calcit.std.hash $ {}
+    |calcit.std.hash $ %{} :FileEntry
       :defs $ {}
         |md5 $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -124,7 +124,7 @@
           ns calcit.std.hash $ :require
             calcit.std.$meta :refer $ calcit-dirname
             calcit.std.util :refer $ get-dylib-path
-    |calcit.std.json $ {}
+    |calcit.std.json $ %{} :FileEntry
       :defs $ {}
         |parse-json $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -139,7 +139,7 @@
           ns calcit.std.json $ :require
             calcit.std.$meta :refer $ calcit-dirname
             calcit.std.util :refer $ get-dylib-path
-    |calcit.std.path $ {}
+    |calcit.std.path $ %{} :FileEntry
       :defs $ {}
         |join-path $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -158,7 +158,7 @@
           ns calcit.std.path $ :require
             calcit.std.$meta :refer $ calcit-dirname
             calcit.std.util :refer $ get-dylib-path
-    |calcit.std.process $ {}
+    |calcit.std.process $ %{} :FileEntry
       :defs $ {}
         |execute! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -174,7 +174,7 @@
           ns calcit.std.process $ :require
             calcit.std.$meta :refer $ calcit-dirname
             calcit.std.util :refer $ get-dylib-path
-    |calcit.std.rand $ {}
+    |calcit.std.rand $ %{} :FileEntry
       :defs $ {}
         |nanoid! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -210,7 +210,7 @@
           ns calcit.std.rand $ :require
             calcit.std.$meta :refer $ calcit-dirname
             calcit.std.util :refer $ get-dylib-path
-    |calcit.std.test $ {}
+    |calcit.std.test $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -250,7 +250,7 @@
             calcit.std.time :refer $ set-timeout set-interval
             calcit.std.hash :refer $ md5
             calcit.std.path :refer $ join-path path-dirname path-basename
-    |calcit.std.test.date $ {}
+    |calcit.std.test.date $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -282,7 +282,7 @@
         :code $ quote
           ns calcit.std.test.date $ :require
             calcit.std.date :refer $ parse-time format-time get-time! extract-time from-ymd from-ywd add-duration Date get-timestamp
-    |calcit.std.test.fs $ {}
+    |calcit.std.test.fs $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -310,7 +310,7 @@
             calcit.std.$meta :refer $ calcit-filename calcit-dirname
             calcit.std.fs :refer $ read-file! append-file! write-file! path-exists? read-dir! create-dir! create-dir-all! rename! check-write-file! walk-dir! glob! read-file-by-line!
             calcit.std.process :refer $ execute!
-    |calcit.std.test.json $ {}
+    |calcit.std.test.json $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -343,7 +343,7 @@
         :code $ quote
           ns calcit.std.test.json $ :require
             calcit.std.json :refer $ parse-json stringify-json
-    |calcit.std.test.rand $ {}
+    |calcit.std.test.rand $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -373,7 +373,7 @@
         :code $ quote
           ns calcit.std.test.rand $ :require
             calcit.std.rand :refer $ rand rand-int rand-shift rand-nth rand-between nanoid! rand-hex-color!
-    |calcit.std.time $ {}
+    |calcit.std.time $ %{} :FileEntry
       :defs $ {}
         |set-interval $ %{} :CodeEntry (:doc |)
           :code $ quote
@@ -388,7 +388,7 @@
           ns calcit.std.time $ :require
             calcit.std.$meta :refer $ calcit-dirname
             calcit.std.util :refer $ get-dylib-path
-    |calcit.std.util $ {}
+    |calcit.std.util $ %{} :FileEntry
       :defs $ {}
         |get-dylib-ext $ %{} :CodeEntry (:doc |)
           :code $ quote
