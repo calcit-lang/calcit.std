@@ -1,11 +1,10 @@
 
 {} (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:port 6001) (:reload-fn |calcit.std.test/reload!) (:version |0.2.0-a1)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:port 6001) (:reload-fn |calcit.std.test/reload!) (:version |0.2.0-a2)
     :modules $ []
   :entries $ {}
   :files $ {}
-    |calcit.std.date $ {}
-      :configs $ {}
+    |calcit.std.date $ %{} :FileEntry
       :defs $ {}
         |Date $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1636967181600) (:by |u0)
@@ -344,8 +343,7 @@
                     |r $ %{} :Expr (:at 1633181151756) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220775131) (:by |u0) (:text |get-dylib-path)
-    |calcit.std.fs $ {}
-      :configs $ {}
+    |calcit.std.fs $ %{} :FileEntry
       :defs $ {}
         |append-file! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1679453818235) (:by |u0)
@@ -583,8 +581,7 @@
                     |r $ %{} :Expr (:at 1633181140100) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220832816) (:by |u0) (:text |get-dylib-path)
-    |calcit.std.hash $ {}
-      :configs $ {}
+    |calcit.std.hash $ %{} :FileEntry
       :defs $ {}
         |md5 $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1635220490864) (:by |u0)
@@ -625,8 +622,7 @@
                     |r $ %{} :Expr (:at 1635220595836) (:by |u0)
                       :data $ {}
                         |r $ %{} :Leaf (:at 1635220746259) (:by |u0) (:text |get-dylib-path)
-    |calcit.std.json $ {}
-      :configs $ {}
+    |calcit.std.json $ %{} :FileEntry
       :defs $ {}
         |parse-json $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1633168511255) (:by |u0)
@@ -687,8 +683,7 @@
                     |r $ %{} :Expr (:at 1633181160126) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220862556) (:by |u0) (:text |get-dylib-path)
-    |calcit.std.path $ {}
-      :configs $ {}
+    |calcit.std.path $ %{} :FileEntry
       :defs $ {}
         |join-path $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1636556313098) (:by |u0)
@@ -765,8 +760,7 @@
                     |r $ %{} :Expr (:at 1636556291572) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1636556291572) (:by |u0) (:text |get-dylib-path)
-    |calcit.std.process $ {}
-      :configs $ {}
+    |calcit.std.process $ %{} :FileEntry
       :defs $ {}
         |execute! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1630233671273) (:by |u0)
@@ -847,8 +841,7 @@
                     |r $ %{} :Expr (:at 1630234680982) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220886442) (:by |u0) (:text |get-dylib-path)
-    |calcit.std.rand $ {}
-      :configs $ {}
+    |calcit.std.rand $ %{} :FileEntry
       :defs $ {}
         |nanoid! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1633344066690) (:by |u0)
@@ -1024,8 +1017,7 @@
                     |r $ %{} :Expr (:at 1633343524902) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220911694) (:by |u0) (:text |get-dylib-path)
-    |calcit.std.test $ {}
-      :configs $ {}
+    |calcit.std.test $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1633149996242) (:by |u0)
@@ -1255,8 +1247,7 @@
                         |T $ %{} :Leaf (:at 1636556831915) (:by |u0) (:text |join-path)
                         |j $ %{} :Leaf (:at 1636558769054) (:by |u0) (:text |path-dirname)
                         |r $ %{} :Leaf (:at 1636558771914) (:by |u0) (:text |path-basename)
-    |calcit.std.test.date $ {}
-      :configs $ {}
+    |calcit.std.test.date $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1633181508087) (:by |u0)
@@ -1505,8 +1496,7 @@
                         |yT $ %{} :Leaf (:at 1636966285858) (:by |u0) (:text |add-duration)
                         |yj $ %{} :Leaf (:at 1636967365864) (:by |u0) (:text |Date)
                         |yr $ %{} :Leaf (:at 1636967833659) (:by |u0) (:text |get-timestamp)
-    |calcit.std.test.fs $ {}
-      :configs $ {}
+    |calcit.std.test.fs $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1630174676216) (:by |u0)
@@ -1692,8 +1682,7 @@
                     |r $ %{} :Expr (:at 1630234437661) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1630234439968) (:by |u0) (:text |execute!)
-    |calcit.std.test.json $ {}
-      :configs $ {}
+    |calcit.std.test.json $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1633181629879) (:by |u0)
@@ -1878,8 +1867,7 @@
                       :data $ {}
                         |T $ %{} :Leaf (:at 1633181749646) (:by |u0) (:text |parse-json)
                         |j $ %{} :Leaf (:at 1633181755342) (:by |u0) (:text |stringify-json)
-    |calcit.std.test.rand $ {}
-      :configs $ {}
+    |calcit.std.test.rand $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1633343514818) (:by |u0)
@@ -2117,8 +2105,7 @@
                         |x $ %{} :Leaf (:at 1633344451455) (:by |u0) (:text |rand-between)
                         |y $ %{} :Leaf (:at 1633344907417) (:by |u0) (:text |nanoid!)
                         |yT $ %{} :Leaf (:at 1636711587670) (:by |u0) (:text |rand-hex-color!)
-    |calcit.std.time $ {}
-      :configs $ {}
+    |calcit.std.time $ %{} :FileEntry
       :defs $ {}
         |set-interval $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1635179641143) (:by |u0)
@@ -2180,8 +2167,7 @@
                     |r $ %{} :Expr (:at 1635179663484) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635221003887) (:by |u0) (:text |get-dylib-path)
-    |calcit.std.util $ {}
-      :configs $ {}
+    |calcit.std.util $ %{} :FileEntry
       :defs $ {}
         |get-dylib-ext $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1630231398718) (:by |u0)
