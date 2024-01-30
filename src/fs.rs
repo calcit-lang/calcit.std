@@ -15,7 +15,7 @@ pub fn read_file(args: Vec<Edn>) -> Result<Edn, String> {
     if let Edn::Str(name) = &args[0] {
       let task = fs::read_to_string(&**name);
       match task {
-        Ok(s) => Ok(Edn::Str(s.into_boxed_str())),
+        Ok(s) => Ok(Edn::Str(s.into())),
         Err(e) => Err(format!("Failed to read file {name:?}: {e}")),
       }
     } else {
@@ -129,7 +129,7 @@ pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
         Ok(children) => {
           let mut content: Vec<Edn> = vec![];
           for c in children {
-            content.push(Edn::Str(format!("{}", c.unwrap().path().display()).into_boxed_str()));
+            content.push(Edn::Str(format!("{}", c.unwrap().path().display()).into()));
           }
           // println!("child dir: {:?}", content);
 
@@ -245,7 +245,7 @@ pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
         let entry = entry.unwrap();
         let path = entry.path();
         if path.is_file() {
-          content.push(Edn::Str(format!("{}", path.display()).into_boxed_str()));
+          content.push(Edn::Str(format!("{}", path.display()).into()));
         }
       }
       Ok(Edn::List(content))
@@ -267,7 +267,7 @@ pub fn glob_call(args: Vec<Edn>) -> Result<Edn, String> {
         match entry {
           Ok(entry) => {
             if entry.is_file() {
-              content.push(Edn::Str(format!("{}", entry.display()).into_boxed_str()));
+              content.push(Edn::Str(format!("{}", entry.display()).into()));
             }
           }
           Err(e) => return Err(format!("Failed to read: {}", e)),

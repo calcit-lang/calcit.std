@@ -12,24 +12,24 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - uses: dtolnay/rust-toolchain@stable
         with:
-          # toolchain: nightly
+          toolchain: nightly
           components: clippy
 
       - uses: supplypike/setup-bin@v3
         with:
-          uri: "https://github.com/calcit-lang/calcit/releases/download/0.8.0-a3/cr"
+          uri: "https://github.com/calcit-lang/calcit/releases/download/0.8.21/cr"
           name: "cr"
-          version: "0.8.0-a3"
+          version: "0.8.21"
 
       - uses: supplypike/setup-bin@v3
         with:
-          uri: "https://github.com/calcit-lang/calcit/releases/download/0.8.0-a3/caps"
+          uri: "https://github.com/calcit-lang/calcit/releases/download/0.8.21/caps"
           name: "caps"
-          version: "0.8.0-a3"
+          version: "0.8.21"
 
       - run: cargo build --release
 

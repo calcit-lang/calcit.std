@@ -69,19 +69,16 @@ pub fn call_nanoid(xs: Vec<Edn>) -> Result<Edn, String> {
     };
 
     match (size, &xs[1]) {
-      (None, Edn::Nil) => Ok(Edn::Str(nanoid!().into_boxed_str())),
-      (Some(n), Edn::Nil) => Ok(Edn::Str(nanoid!(n).into_boxed_str())),
+      (None, Edn::Nil) => Ok(Edn::Str(nanoid!().into())),
+      (Some(n), Edn::Nil) => Ok(Edn::Str(nanoid!(n).into())),
       (Some(n), Edn::Str(s)) => {
         let mut charset: Vec<char> = vec![];
         for c in s.chars() {
           charset.push(c);
         }
-        Ok(Edn::Str(nanoid!(n, &charset).into_boxed_str()))
+        Ok(Edn::Str(nanoid!(n, &charset).into()))
       }
-      (a, b) => Err(format!(
-        "nanoid! expected size or charset, got: {:?} {:?}",
-        a, b
-      )),
+      (a, b) => Err(format!("nanoid! expected size or charset, got: {:?} {:?}", a, b)),
     }
   } else {
     Err(format!("nanoid! expected 2 args, got: {xs:?}"))
