@@ -1,7 +1,7 @@
 //! TODO, need to store offset as well,
 //! currently lack of offset, prefer using Local time
 
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Arc};
 
 use chrono::{DateTime, Datelike, Duration, Local, LocalResult, NaiveDate, TimeZone, Timelike, Utc, Weekday};
 use cirru_edn::Edn;
@@ -49,12 +49,12 @@ pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
       (Edn::Number(n), Edn::Nil) => match Local.timestamp_opt((n.floor() / 1000.0) as i64, (n.fract() * 1_000_000.0) as u32) {
-        LocalResult::Single(time) => Ok(Edn::Str(time.to_rfc3339().into_boxed_str())),
+        LocalResult::Single(time) => Ok(Edn::Str(time.to_rfc3339().into())),
         LocalResult::Ambiguous(min_time, max_time) => Err(format!("format-time failed, ambiguous: {min_time} {max_time}")),
         LocalResult::None => Err(format!("format-time out of range: {n}")),
       },
       (Edn::Number(n), Edn::Str(f)) => match Local.timestamp_opt((n.floor() / 1000.0) as i64, (n.fract() * 1_000_000.0) as u32) {
-        LocalResult::Single(time) => Ok(Edn::Str(time.format(f).to_string().into_boxed_str())),
+        LocalResult::Single(time) => Ok(Edn::Str(time.format(f).to_string().into())),
         LocalResult::None => Err(format!("format-time out of range: {n} {f}")),
         LocalResult::Ambiguous(min_time, max_time) => Err(format!("format-time ambiguous: {min_time} {max_time}")),
       },
@@ -114,13 +114,13 @@ pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
             .and_hms_opt(0, 0, 0)
             .ok_or("from_ymd got none")?,
         ) {
-          LocalResult::None => Ok(Edn::Tuple(Box::new(Edn::tag("none")), vec![])),
+          LocalResult::None => Ok(Edn::Tuple(Arc::new(Edn::tag("none")), vec![])),
           LocalResult::Single(d) => Ok(Edn::Tuple(
-            Box::new(Edn::tag("single")),
+            Arc::new(Edn::tag("single")),
             vec![Edn::Number(d.timestamp_millis() as f64)],
           )),
           LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(
-            Box::new(Edn::tag("ambiguous")),
+            Arc::new(Edn::tag("ambiguous")),
             vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
           )),
         }
@@ -148,20 +148,20 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
           6 => Weekday::Sat,
           _ => {
             return Ok(Edn::Tuple(
-              Box::new(Edn::tag("err")),
+              Arc::new(Edn::tag("err")),
               vec![Edn::str(format!("invalid digit for weekday: {d}"))],
             ))
           }
         };
         match NaiveDate::from_isoywd_opt(*y as i32, *w as u32, weekday) {
           Some(time) => match Local.from_local_datetime(&time.and_hms_opt(0, 0, 0).ok_or("hms got none")?) {
-            LocalResult::None => Ok(Edn::Tuple(Box::new(Edn::tag("none")), vec![])),
+            LocalResult::None => Ok(Edn::Tuple(Arc::new(Edn::tag("none")), vec![])),
             LocalResult::Single(d) => Ok(Edn::Tuple(
-              Box::new(Edn::tag("single")),
+              Arc::new(Edn::tag("single")),
               vec![Edn::Number(d.timestamp_millis() as f64)],
             )),
             LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(
-              Box::new(Edn::tag("single")),
+              Arc::new(Edn::tag("single")),
               vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
             )),
           },

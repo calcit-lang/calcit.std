@@ -14,7 +14,7 @@ pub fn json_to_edn(data: &Value) -> Edn {
         // special logic to parse keyword
         Edn::Tag(EdnTag::new(s.strip_prefix(':').unwrap()))
       } else {
-        Edn::Str(s.to_owned().into_boxed_str())
+        Edn::Str(s.to_owned().into())
       }
     }
     Value::Array(xs) => {
@@ -30,7 +30,7 @@ pub fn json_to_edn(data: &Value) -> Edn {
         let key = if k.starts_with(':') {
           Edn::tag(k.strip_prefix(':').unwrap())
         } else {
-          Edn::Str(k.to_owned().into_boxed_str())
+          Edn::Str(k.to_owned().into())
         };
         ys.insert(key, json_to_edn(v));
       }
@@ -118,14 +118,14 @@ pub fn stringify_json(args: Vec<Edn>) -> Result<Edn, String> {
       Edn::Bool(add_colon) => {
         let ret = edn_to_json(args[0].to_owned(), *add_colon)?;
         match serde_json::to_string(&ret) {
-          Ok(s) => Ok(Edn::Str(s.into_boxed_str())),
+          Ok(s) => Ok(Edn::Str(s.into())),
           Err(e) => Err(format!("failed to generate string: {e}")),
         }
       }
       Edn::Nil => {
         let ret = edn_to_json(args[0].to_owned(), false)?;
         match serde_json::to_string(&ret) {
-          Ok(s) => Ok(Edn::Str(s.into_boxed_str())),
+          Ok(s) => Ok(Edn::Str(s.into())),
           Err(e) => Err(format!("failed to generate string: {e}")),
         }
       }
