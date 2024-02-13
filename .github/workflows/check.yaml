@@ -21,15 +21,15 @@ jobs:
 
       - uses: supplypike/setup-bin@v3
         with:
-          uri: "https://github.com/calcit-lang/calcit/releases/download/0.8.21/cr"
+          uri: "https://github.com/calcit-lang/calcit/releases/download/0.8.28/cr"
           name: "cr"
-          version: "0.8.21"
+          version: "0.8.28"
 
       - uses: supplypike/setup-bin@v3
         with:
-          uri: "https://github.com/calcit-lang/calcit/releases/download/0.8.21/caps"
+          uri: "https://github.com/calcit-lang/calcit/releases/download/0.8.28/caps"
           name: "caps"
-          version: "0.8.21"
+          version: "0.8.28"
 
       - run: cargo build --release
 
