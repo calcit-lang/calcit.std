@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde_json::Value;
 
-use cirru_edn::{Edn, EdnTag};
+use cirru_edn::{Edn, EdnRecordView, EdnTag};
 
 pub fn json_to_edn(data: &Value) -> Edn {
   match data {
@@ -22,7 +22,7 @@ pub fn json_to_edn(data: &Value) -> Edn {
       for x in xs {
         ys.push(json_to_edn(x));
       }
-      Edn::List(ys)
+      Edn::from(ys)
     }
     Value::Object(xs) => {
       let mut ys: HashMap<Edn, Edn> = HashMap::new();
@@ -34,17 +34,17 @@ pub fn json_to_edn(data: &Value) -> Edn {
         };
         ys.insert(key, json_to_edn(v));
       }
-      Edn::Map(ys)
+      Edn::from(ys)
     }
   }
 }
 
 /// option for "add colon to keyword"
-pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
+pub fn edn_to_json(data: &Edn, add_colon: bool) -> Result<Value, String> {
   match data {
     Edn::Nil => Ok(Value::Null),
-    Edn::Bool(b) => Ok(Value::Bool(b)),
-    Edn::Number(n) => match serde_json::value::Number::from_f64(n) {
+    Edn::Bool(b) => Ok(Value::Bool(*b)),
+    Edn::Number(n) => match serde_json::value::Number::from_f64(*n) {
       Some(v) => Ok(Value::Number(v)),
       None => Err(format!("failed to convert to number: {n}")),
     },
@@ -53,7 +53,7 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
       if add_colon {
         Ok(Value::String(format!(":{s}")))
       } else {
-        Ok(Value::String((*s.to_str()).to_string()))
+        Ok(Value::String((*s.ref_str()).to_string()))
       }
     }
     Edn::Str(s) => Ok(Value::String((*s).to_string())),
@@ -66,7 +66,7 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
     }
     Edn::Map(xs) => {
       let mut data = serde_json::Map::new();
-      for (k, v) in xs {
+      for (k, v) in &xs.0 {
         match k {
           Edn::Str(s) => {
             data.insert(s.to_string(), edn_to_json(v, add_colon)?);
@@ -84,10 +84,10 @@ pub fn edn_to_json(data: Edn, add_colon: bool) -> Result<Value, String> {
 
       Ok(Value::Object(data))
     }
-    Edn::Record(_, entries) => {
+    Edn::Record(EdnRecordView { pairs: entries, .. }) => {
       let mut data = serde_json::Map::new();
       for entry in entries {
-        data.insert(entry.0.to_string(), edn_to_json(entry.1.to_owned(), add_colon)?);
+        data.insert(entry.0.to_string(), edn_to_json(&entry.1, add_colon)?);
       }
       Ok(Value::Object(data))
     }
@@ -116,14 +116,14 @@ pub fn stringify_json(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match &args[1] {
       Edn::Bool(add_colon) => {
-        let ret = edn_to_json(args[0].to_owned(), *add_colon)?;
+        let ret = edn_to_json(&args[0], *add_colon)?;
         match serde_json::to_string(&ret) {
           Ok(s) => Ok(Edn::Str(s.into())),
           Err(e) => Err(format!("failed to generate string: {e}")),
         }
       }
       Edn::Nil => {
-        let ret = edn_to_json(args[0].to_owned(), false)?;
+        let ret = edn_to_json(&args[0], false)?;
         match serde_json::to_string(&ret) {
           Ok(s) => Ok(Edn::Str(s.into())),
           Err(e) => Err(format!("failed to generate string: {e}")),
