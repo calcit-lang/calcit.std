@@ -133,7 +133,7 @@ pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
           }
           // println!("child dir: {:?}", content);
 
-          Ok(Edn::List(content))
+          Ok(Edn::from(content))
         }
         Err(e) => Err(format!("Failed to read dir {name:?}: {e}")),
       }
@@ -248,7 +248,7 @@ pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
           content.push(Edn::Str(format!("{}", path.display()).into()));
         }
       }
-      Ok(Edn::List(content))
+      Ok(Edn::from(content))
     } else {
       Err(format!("walk-dir expected a string, got: {}", &args[0]))
     }
@@ -273,7 +273,7 @@ pub fn glob_call(args: Vec<Edn>) -> Result<Edn, String> {
           Err(e) => return Err(format!("Failed to read: {}", e)),
         }
       }
-      Ok(Edn::List(content))
+      Ok(Edn::from(content))
     } else {
       Err(format!("glob expected a string, got: {}", &args[0]))
     }

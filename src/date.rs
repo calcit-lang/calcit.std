@@ -4,7 +4,7 @@
 use std::{collections::HashMap, sync::Arc};
 
 use chrono::{DateTime, Datelike, Duration, Local, LocalResult, NaiveDate, TimeZone, Timelike, Utc, Weekday};
-use cirru_edn::Edn;
+use cirru_edn::{Edn, EdnTupleView};
 use std::ops::Add;
 
 /// calcit represents DateTime in f64
@@ -92,7 +92,7 @@ pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
         data.insert(Edn::tag("week"), Edn::Number(time.date_naive().iso_week().week() as f64));
         data.insert(Edn::tag("week0"), Edn::Number(time.date_naive().iso_week().week0() as f64));
 
-        Ok(Edn::Map(data))
+        Ok(Edn::from(data))
       }
       _ => Err(format!("extract-time expected f64 and string, got: {args:?}")),
     }
@@ -114,15 +114,18 @@ pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
             .and_hms_opt(0, 0, 0)
             .ok_or("from_ymd got none")?,
         ) {
-          LocalResult::None => Ok(Edn::Tuple(Arc::new(Edn::tag("none")), vec![])),
-          LocalResult::Single(d) => Ok(Edn::Tuple(
-            Arc::new(Edn::tag("single")),
-            vec![Edn::Number(d.timestamp_millis() as f64)],
-          )),
-          LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(
-            Arc::new(Edn::tag("ambiguous")),
-            vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
-          )),
+          LocalResult::None => Ok(Edn::Tuple(EdnTupleView {
+            tag: Arc::new(Edn::tag("none")),
+            extra: vec![],
+          })),
+          LocalResult::Single(d) => Ok(Edn::Tuple(EdnTupleView {
+            tag: Arc::new(Edn::tag("single")),
+            extra: vec![Edn::Number(d.timestamp_millis() as f64)],
+          })),
+          LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(EdnTupleView {
+            tag: Arc::new(Edn::tag("ambiguous")),
+            extra: vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
+          })),
         }
       }
       (a, b, c) => Err(format!("from-ymd expected 2 args, got: {a} {b} {c}")),
@@ -147,23 +150,26 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
           5 => Weekday::Fri,
           6 => Weekday::Sat,
           _ => {
-            return Ok(Edn::Tuple(
-              Arc::new(Edn::tag("err")),
-              vec![Edn::str(format!("invalid digit for weekday: {d}"))],
-            ))
+            return Ok(Edn::Tuple(EdnTupleView {
+              tag: Arc::new(Edn::tag("err")),
+              extra: vec![Edn::str(format!("invalid digit for weekday: {d}"))],
+            }))
           }
         };
         match NaiveDate::from_isoywd_opt(*y as i32, *w as u32, weekday) {
           Some(time) => match Local.from_local_datetime(&time.and_hms_opt(0, 0, 0).ok_or("hms got none")?) {
-            LocalResult::None => Ok(Edn::Tuple(Arc::new(Edn::tag("none")), vec![])),
-            LocalResult::Single(d) => Ok(Edn::Tuple(
-              Arc::new(Edn::tag("single")),
-              vec![Edn::Number(d.timestamp_millis() as f64)],
-            )),
-            LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(
-              Arc::new(Edn::tag("single")),
-              vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
-            )),
+            LocalResult::None => Ok(Edn::Tuple(EdnTupleView {
+              tag: Arc::new(Edn::tag("none")),
+              extra: vec![],
+            })),
+            LocalResult::Single(d) => Ok(Edn::Tuple(EdnTupleView {
+              tag: Arc::new(Edn::tag("single")),
+              extra: vec![Edn::Number(d.timestamp_millis() as f64)],
+            })),
+            LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(EdnTupleView {
+              tag: Arc::new(Edn::tag("single")),
+              extra: vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
+            })),
           },
           None => Err(format!("from-ywd got invalid args: {y} {w} {weekday}")),
         }
@@ -186,7 +192,7 @@ pub fn add_duration(args: Vec<Edn>) -> Result<Edn, String> {
           LocalResult::Ambiguous(min_time, max_time) => return Err(format!("add-duration ambiguous: {min_time} {max_time}")),
         };
 
-        match &(*k.to_str()) {
+        match k.ref_str() {
           "week" | "weeks" => Ok(Edn::Number(time.add(Duration::weeks(*n as i64)).timestamp_millis() as f64)),
           "day" | "days" => Ok(Edn::Number(time.add(Duration::days(*n as i64)).timestamp_millis() as f64)),
           "h" | "hour" | "hours" => Ok(Edn::Number(time.add(Duration::hours(*n as i64)).timestamp_millis() as f64)),

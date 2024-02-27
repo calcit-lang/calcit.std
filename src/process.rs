@@ -9,7 +9,7 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
         let mut cmd = String::from("");
         let mut xs: Vec<String> = vec![];
 
-        for (idx, piece) in ys.iter().enumerate() {
+        for (idx, piece) in ys.0.iter().enumerate() {
           if let Edn::Str(s) = piece {
             if idx == 0 {
               cmd = (**s).to_owned();
@@ -25,7 +25,7 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
           Ok(t) => {
             let content = String::from_utf8(t.stdout).unwrap();
             let stderr = String::from_utf8(t.stderr).unwrap();
-            Ok(Edn::List(vec![Edn::Str(content.into()), Edn::Str(stderr.into())]))
+            Ok(Edn::from(vec![Edn::Str(content.into()), Edn::Str(stderr.into())]))
           }
           Err(e) => Err(format!("Failed to excute: {e}")),
         }
