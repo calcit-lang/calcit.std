@@ -1,6 +1,6 @@
 [package]
 name = "calcit_std"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["jiyinyiyong <jiyinyiyong@gmail.com>"]
 edition = "2021"
 
@@ -14,17 +14,17 @@ crate-type = ["dylib"] # Creates dynamic lib
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serde = { version = "1.0.185", features = ["derive"] }
-serde_json = "1.0.105"
-chrono = "0.4.26"
-cirru_edn = "0.6.2"
-cirru_parser = "0.1.28"
+serde = { version = "1.0.202", features = ["derive"] }
+serde_json = "1.0.117"
+chrono = "0.4.38"
+cirru_edn = "0.6.5"
+cirru_parser = "0.1.29"
 nanoid = "0.4.0"
 rand = "0.8.5"
-ctrlc = "3.4.0"
+ctrlc = "3.4.4"
 md5 = "0.7.0"
-walkdir = "2.3.3"
-glob = "0.3.0"
+walkdir = "2.5.0"
+glob = "0.3.1"
 
 # [profile.release]
 # lto = true
