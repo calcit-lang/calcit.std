@@ -1,20 +1,10 @@
-//! TODO, need to store offset as well,
-//! currently lack of offset, prefer using Local time
-
-use std::{
-  collections::HashMap,
-  sync::{Arc, RwLock},
-};
+/// DateTime<FixedOffset> is used to store time internally
+///
+use std::{collections::HashMap, sync::Arc};
 
 use chrono::{DateTime, Datelike, Duration, FixedOffset, Local, LocalResult, NaiveDate, TimeZone, Timelike, Weekday};
-use cirru_edn::{Edn, EdnAnyRef, EdnTupleView};
+use cirru_edn::{Edn, EdnTupleView};
 use std::ops::Add;
-
-/// an alias generating Edn from DateTime
-/// DateTime<FixedOffset> is used to store time internally
-fn date_to_edn<T: TimeZone>(d: &DateTime<T>) -> Edn {
-  Edn::AnyRef(EdnAnyRef(Arc::new(RwLock::new(d.fixed_offset()))))
-}
 
 /// calcit represents DateTime in f64
 /// nil for no format
@@ -23,11 +13,11 @@ pub fn parse_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
       (Edn::Str(s), Edn::Nil) => match DateTime::parse_from_rfc3339(s) {
-        Ok(time) => Ok(date_to_edn(&time)),
+        Ok(time) => Ok(Edn::any_ref(time.fixed_offset())),
         Err(e) => Err(format!("parse-time failed, {e}")),
       },
       (Edn::Str(s), Edn::Str(f)) => match DateTime::parse_from_str(s, f) {
-        Ok(time) => Ok(date_to_edn(&time)),
+        Ok(time) => Ok(Edn::any_ref(time.fixed_offset())),
         Err(e) => Err(format!("parse-time failed, {s} {f} {e}")),
       },
       (_, _) => Err(format!("parse-time expected 2 arguments, got: {args:?}")),
@@ -39,7 +29,7 @@ pub fn parse_time(args: Vec<Edn>) -> Result<Edn, String> {
 
 #[no_mangle]
 pub fn now_bang(_args: Vec<Edn>) -> Result<Edn, String> {
-  Ok(date_to_edn(&Local::now()))
+  Ok(Edn::any_ref(Local::now().fixed_offset()))
 }
 
 /// TODO currently only return self, no offset involved yet
@@ -141,11 +131,11 @@ pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
           })),
           LocalResult::Single(d) => Ok(Edn::Tuple(EdnTupleView {
             tag: Arc::new(Edn::tag("single")),
-            extra: vec![date_to_edn(&d)],
+            extra: vec![Edn::any_ref(d.fixed_offset())],
           })),
           LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(EdnTupleView {
             tag: Arc::new(Edn::tag("ambiguous")),
-            extra: vec![date_to_edn(&d), date_to_edn(&d2)],
+            extra: vec![Edn::any_ref(d.fixed_offset()), Edn::any_ref(d2.fixed_offset())],
           })),
         }
       }
@@ -185,11 +175,11 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
             })),
             LocalResult::Single(d) => Ok(Edn::Tuple(EdnTupleView {
               tag: Arc::new(Edn::tag("single")),
-              extra: vec![date_to_edn(&d)],
+              extra: vec![Edn::any_ref(d.fixed_offset())],
             })),
             LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(EdnTupleView {
               tag: Arc::new(Edn::tag("single")),
-              extra: vec![date_to_edn(&d), date_to_edn(&d2)],
+              extra: vec![Edn::any_ref(d.fixed_offset()), Edn::any_ref(d2.fixed_offset())],
             })),
           },
           None => Err(format!("from-ywd got invalid args: {y} {w} {weekday}")),
@@ -209,12 +199,12 @@ pub fn add_duration(args: Vec<Edn>) -> Result<Edn, String> {
       (Edn::AnyRef(d), Edn::Number(n), Edn::Tag(k)) => {
         if let Some(time) = d.0.read().unwrap().downcast_ref::<DateTime<FixedOffset>>() {
           match k.ref_str() {
-            "week" | "weeks" => Ok(date_to_edn(&time.add(Duration::weeks(*n as i64)))),
-            "day" | "days" => Ok(date_to_edn(&time.add(Duration::days(*n as i64)))),
-            "h" | "hour" | "hours" => Ok(date_to_edn(&time.add(Duration::hours(*n as i64)))),
-            "min" | "minute" | "minutes" => Ok(date_to_edn(&time.add(Duration::minutes(*n as i64)))),
-            "second" | "seconds" => Ok(date_to_edn(&time.add(Duration::seconds(*n as i64)))),
-            "milli" | "millisecond" | "milliseconds" => Ok(date_to_edn(&time.add(Duration::milliseconds(*n as i64)))),
+            "week" | "weeks" => Ok(Edn::any_ref(time.add(Duration::weeks(*n as i64)).fixed_offset())),
+            "day" | "days" => Ok(Edn::any_ref(time.add(Duration::days(*n as i64)).fixed_offset())),
+            "h" | "hour" | "hours" => Ok(Edn::any_ref(time.add(Duration::hours(*n as i64)).fixed_offset())),
+            "min" | "minute" | "minutes" => Ok(Edn::any_ref(time.add(Duration::minutes(*n as i64)).fixed_offset())),
+            "second" | "seconds" => Ok(Edn::any_ref(time.add(Duration::seconds(*n as i64)).fixed_offset())),
+            "milli" | "millisecond" | "milliseconds" => Ok(Edn::any_ref(time.add(Duration::milliseconds(*n as i64)).fixed_offset())),
             a => Err(format!("unknown duration unit: {a}")),
           }
         } else {
