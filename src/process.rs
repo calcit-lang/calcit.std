@@ -12,7 +12,7 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
         for (idx, piece) in ys.0.iter().enumerate() {
           if let Edn::Str(s) = piece {
             if idx == 0 {
-              cmd = (**s).to_owned();
+              (**s).clone_into(&mut cmd);
             } else {
               xs.push((**s).to_owned());
             }

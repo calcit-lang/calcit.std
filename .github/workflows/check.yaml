@@ -16,20 +16,12 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: nightly
+          toolchain: stable
           components: clippy
 
-      - uses: supplypike/setup-bin@v3
+      - uses: calcit-lang/setup-cr@0.0.3
         with:
-          uri: "https://github.com/calcit-lang/calcit/releases/download/0.8.36/cr"
-          name: "cr"
-          version: "0.8.36"
-
-      - uses: supplypike/setup-bin@v3
-        with:
-          uri: "https://github.com/calcit-lang/calcit/releases/download/0.8.36/caps"
-          name: "caps"
-          version: "0.8.36"
+          version: "0.8.52"
 
       - run: cargo build --release
 

@@ -47,7 +47,7 @@ pub fn read_file_by_line(
       match read_lines(&**name) {
         Ok(lines) => {
           // Consumes the iterator, returns an (Optional) String
-          for line in lines.flatten() {
+          for line in lines.map_while(Result::ok) {
             match handler(vec![Edn::str(line)]) {
               Ok(_) => {}
               Err(e) => return Err(format!("failed reading line: {}", e)),
@@ -92,7 +92,7 @@ pub fn append_file(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
       (Edn::Str(name), Edn::Str(content)) => {
-        let mut file = OpenOptions::new().write(true).append(true).open(&**name).unwrap();
+        let mut file = OpenOptions::new().append(true).open(&**name).unwrap();
 
         if let Err(e) = writeln!(file, "{}", content) {
           Err(format!("Failed to append to file {name:?}: {e}"))
