@@ -78,7 +78,7 @@ pub fn call_nanoid(xs: Vec<Edn>) -> Result<Edn, String> {
         }
         Ok(Edn::Str(nanoid!(n, &charset).into()))
       }
-      (a, b) => Err(format!("nanoid! expected size or charset, got: {:?} {:?}", a, b)),
+      (a, b) => Err(format!("nanoid! expected size or charset, got: {a:?} {b:?}")),
     }
   } else {
     Err(format!("nanoid! expected 2 args, got: {xs:?}"))
