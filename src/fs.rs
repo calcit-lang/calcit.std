@@ -50,7 +50,7 @@ pub fn read_file_by_line(
           for line in lines.map_while(Result::ok) {
             match handler(vec![Edn::str(line)]) {
               Ok(_) => {}
-              Err(e) => return Err(format!("failed reading line: {}", e)),
+              Err(e) => return Err(format!("failed reading line: {e}")),
             }
           }
           finish();
@@ -94,7 +94,7 @@ pub fn append_file(args: Vec<Edn>) -> Result<Edn, String> {
       (Edn::Str(name), Edn::Str(content)) => {
         let mut file = OpenOptions::new().append(true).open(&**name).unwrap();
 
-        if let Err(e) = writeln!(file, "{}", content) {
+        if let Err(e) = writeln!(file, "{content}") {
           Err(format!("Failed to append to file {name:?}: {e}"))
         } else {
           Ok(Edn::Nil)
@@ -172,7 +172,7 @@ pub fn create_dir_all(args: Vec<Edn>) -> Result<Edn, String> {
       Err(format!("create-dir-all! expected 1 filename, got {:?}", &args[0]))
     }
   } else {
-    Err(format!("create-dir-all! expected 1 argument, got {:?}", args))
+    Err(format!("create-dir-all! expected 1 argument, got {args:?}"))
   }
 }
 
@@ -185,7 +185,7 @@ pub fn rename_path(args: Vec<Edn>) -> Result<Edn, String> {
         let task = fs::rename(&**name, &**next);
         match task {
           Ok(()) => Ok(Edn::Nil),
-          Err(e) => Err(format!("Failed to rename file {:?} -> {:?} {}", name, next, e)),
+          Err(e) => Err(format!("Failed to rename file {name:?} -> {next:?} {e}")),
         }
       }
       (_, _) => Err(format!("rename! expected 2 strings, got {args:?}")),
@@ -228,7 +228,7 @@ pub fn check_write_file(args: Vec<Edn>) -> Result<Edn, String> {
           }
         }
       }
-      (_, _) => Err(format!("check-write-file! expected 2 strings, got {:?}", args)),
+      (_, _) => Err(format!("check-write-file! expected 2 strings, got {args:?}")),
     }
   } else {
     Err(format!("check-write-file! expected 2 args, got {args:?}"))
@@ -270,7 +270,7 @@ pub fn glob_call(args: Vec<Edn>) -> Result<Edn, String> {
               content.push(Edn::Str(format!("{}", entry.display()).into()));
             }
           }
-          Err(e) => return Err(format!("Failed to read: {}", e)),
+          Err(e) => return Err(format!("Failed to read: {e}")),
         }
       }
       Ok(Edn::from(content))

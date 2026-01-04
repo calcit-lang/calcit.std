@@ -5,8 +5,7 @@ use std::path::{Path, PathBuf};
 pub fn join_path(args: Vec<Edn>) -> Result<Edn, String> {
   if args.is_empty() {
     Err(format!(
-      "join-path expected multiple arguments, got: {:?}",
-      args
+      "join-path expected multiple arguments, got: {args:?}"
     ))
   } else {
     let mut first = true;

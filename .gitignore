@@ -12,3 +12,5 @@
 .compact-inc.cirru
 
 /dylibs/
+
+.DS_Store

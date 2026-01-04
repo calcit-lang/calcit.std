@@ -1,12 +1,12 @@
 
 {} (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:port 6001) (:reload-fn |calcit.std.test/reload!) (:version |0.2.5)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:port 6001) (:reload-fn |calcit.std.test/reload!) (:version |0.2.6)
     :modules $ []
   :entries $ {}
   :files $ {}
     |calcit.std.date $ %{} :FileEntry
       :defs $ {}
-        |Date $ %{} :CodeEntry (:doc |)
+        |Date $ %{} :CodeEntry (:doc "|Date record type wrapping timestamps. Provides static methods: :now (current time), :parse (parse string), :timestamp (get timestamp), :add (add duration), :format (format output).")
           :code $ %{} :Expr (:at 1636967181600) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636967184614) (:by |u0) (:text |defrecord!)
@@ -43,7 +43,8 @@
                 :data $ {}
                   |T $ %{} :Leaf (:at 1636967342266) (:by |u0) (:text |:extract)
                   |j $ %{} :Leaf (:at 1636967344062) (:by |u0) (:text |extract-time)
-        |add-duration $ %{} :CodeEntry (:doc |)
+          :examples $ []
+        |add-duration $ %{} :CodeEntry (:doc "|Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc).")
           :code $ %{} :Expr (:at 1636966236963) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636966236963) (:by |u0) (:text |defn)
@@ -73,7 +74,9 @@
                           |j $ %{} :Leaf (:at 1636967726909) (:by |u0) (:text |1)
                       |x $ %{} :Leaf (:at 1636966264462) (:by |u0) (:text |n)
                       |y $ %{} :Leaf (:at 1636966265224) (:by |u0) (:text |k)
-        |extract-time $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ add-duration (get-time!) 7 :days
+        |extract-time $ %{} :CodeEntry (:doc "|Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields.")
           :code $ %{} :Expr (:at 1636560278671) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636560278671) (:by |u0) (:text |defn)
@@ -94,7 +97,9 @@
                       |D $ %{} :Leaf (:at 1636967762505) (:by |u0) (:text |nth)
                       |T $ %{} :Leaf (:at 1636560295035) (:by |u0) (:text |x)
                       |j $ %{} :Leaf (:at 1636967764117) (:by |u0) (:text |1)
-        |format-time $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ extract-time (get-time!)
+        |format-time $ %{} :CodeEntry (:doc "|Format Date object to string. Optional second parameter specifies format (default ISO format).")
           :code $ %{} :Expr (:at 1633168497249) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633168497249) (:by |u0) (:text |defn)
@@ -118,7 +123,9 @@
                       |T $ %{} :Leaf (:at 1633181240264) (:by |u0) (:text |time)
                       |j $ %{} :Leaf (:at 1636967744890) (:by |u0) (:text |1)
                   |x $ %{} :Leaf (:at 1633181241023) (:by |u0) (:text |format)
-        |from-ymd $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ format-time (get-time!) |%Y-%m-%d
+        |from-ymd $ %{} :CodeEntry (:doc "|Create Date object from year, month, day. Args: year, month (1-12), day (1-31).")
           :code $ %{} :Expr (:at 1636792849064) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636792849064) (:by |u0) (:text |defn)
@@ -187,7 +194,9 @@
                         :data $ {}
                           |T $ %{} :Leaf (:at 1636968205753) (:by |u0) (:text |raise)
                           |j $ %{} :Leaf (:at 1636968209667) (:by |u0) (:text "|\"unreachable!")
-        |from-ywd $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ from-ymd 2024 1 15
+        |from-ywd $ %{} :CodeEntry (:doc "|Create Date object from year, week, day. Args: year, week (1-53), day (1-7, 1=Monday).")
           :code $ %{} :Expr (:at 1636792882847) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636792882847) (:by |u0) (:text |defn)
@@ -256,7 +265,9 @@
                         :data $ {}
                           |T $ %{} :Leaf (:at 1636968403443) (:by |u0) (:text |raise)
                           |j $ %{} :Leaf (:at 1636968407933) (:by |u0) (:text "|\"unreachable!")
-        |get-time! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ from-ywd 2024 1 1
+        |get-time! $ %{} :CodeEntry (:doc "|Get current system time as a Date object.")
           :code $ %{} :Expr (:at 1633168502797) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633168502797) (:by |u0) (:text |defn)
@@ -276,7 +287,9 @@
                           |T $ %{} :Leaf (:at 1635220782559) (:by |u0) (:text |get-dylib-path)
                           |j $ %{} :Leaf (:at 1635220784327) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                       |r $ %{} :Leaf (:at 1633181993466) (:by |u0) (:text "|\"now_bang")
-        |get-timestamp $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ get-time!
+        |get-timestamp $ %{} :CodeEntry (:doc "|Get timestamp (milliseconds) from Date object.")
           :code $ %{} :Expr (:at 1636967154593) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636967154593) (:by |u0) (:text |defn)
@@ -297,7 +310,9 @@
                       |D $ %{} :Leaf (:at 1636967716897) (:by |u0) (:text |nth)
                       |T $ %{} :Leaf (:at 1636967156785) (:by |u0) (:text |date)
                       |j $ %{} :Leaf (:at 1636967717888) (:by |u0) (:text |1)
-        |parse-time $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ get-timestamp (get-time!)
+        |parse-time $ %{} :CodeEntry (:doc "|Parse time string to Date object. Args: time string, format string (e.g. \"%Y-%m-%d %H:%M:%S %z\").")
           :code $ %{} :Expr (:at 1633168493152) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633168493152) (:by |u0) (:text |defn)
@@ -321,6 +336,8 @@
                       |r $ %{} :Leaf (:at 1633181261272) (:by |u0) (:text "|\"parse_time")
                       |v $ %{} :Leaf (:at 1633181264402) (:by |u0) (:text |time)
                       |x $ %{} :Leaf (:at 1633181265382) (:by |u0) (:text |format)
+          :examples $ []
+            quote $ parse-time "|2024-01-01 12:00:00 +00:00" "|%Y-%m-%d %H:%M:%S %z"
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1633168354404) (:by |u0)
           :data $ {}
@@ -343,9 +360,10 @@
                     |r $ %{} :Expr (:at 1633181151756) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220775131) (:by |u0) (:text |get-dylib-path)
+        :examples $ []
     |calcit.std.fs $ %{} :FileEntry
       :defs $ {}
-        |append-file! $ %{} :CodeEntry (:doc |)
+        |append-file! $ %{} :CodeEntry (:doc "|Append content to end of file. Args: file path, content string.")
           :code $ %{} :Expr (:at 1679453818235) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1679453818235) (:by |u0) (:text |defn)
@@ -364,7 +382,9 @@
                   |h $ %{} :Leaf (:at 1679453834365) (:by |u0) (:text "|\"append_file")
                   |l $ %{} :Leaf (:at 1679453827292) (:by |u0) (:text |name)
                   |o $ %{} :Leaf (:at 1679453827292) (:by |u0) (:text |content)
-        |check-write-file! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ append-file! |log.txt | "New log entry"
+        |check-write-file! $ %{} :CodeEntry (:doc "|Check if file exists, write content if not exists. Args: file path, content string.")
           :code $ %{} :Expr (:at 1636559397887) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636559397887) (:by |u0) (:text |defn)
@@ -383,7 +403,8 @@
                   |r $ %{} :Leaf (:at 1636559404373) (:by |u0) (:text "|\"check_write_file")
                   |v $ %{} :Leaf (:at 1636559397887) (:by |u0) (:text |name)
                   |x $ %{} :Leaf (:at 1636559397887) (:by |u0) (:text |content)
-        |create-dir! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+        |create-dir! $ %{} :CodeEntry (:doc "|Create a directory at the given path. Fails if parent directory does not exist.")
           :code $ %{} :Expr (:at 1636552743342) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636552743342) (:by |u0) (:text |defn)
@@ -400,7 +421,9 @@
                       |j $ %{} :Leaf (:at 1636552746319) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |r $ %{} :Leaf (:at 1636552755308) (:by |u0) (:text "|\"create_dir")
                   |v $ %{} :Leaf (:at 1636552746319) (:by |u0) (:text |name)
-        |create-dir-all! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ create-dir! |new-folder
+        |create-dir-all! $ %{} :CodeEntry (:doc "|Create a directory and all necessary parent directories.")
           :code $ %{} :Expr (:at 1636552822494) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636552822494) (:by |u0) (:text |defn)
@@ -417,7 +440,9 @@
                       |j $ %{} :Leaf (:at 1636552824361) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |r $ %{} :Leaf (:at 1636552908780) (:by |u0) (:text "|\"create_dir_all")
                   |v $ %{} :Leaf (:at 1636552824361) (:by |u0) (:text |name)
-        |glob! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ create-dir-all! |path/to/nested/dir
+        |glob! $ %{} :CodeEntry (:doc "|Find files matching the glob pattern. Returns a list of matching file paths.")
           :code $ %{} :Expr (:at 1673542966298) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1673542966298) (:by |u0) (:text |defn)
@@ -434,7 +459,9 @@
                       |b $ %{} :Leaf (:at 1673542969091) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |h $ %{} :Leaf (:at 1673543522071) (:by |u0) (:text "|\"glob_call")
                   |l $ %{} :Leaf (:at 1673542969091) (:by |u0) (:text |name)
-        |path-exists? $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ glob! | src/**/*.rs
+        |path-exists? $ %{} :CodeEntry (:doc "|Check if a file or directory exists at the given path. Returns boolean.")
           :code $ %{} :Expr (:at 1630219258753) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1630219258753) (:by |u0) (:text |defn)
@@ -451,7 +478,9 @@
                       |j $ %{} :Leaf (:at 1635220808067) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |r $ %{} :Leaf (:at 1630219282714) (:by |u0) (:text "|\"path_exists")
                   |v $ %{} :Leaf (:at 1630219268038) (:by |u0) (:text |name)
-        |read-dir! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ path-exists? |file.txt
+        |read-dir! $ %{} :CodeEntry (:doc "|Read directory contents and return a list of file/directory names.")
           :code $ %{} :Expr (:at 1630224735170) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1630224735170) (:by |u0) (:text |defn)
@@ -468,7 +497,9 @@
                       |j $ %{} :Leaf (:at 1635220816762) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |r $ %{} :Leaf (:at 1631164877698) (:by |u0) (:text "|\"read_dir")
                   |v $ %{} :Leaf (:at 1631164877698) (:by |u0) (:text |name)
-        |read-file! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ read-dir! |src
+        |read-file! $ %{} :CodeEntry (:doc "|Read entire file content as a string. Args: file path.")
           :code $ %{} :Expr (:at 1630171370222) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1630171370222) (:by |u0) (:text |defn)
@@ -485,7 +516,9 @@
                       |j $ %{} :Leaf (:at 1635220825098) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |n $ %{} :Leaf (:at 1630176304763) (:by |u0) (:text "|\"read_file")
                   |r $ %{} :Leaf (:at 1630171465347) (:by |u0) (:text |name)
-        |read-file-by-line! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ read-file! |example.txt
+        |read-file-by-line! $ %{} :CodeEntry (:doc "|Read file line by line and call the callback function for each line. Args: file path, callback function.")
           :code $ %{} :Expr (:at 1688447271554) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1688447271554) (:by |u0) (:text |defn)
@@ -504,7 +537,10 @@
                   |h $ %{} :Leaf (:at 1688447428492) (:by |u0) (:text "|\"read_file_by_line")
                   |l $ %{} :Leaf (:at 1688447278540) (:by |u0) (:text |name)
                   |o $ %{} :Leaf (:at 1688447312392) (:by |u0) (:text |cb)
-        |rename! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ read-file-by-line! |file.txt
+              fn (line) (println line)
+        |rename! $ %{} :CodeEntry (:doc "|Rename or move a file/directory. Args: source path, destination path.")
           :code $ %{} :Expr (:at 1636553285707) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636553285707) (:by |u0) (:text |defn)
@@ -523,7 +559,9 @@
                   |r $ %{} :Leaf (:at 1636553366268) (:by |u0) (:text "|\"rename_path")
                   |v $ %{} :Leaf (:at 1636553295788) (:by |u0) (:text |from)
                   |x $ %{} :Leaf (:at 1636553296107) (:by |u0) (:text |to)
-        |walk-dir! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ rename! |old.txt |new.txt
+        |walk-dir! $ %{} :CodeEntry (:doc "|Recursively walk through directory and return all file paths.")
           :code $ %{} :Expr (:at 1672681238594) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1672681238594) (:by |u0) (:text |defn)
@@ -540,7 +578,8 @@
                       |b $ %{} :Leaf (:at 1672681246880) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |h $ %{} :Leaf (:at 1672681289573) (:by |u0) (:text "|\"walk_dir")
                   |l $ %{} :Leaf (:at 1672681246880) (:by |u0) (:text |name)
-        |write-file! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+        |write-file! $ %{} :CodeEntry (:doc "|Write content to file (overwrite). Args: file path, content string.")
           :code $ %{} :Expr (:at 1630171482098) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1630171482098) (:by |u0) (:text |defn)
@@ -559,6 +598,8 @@
                   |n $ %{} :Leaf (:at 1630176312321) (:by |u0) (:text "|\"write_file")
                   |r $ %{} :Leaf (:at 1630171491979) (:by |u0) (:text |name)
                   |v $ %{} :Leaf (:at 1630171494451) (:by |u0) (:text |content)
+          :examples $ []
+            quote $ write-file! |output.txt | "Hello, World!"
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1630171366222) (:by |u0)
           :data $ {}
@@ -581,9 +622,10 @@
                     |r $ %{} :Expr (:at 1633181140100) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220832816) (:by |u0) (:text |get-dylib-path)
+        :examples $ []
     |calcit.std.hash $ %{} :FileEntry
       :defs $ {}
-        |md5 $ %{} :CodeEntry (:doc |)
+        |md5 $ %{} :CodeEntry (:doc "|Calculate MD5 hash of a string. Returns 32-character hexadecimal string.")
           :code $ %{} :Expr (:at 1635220490864) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1635220490864) (:by |u0) (:text |defn)
@@ -600,6 +642,8 @@
                       |j $ %{} :Leaf (:at 1635220739344) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |r $ %{} :Leaf (:at 1635220504848) (:by |u0) (:text "|\"md5")
                   |v $ %{} :Leaf (:at 1635220498556) (:by |u0) (:text |s)
+          :examples $ []
+            quote $ md5 |hello
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1635220487680) (:by |u0)
           :data $ {}
@@ -622,9 +666,10 @@
                     |r $ %{} :Expr (:at 1635220595836) (:by |u0)
                       :data $ {}
                         |r $ %{} :Leaf (:at 1635220746259) (:by |u0) (:text |get-dylib-path)
+        :examples $ []
     |calcit.std.json $ %{} :FileEntry
       :defs $ {}
-        |parse-json $ %{} :CodeEntry (:doc |)
+        |parse-json $ %{} :CodeEntry (:doc "|Parse JSON string to Calcit data structures. String keys remain as strings, keyword keys become keywords.")
           :code $ %{} :Expr (:at 1633168511255) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633168511255) (:by |u0) (:text |defn)
@@ -641,7 +686,9 @@
                       |j $ %{} :Leaf (:at 1635220857947) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |r $ %{} :Leaf (:at 1633184660110) (:by |u0) (:text "|\"parse_json")
                   |v $ %{} :Leaf (:at 1633181297499) (:by |u0) (:text |s)
-        |stringify-json $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ parse-json "|{\"a\": [1, 2], \":b\": 3}"
+        |stringify-json $ %{} :CodeEntry (:doc "|Serialize Calcit data structures to JSON string. Second parameter colon? when true converts keywords to strings with colon prefix.")
           :code $ %{} :Expr (:at 1633168514525) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633168514525) (:by |u0) (:text |defn)
@@ -661,6 +708,11 @@
                   |r $ %{} :Leaf (:at 1633186337203) (:by |u0) (:text "|\"stringify_json")
                   |v $ %{} :Leaf (:at 1633181320287) (:by |u0) (:text |data)
                   |x $ %{} :Leaf (:at 1633181322417) (:by |u0) (:text |colon?)
+          :examples $ []
+            quote $ stringify-json ([] 1 2 3)
+            quote $ stringify-json
+              {} (:a 1) (:b 2)
+              , true
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1633168388260) (:by |u0)
           :data $ {}
@@ -683,9 +735,10 @@
                     |r $ %{} :Expr (:at 1633181160126) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220862556) (:by |u0) (:text |get-dylib-path)
+        :examples $ []
     |calcit.std.path $ %{} :FileEntry
       :defs $ {}
-        |join-path $ %{} :CodeEntry (:doc |)
+        |join-path $ %{} :CodeEntry (:doc "|Join multiple path segments into a complete path, handling separators automatically.")
           :code $ %{} :Expr (:at 1636556313098) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636556313098) (:by |u0) (:text |defn)
@@ -704,7 +757,9 @@
                   |r $ %{} :Leaf (:at 1636556336521) (:by |u0) (:text "|\"join_path")
                   |v $ %{} :Leaf (:at 1636556337922) (:by |u0) (:text |&)
                   |x $ %{} :Leaf (:at 1636556339654) (:by |u0) (:text |xs)
-        |path-basename $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ join-path |/home |user |documents |file.txt
+        |path-basename $ %{} :CodeEntry (:doc "|Get the filename part of a path (the last path component).")
           :code $ %{} :Expr (:at 1636558665896) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636558665896) (:by |u0) (:text |defn)
@@ -721,7 +776,9 @@
                       |j $ %{} :Leaf (:at 1636558674612) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |r $ %{} :Leaf (:at 1636558783396) (:by |u0) (:text "|\"path_basename")
                   |v $ %{} :Leaf (:at 1636558690631) (:by |u0) (:text |x)
-        |path-dirname $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ path-basename |/home/user/file.txt
+        |path-dirname $ %{} :CodeEntry (:doc "|Get the directory part of a path (excluding the last component).")
           :code $ %{} :Expr (:at 1636558650046) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636558650046) (:by |u0) (:text |defn)
@@ -738,6 +795,8 @@
                       |j $ %{} :Leaf (:at 1636558695026) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |r $ %{} :Leaf (:at 1636558787441) (:by |u0) (:text "|\"path_dirname")
                   |v $ %{} :Leaf (:at 1636558695026) (:by |u0) (:text |x)
+          :examples $ []
+            quote $ path-dirname |/home/user/file.txt
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1636556244867) (:by |u0)
           :data $ {}
@@ -760,9 +819,10 @@
                     |r $ %{} :Expr (:at 1636556291572) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1636556291572) (:by |u0) (:text |get-dylib-path)
+        :examples $ []
     |calcit.std.process $ %{} :FileEntry
       :defs $ {}
-        |execute! $ %{} :CodeEntry (:doc |)
+        |execute! $ %{} :CodeEntry (:doc "|Execute a shell command. Args: command as list of strings, optional working directory. Returns output or error.")
           :code $ %{} :Expr (:at 1630233671273) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1630233671273) (:by |u0) (:text |defn)
@@ -802,7 +862,9 @@
                       |j $ %{} :Leaf (:at 1631166907802) (:by |u0) (:text |dir)
                       |r $ %{} :Leaf (:at 1631166907802) (:by |u0) (:text "|\"./")
                   |t $ %{} :Leaf (:at 1631164907902) (:by |u0) (:text |command)
-        |on-ctrl-c $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ execute! ([] |ls | -la)
+        |on-ctrl-c $ %{} :CodeEntry (:doc "|Register a callback function to handle Ctrl+C signal.")
           :code $ %{} :Expr (:at 1635175970470) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1635175970470) (:by |u0) (:text |defn)
@@ -819,6 +881,9 @@
                       |j $ %{} :Leaf (:at 1635220896873) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |r $ %{} :Leaf (:at 1635176045304) (:by |u0) (:text "|\"on_ctrl_c")
                   |v $ %{} :Leaf (:at 1635176047010) (:by |u0) (:text |f)
+          :examples $ []
+            quote $ on-ctrl-c
+              fn () $ println | Exiting...
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1630233659635) (:by |u0)
           :data $ {}
@@ -841,9 +906,10 @@
                     |r $ %{} :Expr (:at 1630234680982) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220886442) (:by |u0) (:text |get-dylib-path)
+        :examples $ []
     |calcit.std.rand $ %{} :FileEntry
       :defs $ {}
-        |nanoid! $ %{} :CodeEntry (:doc |)
+        |nanoid! $ %{} :CodeEntry (:doc "|Generate nanoid string. Optional: size (default 21), chars (character set).")
           :code $ %{} :Expr (:at 1633344066690) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633344066690) (:by |u0) (:text |defn)
@@ -863,7 +929,10 @@
                   |r $ %{} :Leaf (:at 1633344271797) (:by |u0) (:text "|\"call_nanoid")
                   |v $ %{} :Leaf (:at 1633344294685) (:by |u0) (:text |size)
                   |x $ %{} :Leaf (:at 1633344296969) (:by |u0) (:text |chars)
-        |rand $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ nanoid!
+            quote $ nanoid! 10
+        |rand $ %{} :CodeEntry (:doc "|Generate random float. No args: [0, 1), one arg: [0, n), two args: [from, to).")
           :code $ %{} :Expr (:at 1633343988409) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633343988409) (:by |u0) (:text |defn)
@@ -883,7 +952,10 @@
                   |r $ %{} :Leaf (:at 1633344036924) (:by |u0) (:text "|\"rand")
                   |v $ %{} :Leaf (:at 1633344033560) (:by |u0) (:text |from)
                   |x $ %{} :Leaf (:at 1633344033993) (:by |u0) (:text |to)
-        |rand-between $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ rand
+            quote $ rand 10 100
+        |rand-between $ %{} :CodeEntry (:doc "|Generate random float between from and to.")
           :code $ %{} :Expr (:at 1633344347956) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633344347956) (:by |u0) (:text |defn)
@@ -904,7 +976,9 @@
                           |T $ %{} :Leaf (:at 1633344347956) (:by |u0) (:text |&-)
                           |j $ %{} :Leaf (:at 1633344347956) (:by |u0) (:text |y)
                           |r $ %{} :Leaf (:at 1633344347956) (:by |u0) (:text |x)
-        |rand-hex-color! $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ rand-between 10 20
+        |rand-hex-color! $ %{} :CodeEntry (:doc "|Generate random hexadecimal color string in format #rrggbb.")
           :code $ %{} :Expr (:at 1636711454257) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1636711454257) (:by |u0) (:text |defn)
@@ -919,7 +993,9 @@
                       |T $ %{} :Leaf (:at 1636711461043) (:by |u0) (:text |get-dylib-path)
                       |j $ %{} :Leaf (:at 1636711461043) (:by |u0) (:text "|\"/dylibs/libcalcit_std")
                   |r $ %{} :Leaf (:at 1636711475178) (:by |u0) (:text "|\"rand_hex_color")
-        |rand-int $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ rand-hex-color!
+        |rand-int $ %{} :CodeEntry (:doc "|Generate random integer. No args: large range, one arg: [0, n), two args: [from, to).")
           :code $ %{} :Expr (:at 1633343990667) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633343990667) (:by |u0) (:text |defn)
@@ -939,7 +1015,9 @@
                   |r $ %{} :Leaf (:at 1633344056421) (:by |u0) (:text "|\"rand_int")
                   |v $ %{} :Leaf (:at 1633344047273) (:by |u0) (:text |from)
                   |x $ %{} :Leaf (:at 1633344047273) (:by |u0) (:text |to)
-        |rand-nth $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ rand-int 100
+        |rand-nth $ %{} :CodeEntry (:doc "|Randomly select one element from a list.")
           :code $ %{} :Expr (:at 1633344324018) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633344324018) (:by |u0) (:text |defn)
@@ -970,7 +1048,9 @@
                                   |T $ %{} :Leaf (:at 1633344324018) (:by |u0) (:text |&list:count)
                                   |j $ %{} :Leaf (:at 1633344324018) (:by |u0) (:text |xs)
                               |r $ %{} :Leaf (:at 1633344324018) (:by |u0) (:text |1)
-        |rand-shift $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ rand-nth ([] 1 2 3 4 5)
+        |rand-shift $ %{} :CodeEntry (:doc "|Generate random float within center ± shift range.")
           :code $ %{} :Expr (:at 1633344336110) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1633344336110) (:by |u0) (:text |defn)
@@ -995,6 +1075,8 @@
                           |T $ %{} :Leaf (:at 1633344336110) (:by |u0) (:text |&*)
                           |j $ %{} :Leaf (:at 1633344336110) (:by |u0) (:text |2)
                           |r $ %{} :Leaf (:at 1633344336110) (:by |u0) (:text |y)
+          :examples $ []
+            quote $ rand-shift 10 2
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1633343497577) (:by |u0)
           :data $ {}
@@ -1017,6 +1099,7 @@
                     |r $ %{} :Expr (:at 1633343524902) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220911694) (:by |u0) (:text |get-dylib-path)
+        :examples $ []
     |calcit.std.test $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
@@ -1032,6 +1115,7 @@
               |x $ %{} :Expr (:at 1635220521494) (:by |u0)
                 :data $ {}
                   |T $ %{} :Leaf (:at 1635220524841) (:by |u0) (:text |try-demos)
+          :examples $ []
         |reload! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1633149998862) (:by |u0)
             :data $ {}
@@ -1046,6 +1130,7 @@
                 :data $ {}
                   |T $ %{} :Leaf (:at 1635313997339) (:by |u0) (:text |println)
                   |j $ %{} :Leaf (:at 1635314003548) (:by |u0) (:text "|\"reload not handled yet")
+          :examples $ []
         |run-tests $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1633150008092) (:by |u0)
             :data $ {}
@@ -1068,6 +1153,7 @@
               |yr $ %{} :Expr (:at 1636556898410) (:by |u0)
                 :data $ {}
                   |T $ %{} :Leaf (:at 1636556897610) (:by |u0) (:text |test-path)
+          :examples $ []
         |test-path $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1636556278883) (:by |u0)
             :data $ {}
@@ -1118,6 +1204,7 @@
                     :data $ {}
                       |T $ %{} :Leaf (:at 1636558727537) (:by |u0) (:text |path-basename)
                       |j $ %{} :Leaf (:at 1636558742874) (:by |u0) (:text "|\"a/b/c")
+          :examples $ []
         |try-ctrlc! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1635176069456) (:by |u0)
             :data $ {}
@@ -1137,6 +1224,7 @@
                         :data $ {}
                           |T $ %{} :Leaf (:at 1635176099563) (:by |u0) (:text |println)
                           |j $ %{} :Leaf (:at 1635176102382) (:by |u0) (:text "|\"TODO handler...")
+          :examples $ []
         |try-demos $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1635220535726) (:by |u0)
             :data $ {}
@@ -1158,6 +1246,7 @@
                     :data $ {}
                       |T $ %{} :Leaf (:at 1635220560883) (:by |u0) (:text |md5)
                       |j $ %{} :Leaf (:at 1635220563892) (:by |u0) (:text "|\"5")
+          :examples $ []
         |try-time! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1635179674423) (:by |u0)
             :data $ {}
@@ -1191,6 +1280,7 @@
                         :data $ {}
                           |T $ %{} :Leaf (:at 1635179705950) (:by |u0) (:text |println)
                           |j $ %{} :Leaf (:at 1635179710631) (:by |u0) (:text "|\"DO Do Do")
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1633149625774) (:by |u0)
           :data $ {}
@@ -1250,6 +1340,7 @@
                         |T $ %{} :Leaf (:at 1636556831915) (:by |u0) (:text |join-path)
                         |j $ %{} :Leaf (:at 1636558769054) (:by |u0) (:text |path-dirname)
                         |r $ %{} :Leaf (:at 1636558771914) (:by |u0) (:text |path-basename)
+        :examples $ []
     |calcit.std.test.date $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
@@ -1468,6 +1559,7 @@
                         :data $ {}
                           |T $ %{} :Leaf (:at 1636967398504) (:by |u0) (:text |.format)
                           |j $ %{} :Leaf (:at 1636967400868) (:by |u0) (:text "|\"%Y-%m-%d %H-%M")
+          :examples $ []
         |reload! $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1641266526980) (:by |u0)
             :data $ {}
@@ -1478,6 +1570,7 @@
               |v $ %{} :Expr (:at 1641266529182) (:by |u0)
                 :data $ {}
                   |T $ %{} :Leaf (:at 1641266530491) (:by |u0) (:text |main!)
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1633181502356) (:by |u0)
           :data $ {}
@@ -1501,6 +1594,7 @@
                         |yT $ %{} :Leaf (:at 1636966285858) (:by |u0) (:text |add-duration)
                         |yj $ %{} :Leaf (:at 1636967365864) (:by |u0) (:text |Date)
                         |yr $ %{} :Leaf (:at 1636967833659) (:by |u0) (:text |get-timestamp)
+        :examples $ []
     |calcit.std.test.fs $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
@@ -1646,6 +1740,7 @@
                       |D $ %{} :Leaf (:at 1679454022300) (:by |u0) (:text |str)
                       |L $ %{} :Leaf (:at 1679454023645) (:by |u0) (:text |&newline)
                       |T $ %{} :Leaf (:at 1679453998007) (:by |u0) (:text "|\"NEWLINE TODO")
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1630174670374) (:by |u0)
           :data $ {}
@@ -1687,6 +1782,7 @@
                     |r $ %{} :Expr (:at 1630234437661) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1630234439968) (:by |u0) (:text |execute!)
+        :examples $ []
     |calcit.std.test.json $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
@@ -1817,6 +1913,7 @@
                             :data $ {}
                               |T $ %{} :Leaf (:at 1633187033835) (:by |u0) (:text ||c)
                               |j $ %{} :Leaf (:at 1633187033835) (:by |u0) (:text ||k)
+          :examples $ []
         |slurp-cirru-edn $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1633181663658) (:by |u0)
             :data $ {}
@@ -1845,6 +1942,7 @@
                                       |T $ %{} :Leaf (:at 1633181663658) (:by |u0) (:text |read-file)
                                       |j $ %{} :Leaf (:at 1633181663658) (:by |u0) (:text |file)
                       |r $ %{} :Leaf (:at 1633181663658) (:by |u0) (:text |true)
+          :examples $ []
         |try-large-json $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1633181636524) (:by |u0)
             :data $ {}
@@ -1856,6 +1954,7 @@
                 :data $ {}
                   |T $ %{} :Leaf (:at 1633181656855) (:by |u0) (:text |slurp-cirru-edn)
                   |j $ %{} :Leaf (:at 1633181656855) (:by |u0) (:text ||/Users/chen/repo/calcit-lang/apis/docs/apis.cirru)
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1633181626356) (:by |u0)
           :data $ {}
@@ -1872,6 +1971,7 @@
                       :data $ {}
                         |T $ %{} :Leaf (:at 1633181749646) (:by |u0) (:text |parse-json)
                         |j $ %{} :Leaf (:at 1633181755342) (:by |u0) (:text |stringify-json)
+        :examples $ []
     |calcit.std.test.rand $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |)
@@ -2089,6 +2189,7 @@
                   |j $ %{} :Expr (:at 1636711580034) (:by |u0)
                     :data $ {}
                       |T $ %{} :Leaf (:at 1636711580034) (:by |u0) (:text |rand-hex-color!)
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1633343510095) (:by |u0)
           :data $ {}
@@ -2110,9 +2211,10 @@
                         |x $ %{} :Leaf (:at 1633344451455) (:by |u0) (:text |rand-between)
                         |y $ %{} :Leaf (:at 1633344907417) (:by |u0) (:text |nanoid!)
                         |yT $ %{} :Leaf (:at 1636711587670) (:by |u0) (:text |rand-hex-color!)
+        :examples $ []
     |calcit.std.time $ %{} :FileEntry
       :defs $ {}
-        |set-interval $ %{} :CodeEntry (:doc |)
+        |set-interval $ %{} :CodeEntry (:doc "|Execute function repeatedly at intervals. Args: interval in milliseconds, function to repeat.")
           :code $ %{} :Expr (:at 1635179641143) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1635179641143) (:by |u0) (:text |defn)
@@ -2131,7 +2233,10 @@
                   |r $ %{} :Leaf (:at 1635179651332) (:by |u0) (:text "|\"set_interval")
                   |v $ %{} :Leaf (:at 1635179643672) (:by |u0) (:text |t)
                   |x $ %{} :Leaf (:at 1635179643672) (:by |u0) (:text |cb)
-        |set-timeout $ %{} :CodeEntry (:doc |)
+          :examples $ []
+            quote $ set-interval 1000
+              fn () $ println |tick
+        |set-timeout $ %{} :CodeEntry (:doc "|Execute function after delay. Args: delay in milliseconds, function to execute.")
           :code $ %{} :Expr (:at 1635179602515) (:by |u0)
             :data $ {}
               |T $ %{} :Leaf (:at 1635179602515) (:by |u0) (:text |defn)
@@ -2150,6 +2255,9 @@
                   |r $ %{} :Leaf (:at 1635179626283) (:by |u0) (:text "|\"set_timeout")
                   |v $ %{} :Leaf (:at 1635179619080) (:by |u0) (:text |t)
                   |x $ %{} :Leaf (:at 1635179620417) (:by |u0) (:text |cb)
+          :examples $ []
+            quote $ set-timeout 1000
+              fn () $ println |timeout
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1635179588832) (:by |u0)
           :data $ {}
@@ -2172,6 +2280,7 @@
                     |r $ %{} :Expr (:at 1635179663484) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635221003887) (:by |u0) (:text |get-dylib-path)
+        :examples $ []
     |calcit.std.util $ %{} :FileEntry
       :defs $ {}
         |get-dylib-ext $ %{} :CodeEntry (:doc |)
@@ -2196,6 +2305,7 @@
                     :data $ {}
                       |T $ %{} :Leaf (:at 1630231449901) (:by |u0) (:text |:windows)
                       |j $ %{} :Leaf (:at 1630231461388) (:by |u0) (:text "|\".dll")
+          :examples $ []
         |get-dylib-path $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1635220682827) (:by |u0)
             :data $ {}
@@ -2215,6 +2325,7 @@
                   |v $ %{} :Expr (:at 1635220685851) (:by |u0)
                     :data $ {}
                       |T $ %{} :Leaf (:at 1635220685851) (:by |u0) (:text |get-dylib-ext)
+          :examples $ []
         |or-current-path $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1630245582276) (:by |u0)
             :data $ {}
@@ -2232,6 +2343,7 @@
                       |j $ %{} :Leaf (:at 1630245615061) (:by |u0) (:text |p)
                   |r $ %{} :Leaf (:at 1630245616843) (:by |u0) (:text "|\".")
                   |v $ %{} :Leaf (:at 1630245618366) (:by |u0) (:text |p)
+          :examples $ []
       :ns $ %{} :CodeEntry (:doc |)
         :code $ %{} :Expr (:at 1633181044360) (:by |u0)
           :data $ {}
@@ -2247,5 +2359,6 @@
                     |r $ %{} :Expr (:at 1635220717892) (:by |u0)
                       :data $ {}
                         |T $ %{} :Leaf (:at 1635220717892) (:by |u0) (:text |calcit-dirname)
+        :examples $ []
   :users $ {}
     |u0 $ {} (:avatar nil) (:id |u0) (:name |chen) (:nickname |chen) (:password |d41d8cd98f00b204e9800998ecf8427e) (:theme :star-trail)

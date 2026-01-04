@@ -17,7 +17,7 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
               xs.push((**s).to_owned());
             }
           } else {
-            return Err(format!("execute-command expected string in list, got {}", piece));
+            return Err(format!("execute-command expected string in list, got {piece}"));
           }
         }
 
@@ -30,7 +30,7 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
           Err(e) => Err(format!("Failed to excute: {e}")),
         }
       }
-      (_, _) => Err(format!("excute-command expected string and list: {:?}", args)),
+      (_, _) => Err(format!("excute-command expected string and list: {args:?}")),
     }
   } else {
     Err(format!("excute-command expected 2 args: {args:?}"))
