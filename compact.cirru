@@ -1,6 +1,6 @@
 
 {} (:about "|file is generated - never edit directly; learn cr edit/tree workflows before changing") (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.2.6)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.2.7)
     :modules $ []
   :entries $ {}
   :files $ {}
@@ -384,11 +384,7 @@
                   ; assert= "\"2021-11-11 01-00" $ -> d (.add 1 :hours) (format-time "\"%Y-%m-%d %H-%M")
                   ; assert= "\"2021-11-11 00-01" $ -> d (.add 1 :minutes) (format-time "\"%Y-%m-%d %H-%M")
                   ; assert= "\"2021-11-10 16-00" $ -> d (.add -8 :hours) (format-time "\"%Y-%m-%d %H-%M")
-              println $ ->
-                  get-time!
-                .add 1 :hours
-                .add 2 :minutes
-                .format "\"%Y-%m-%d %H-%M"
+              println $ -> (get-time!) (.add 1 :hours) (.add 2 :minutes) (.format "\"%Y-%m-%d %H-%M")
           :examples $ []
         |reload! $ %{} :CodeEntry (:doc |)
           :code $ quote

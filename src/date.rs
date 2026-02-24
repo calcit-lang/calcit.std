@@ -39,7 +39,7 @@ pub fn get_timestamp(args: Vec<Edn>) -> Result<Edn, String> {
     match &args[0] {
       Edn::AnyRef(r) => {
         let v = r.0.read().unwrap();
-        if let Some(time) = v.downcast_ref::<DateTime<FixedOffset>>() {
+        if let Some(time) = v.as_any().downcast_ref::<DateTime<FixedOffset>>() {
           Ok((time.timestamp_millis() as f64).into())
         } else {
           Err(format!("get-timestamp expected DateTime, got: {v:?}"))
@@ -59,7 +59,7 @@ pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
     match &args[0] {
       Edn::AnyRef(r) => {
         let v = r.0.read().unwrap();
-        if let Some(time) = v.downcast_ref::<DateTime<FixedOffset>>() {
+        if let Some(time) = v.as_any().downcast_ref::<DateTime<FixedOffset>>() {
           match &args[1] {
             Edn::Nil => Ok(Edn::Str(time.to_rfc3339().into())),
             Edn::Str(f) => Ok(Edn::Str(time.format(f).to_string().into())),
@@ -83,7 +83,7 @@ pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
     match &args[0] {
       Edn::AnyRef(r) => {
         let v = r.0.read().unwrap();
-        if let Some(time) = v.downcast_ref::<DateTime<FixedOffset>>() {
+        if let Some(time) = v.as_any().downcast_ref::<DateTime<FixedOffset>>() {
           let mut data: HashMap<Edn, Edn> = HashMap::new();
           data.insert(Edn::tag("year"), Edn::Number(time.date_naive().year() as f64));
           data.insert(Edn::tag("month"), Edn::Number(time.date_naive().month() as f64));
@@ -127,14 +127,17 @@ pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
         ) {
           LocalResult::None => Ok(Edn::Tuple(EdnTupleView {
             tag: Arc::new(Edn::tag("none")),
+            enum_tag: None,
             extra: vec![],
           })),
           LocalResult::Single(d) => Ok(Edn::Tuple(EdnTupleView {
             tag: Arc::new(Edn::tag("single")),
+            enum_tag: None,
             extra: vec![Edn::any_ref(d.fixed_offset())],
           })),
           LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(EdnTupleView {
             tag: Arc::new(Edn::tag("ambiguous")),
+            enum_tag: None,
             extra: vec![Edn::any_ref(d.fixed_offset()), Edn::any_ref(d2.fixed_offset())],
           })),
         }
@@ -163,6 +166,7 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
           _ => {
             return Ok(Edn::Tuple(EdnTupleView {
               tag: Arc::new(Edn::tag("err")),
+              enum_tag: None,
               extra: vec![Edn::str(format!("invalid digit for weekday: {d}"))],
             }))
           }
@@ -171,14 +175,17 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
           Some(time) => match Local.from_local_datetime(&time.and_hms_opt(0, 0, 0).ok_or("hms got none")?) {
             LocalResult::None => Ok(Edn::Tuple(EdnTupleView {
               tag: Arc::new(Edn::tag("none")),
+              enum_tag: None,
               extra: vec![],
             })),
             LocalResult::Single(d) => Ok(Edn::Tuple(EdnTupleView {
               tag: Arc::new(Edn::tag("single")),
+              enum_tag: None,
               extra: vec![Edn::any_ref(d.fixed_offset())],
             })),
             LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(EdnTupleView {
-              tag: Arc::new(Edn::tag("single")),
+              tag: Arc::new(Edn::tag("ambiguous")),
+              enum_tag: None,
               extra: vec![Edn::any_ref(d.fixed_offset()), Edn::any_ref(d2.fixed_offset())],
             })),
           },
@@ -197,7 +204,7 @@ pub fn add_duration(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 3 {
     match (&args[0], &args[1], &args[2]) {
       (Edn::AnyRef(d), Edn::Number(n), Edn::Tag(k)) => {
-        if let Some(time) = d.0.read().unwrap().downcast_ref::<DateTime<FixedOffset>>() {
+        if let Some(time) = d.0.read().unwrap().as_any().downcast_ref::<DateTime<FixedOffset>>() {
           match k.ref_str() {
             "week" | "weeks" => Ok(Edn::any_ref(time.add(Duration::weeks(*n as i64)).fixed_offset())),
             "day" | "days" => Ok(Edn::any_ref(time.add(Duration::days(*n as i64)).fixed_offset())),
