@@ -19,9 +19,7 @@ jobs:
           toolchain: stable
           components: clippy
 
-      - uses: calcit-lang/setup-cr@0.0.3
-        with:
-          version: "0.11.6"
+      - uses: calcit-lang/setup-cr@0.0.8
 
       - run: cargo build --release
 
