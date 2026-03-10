@@ -1,6 +1,6 @@
 
-{} (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.2.6)
+{} (:about "|file is generated - never edit directly; learn cr edit/tree workflows before changing") (:package |calcit.std)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.2.7)
     :modules $ []
   :entries $ {}
   :files $ {}
@@ -8,24 +8,42 @@
       :defs $ {}
         |Date $ %{} :CodeEntry (:doc "|Date record type wrapping timestamps. Provides static methods: :now (current time), :parse (parse string), :timestamp (get timestamp), :add (add duration), :format (format output).")
           :code $ quote
-            defrecord! Date (:now get-time!) (:parse parse-time) (:timestamp get-timestamp) (:add add-duration) (:format format-time) (:from-ymd from-ymd) (:from-ywd from-ywd) (:extract extract-time)
+            def Date $ impl-traits Date0 DateImpl
+          :examples $ []
+        |Date0 $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defstruct Date0 $ :date :dynamic
+          :examples $ []
+        |DateImpl $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            defimpl DateImpl DateTrait
+              :format $ fn (self & args)
+                format-time self $ first args
+              :add $ fn (self n k) (add-duration self n k)
+              :timestamp $ fn (self) (get-timestamp self)
+              :extract $ fn (self) (extract-time self)
+          :examples $ []
+        |DateTrait $ %{} :CodeEntry (:doc |)
+          :code $ quote
+            deftrait DateTrait (:format :fn) (:add :fn) (:timestamp :fn) (:extract :fn)
           :examples $ []
         |add-duration $ %{} :CodeEntry (:doc "|Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc).")
           :code $ quote
             defn add-duration (date n k)
-              %:: Date :date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"add_duration" (nth date 1) n k
+              %{} Date $ :date
+                &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"add_duration" (:date date) n k
           :examples $ []
             quote $ add-duration (get-time!) 7 :days
         |extract-time $ %{} :CodeEntry (:doc "|Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields.")
           :code $ quote
             defn extract-time (x)
-              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"extract_time" $ nth x 1
+              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"extract_time" $ :date x
           :examples $ []
             quote $ extract-time (get-time!)
         |format-time $ %{} :CodeEntry (:doc "|Format Date object to string. Optional second parameter specifies format (default ISO format).")
           :code $ quote
             defn format-time (time ? format)
-              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"format_time" (nth time 1) format
+              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"format_time" (:date time) format
           :examples $ []
             quote $ format-time (get-time!) |%Y-%m-%d
         |from-ymd $ %{} :CodeEntry (:doc "|Create Date object from year, month, day. Args: year, month (1-12), day (1-31).")
@@ -33,7 +51,8 @@
             defn from-ymd (y m d)
               tag-match
                 &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ymd" y m d
-                (:single d) (%:: Date :date d)
+                (:single d)
+                  %{} Date $ :date d
                 (:ambiguous a b)
                   raise $ str "\"ambiguous: " a "\" " b
                 (:none) (raise "\"cannot construct")
@@ -45,7 +64,8 @@
             defn from-ywd (y w d)
               tag-match
                 &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"from_ywd" y w d
-                (:single d) (%:: Date :date d)
+                (:single d)
+                  %{} Date $ :date d
                 (:ambiguous a b)
                   raise $ str "\"ambiguous: " a "\" " b
                 (:none) (raise "\"cannot construct")
@@ -54,20 +74,21 @@
             quote $ from-ywd 2024 1 1
         |get-time! $ %{} :CodeEntry (:doc "|Get current system time as a Date object.")
           :code $ quote
-            defn get-time! () $ %:: Date :date
-              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"now_bang"
+            defn get-time! () $ %{} Date
+              :date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"now_bang"
           :examples $ []
             quote $ get-time!
         |get-timestamp $ %{} :CodeEntry (:doc "|Get timestamp (milliseconds) from Date object.")
           :code $ quote
             defn get-timestamp (date)
-              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"get_timestamp" $ nth date 1
+              &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"get_timestamp" $ :date date
           :examples $ []
             quote $ get-timestamp (get-time!)
         |parse-time $ %{} :CodeEntry (:doc "|Parse time string to Date object. Args: time string, format string (e.g. \"%Y-%m-%d %H:%M:%S %z\").")
           :code $ quote
             defn parse-time (time format)
-              %:: Date :date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_time" time format
+              %{} Date $ :date
+                &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_time" time format
           :examples $ []
             quote $ parse-time "|2024-01-01 12:00:00 +00:00" "|%Y-%m-%d %H:%M:%S %z"
       :ns $ %{} :CodeEntry (:doc |)
@@ -349,7 +370,9 @@
               println "\"GET TIME" $ get-time!
               echo |time: $ format-time (get-time!) "|%Y-%m-%d %H:%M:%S %z"
               assert= 1417176009000 $ get-timestamp (parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z")
-              ; assert= "|2014-11-28 12:00:09 +0000" $ format-time (%:: Date :date 1417176009000) "|%Y-%m-%d %H:%M:%S %z"
+              ; assert= "|2014-11-28 12:00:09 +0000" $ format-time
+                %{} Date $ :date 1417176009000
+                , "|%Y-%m-%d %H:%M:%S %z"
               w-log $ extract-time (get-time!)
               w-log $ from-ymd 2021 11 11
               w-log $ from-ywd 2021 45 6
@@ -361,11 +384,7 @@
                   ; assert= "\"2021-11-11 01-00" $ -> d (.add 1 :hours) (format-time "\"%Y-%m-%d %H-%M")
                   ; assert= "\"2021-11-11 00-01" $ -> d (.add 1 :minutes) (format-time "\"%Y-%m-%d %H-%M")
                   ; assert= "\"2021-11-10 16-00" $ -> d (.add -8 :hours) (format-time "\"%Y-%m-%d %H-%M")
-              println $ ->
-                  :now Date
-                .add 1 :hours
-                .add 2 :minutes
-                .format "\"%Y-%m-%d %H-%M"
+              println $ -> (get-time!) (.add 1 :hours) (.add 2 :minutes) (.format "\"%Y-%m-%d %H-%M")
           :examples $ []
         |reload! $ %{} :CodeEntry (:doc |)
           :code $ quote
