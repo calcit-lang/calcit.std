@@ -25,4 +25,4 @@ jobs:
 
       - run: mkdir dylibs/ && ls target/release/ && cp -v target/release/libcalcit_std.* dylibs/
 
-      - run: cr -1
+      - run: cr
