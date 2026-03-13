@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde_json::Value;
 
-use cirru_edn::{Edn, EdnListView, EdnMapView, EdnRecordView, EdnTag};
+use cirru_edn::{Edn, EdnListView, EdnMapView, EdnTag};
 
 pub fn json_to_edn(data: &Value) -> Edn {
   match data {
