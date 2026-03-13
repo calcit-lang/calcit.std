@@ -27,26 +27,26 @@
           :code $ quote
             deftrait DateTrait (.format :fn) (.add :fn) (.timestamp :fn) (.extract :fn)
           :examples $ []
-        |add-duration $ %{} :CodeEntry (:doc "|Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc).") (:schema nil)
+        |add-duration $ %{} :CodeEntry (:doc "|Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc). Example: (add-duration (get-time!) 7 :days)") (:schema nil)
           :code $ quote
             defn add-duration (date n k)
               %{} Date $ :date
                 &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"add_duration" (:date date) n k
           :examples $ []
             quote $ add-duration (get-time!) 7 :days
-        |extract-time $ %{} :CodeEntry (:doc "|Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields.") (:schema nil)
+        |extract-time $ %{} :CodeEntry (:doc "|Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields. Example: (extract-time (get-time!))") (:schema nil)
           :code $ quote
             defn extract-time (x)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"extract_time" $ :date x
           :examples $ []
             quote $ extract-time (get-time!)
-        |format-time $ %{} :CodeEntry (:doc "|Format Date object to string. Optional second parameter specifies format (default ISO format).") (:schema nil)
+        |format-time $ %{} :CodeEntry (:doc "|Format Date object to string. Optional second parameter specifies format (default ISO format). Example: (format-time (get-time!) \"|%Y-%m-%d\")") (:schema nil)
           :code $ quote
             defn format-time (time ? format)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"format_time" (:date time) format
           :examples $ []
             quote $ format-time (get-time!) |%Y-%m-%d
-        |from-ymd $ %{} :CodeEntry (:doc "|Create Date object from year, month, day. Args: year, month (1-12), day (1-31).") (:schema nil)
+        |from-ymd $ %{} :CodeEntry (:doc "|Create Date object from year, month, day. Args: year, month (1-12), day (1-31). Example: (from-ymd 2024 1 15)") (:schema nil)
           :code $ quote
             defn from-ymd (y m d)
               tag-match
@@ -59,7 +59,7 @@
                 _ $ raise "\"unreachable!"
           :examples $ []
             quote $ from-ymd 2024 1 15
-        |from-ywd $ %{} :CodeEntry (:doc "|Create Date object from year, week, day. Args: year, week (1-53), day (1-7, 1=Monday).") (:schema nil)
+        |from-ywd $ %{} :CodeEntry (:doc "|Create Date object from year, week, day. Args: year, week (1-53), day (1-7, 1=Monday). Example: (from-ywd 2024 1 1)") (:schema nil)
           :code $ quote
             defn from-ywd (y w d)
               tag-match
@@ -72,19 +72,19 @@
                 _ $ raise "\"unreachable!"
           :examples $ []
             quote $ from-ywd 2024 1 1
-        |get-time! $ %{} :CodeEntry (:doc "|Get current system time as a Date object.") (:schema nil)
+        |get-time! $ %{} :CodeEntry (:doc "|Get current system time as a Date object. Example: (get-time!)") (:schema nil)
           :code $ quote
             defn get-time! () $ %{} Date
               :date $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"now_bang"
           :examples $ []
             quote $ get-time!
-        |get-timestamp $ %{} :CodeEntry (:doc "|Get timestamp (milliseconds) from Date object.") (:schema nil)
+        |get-timestamp $ %{} :CodeEntry (:doc "|Get timestamp (milliseconds) from Date object. Example: (get-timestamp (get-time!))") (:schema nil)
           :code $ quote
             defn get-timestamp (date)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"get_timestamp" $ :date date
           :examples $ []
             quote $ get-timestamp (get-time!)
-        |parse-time $ %{} :CodeEntry (:doc "|Parse time string to Date object. Args: time string, format string (e.g. \"%Y-%m-%d %H:%M:%S %z\").") (:schema nil)
+        |parse-time $ %{} :CodeEntry (:doc "|Parse time string to Date object. Args: time string, format string (e.g. %Y-%m-%d %H:%M:%S %z). Example: (parse-time \"|2024-01-01 12:00:00 +00:00\" \"|%Y-%m-%d %H:%M:%S %z\")") (:schema nil)
           :code $ quote
             defn parse-time (time format)
               %{} Date $ :date
@@ -98,7 +98,7 @@
             calcit.std.util :refer $ get-dylib-path
     |calcit.std.fs $ %{} :FileEntry
       :defs $ {}
-        |append-file! $ %{} :CodeEntry (:doc "|Append content to end of file. Args: file path, content string.") (:schema nil)
+        |append-file! $ %{} :CodeEntry (:doc "|Append content to end of file. Args: file path, content string. Example: (append-file! \"log.txt\" \"New log entry\")") (:schema nil)
           :code $ quote
             defn append-file! (name content)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"append_file" name content
@@ -109,61 +109,61 @@
             defn check-write-file! (name content)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"check_write_file" name content
           :examples $ []
-        |create-dir! $ %{} :CodeEntry (:doc "|Create a directory at the given path. Fails if parent directory does not exist.") (:schema nil)
+        |create-dir! $ %{} :CodeEntry (:doc "|Create a directory at the given path. Fails if parent directory does not exist. Example: (create-dir! \"new-folder\")") (:schema nil)
           :code $ quote
             defn create-dir! (name)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"create_dir" name
           :examples $ []
             quote $ create-dir! |new-folder
-        |create-dir-all! $ %{} :CodeEntry (:doc "|Create a directory and all necessary parent directories.") (:schema nil)
+        |create-dir-all! $ %{} :CodeEntry (:doc "|Create a directory and all necessary parent directories. Example: (create-dir-all! \"path/to/nested/dir\")") (:schema nil)
           :code $ quote
             defn create-dir-all! (name)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"create_dir_all" name
           :examples $ []
             quote $ create-dir-all! |path/to/nested/dir
-        |glob! $ %{} :CodeEntry (:doc "|Find files matching the glob pattern. Returns a list of matching file paths.") (:schema nil)
+        |glob! $ %{} :CodeEntry (:doc "|Find files matching the glob pattern. Returns a list of matching file paths. Example: (glob! \"src/*.rs\")") (:schema nil)
           :code $ quote
             defn glob! (name)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"glob_call" name
           :examples $ []
             quote $ glob! | src/**/*.rs
-        |path-exists? $ %{} :CodeEntry (:doc "|Check if a file or directory exists at the given path. Returns boolean.") (:schema nil)
+        |path-exists? $ %{} :CodeEntry (:doc "|Check if a file or directory exists at the given path. Returns boolean. Example: (path-exists? \"README.md\")") (:schema nil)
           :code $ quote
             defn path-exists? (name)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"path_exists" name
           :examples $ []
             quote $ path-exists? |file.txt
-        |read-dir! $ %{} :CodeEntry (:doc "|Read directory contents and return a list of file/directory names.") (:schema nil)
+        |read-dir! $ %{} :CodeEntry (:doc "|Read directory contents and return a list of file/directory names. Example: (read-dir! \"src\")") (:schema nil)
           :code $ quote
             defn read-dir! (name)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"read_dir" name
           :examples $ []
             quote $ read-dir! |src
-        |read-file! $ %{} :CodeEntry (:doc "|Read entire file content as a string. Args: file path.") (:schema nil)
+        |read-file! $ %{} :CodeEntry (:doc "|Read entire file content as a string. Args: file path. Example: (read-file! \"README.md\")") (:schema nil)
           :code $ quote
             defn read-file! (name)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"read_file" name
           :examples $ []
             quote $ read-file! |example.txt
-        |read-file-by-line! $ %{} :CodeEntry (:doc "|Read file line by line and call the callback function for each line. Args: file path, callback function.") (:schema nil)
+        |read-file-by-line! $ %{} :CodeEntry (:doc "|Read file line by line and call the callback function for each line. Args: file path, callback function. Example: (read-file-by-line! \"file.txt\" (fn (line) (println line)))") (:schema nil)
           :code $ quote
             defn read-file-by-line! (name cb)
               &blocking-dylib-edn-fn (get-dylib-path "\"/dylibs/libcalcit_std") "\"read_file_by_line" name cb
           :examples $ []
             quote $ read-file-by-line! |file.txt
               fn (line) (println line)
-        |rename! $ %{} :CodeEntry (:doc "|Rename or move a file/directory. Args: source path, destination path.") (:schema nil)
+        |rename! $ %{} :CodeEntry (:doc "|Rename or move a file/directory. Args: source path, destination path. Example: (rename! \"old.txt\" \"new.txt\")") (:schema nil)
           :code $ quote
             defn rename! (from to)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"rename_path" from to
           :examples $ []
             quote $ rename! |old.txt |new.txt
-        |walk-dir! $ %{} :CodeEntry (:doc "|Recursively walk through directory and return all file paths.") (:schema nil)
+        |walk-dir! $ %{} :CodeEntry (:doc "|Recursively walk through directory and return all file paths. Example: (walk-dir! \"target\")") (:schema nil)
           :code $ quote
             defn walk-dir! (name)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"walk_dir" name
           :examples $ []
-        |write-file! $ %{} :CodeEntry (:doc "|Write content to file (overwrite). Args: file path, content string.") (:schema nil)
+        |write-file! $ %{} :CodeEntry (:doc "|Write content to file (overwrite). Args: file path, content string. Example: (write-file! \"output.txt\" \"Hello, World!\")") (:schema nil)
           :code $ quote
             defn write-file! (name content)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"write_file" name content
@@ -176,7 +176,7 @@
             calcit.std.util :refer $ get-dylib-path
     |calcit.std.hash $ %{} :FileEntry
       :defs $ {}
-        |md5 $ %{} :CodeEntry (:doc "|Calculate MD5 hash of a string. Returns 32-character hexadecimal string.") (:schema nil)
+        |md5 $ %{} :CodeEntry (:doc "|Calculate MD5 hash of a string. Returns 32-character hexadecimal string. Example: (md5 \"hello\")") (:schema nil)
           :code $ quote
             defn md5 (s)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"md5" s
@@ -189,13 +189,13 @@
             calcit.std.util :refer $ get-dylib-path
     |calcit.std.json $ %{} :FileEntry
       :defs $ {}
-        |parse-json $ %{} :CodeEntry (:doc "|Parse JSON string to Calcit data structures. String keys remain as strings, keyword keys become keywords.") (:schema nil)
+        |parse-json $ %{} :CodeEntry (:doc "|Parse JSON string to Calcit data structures. String keys remain as strings, keyword keys become keywords. Example: (parse-json \"|{\\\"a\\\": [1, 2], \\\":b\\\": 3}\")") (:schema nil)
           :code $ quote
             defn parse-json (s)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"parse_json" s
           :examples $ []
             quote $ parse-json "|{\"a\": [1, 2], \":b\": 3}"
-        |stringify-json $ %{} :CodeEntry (:doc "|Serialize Calcit data structures to JSON string. Second parameter colon? when true converts keywords to strings with colon prefix.") (:schema nil)
+        |stringify-json $ %{} :CodeEntry (:doc "|Serialize Calcit data structures to JSON string. Second parameter colon? when true converts keywords to strings with colon prefix. Example: (stringify-json {:a 1} true)") (:schema nil)
           :code $ quote
             defn stringify-json (data ? colon?)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"stringify_json" data colon?
@@ -211,19 +211,19 @@
             calcit.std.util :refer $ get-dylib-path
     |calcit.std.path $ %{} :FileEntry
       :defs $ {}
-        |join-path $ %{} :CodeEntry (:doc "|Join multiple path segments into a complete path, handling separators automatically.") (:schema nil)
+        |join-path $ %{} :CodeEntry (:doc "|Join multiple path segments into a complete path, handling separators automatically. Example: (join-path \"/home\" \"user\" \"documents\" \"file.txt\")") (:schema nil)
           :code $ quote
             defn join-path (& xs)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"join_path" & xs
           :examples $ []
             quote $ join-path |/home |user |documents |file.txt
-        |path-basename $ %{} :CodeEntry (:doc "|Get the filename part of a path (the last path component).") (:schema nil)
+        |path-basename $ %{} :CodeEntry (:doc "|Get the filename part of a path (the last path component). Example: (path-basename \"/home/user/file.txt\")") (:schema nil)
           :code $ quote
             defn path-basename (x)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"path_basename" x
           :examples $ []
             quote $ path-basename |/home/user/file.txt
-        |path-dirname $ %{} :CodeEntry (:doc "|Get the directory part of a path (excluding the last component).") (:schema nil)
+        |path-dirname $ %{} :CodeEntry (:doc "|Get the directory part of a path (excluding the last component). Example: (path-dirname \"/home/user/file.txt\")") (:schema nil)
           :code $ quote
             defn path-dirname (x)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"path_dirname" x
@@ -236,7 +236,7 @@
             calcit.std.util :refer $ get-dylib-path
     |calcit.std.process $ %{} :FileEntry
       :defs $ {}
-        |execute! $ %{} :CodeEntry (:doc "|Execute a shell command. Args: command as list of strings, optional working directory. Returns output or error.") (:schema nil)
+        |execute! $ %{} :CodeEntry (:doc "|Execute a shell command. Args: command as list of strings, optional working directory. Returns output or error. Example: (execute! [] \"ls\" \"-la\")") (:schema nil)
           :code $ quote
             defn execute! (command ? dir)
               assert "\"command in list" $ and (list? command) (every? command string?)
@@ -257,14 +257,14 @@
             calcit.std.util :refer $ get-dylib-path
     |calcit.std.rand $ %{} :FileEntry
       :defs $ {}
-        |nanoid! $ %{} :CodeEntry (:doc "|Generate nanoid string. Optional: size (default 21), chars (character set).") (:schema nil)
+        |nanoid! $ %{} :CodeEntry (:doc "|Generate nanoid string. Optional: size (default 21), chars (character set). Example: (nanoid! 9)") (:schema nil)
           :code $ quote
             defn nanoid! (? size chars)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"call_nanoid" size chars
           :examples $ []
             quote $ nanoid!
             quote $ nanoid! 10
-        |rand $ %{} :CodeEntry (:doc "|Generate random float. No args: [0, 1), one arg: [0, n), two args: [from, to).") (:schema nil)
+        |rand $ %{} :CodeEntry (:doc "|Generate random float. No args: [0, 1), one arg: [0, n), two args: [from, to). Example: (rand 10 100)") (:schema nil)
           :code $ quote
             defn rand (? from to)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"rand" from to
@@ -277,12 +277,12 @@
               &+ x $ rand (&- y x)
           :examples $ []
             quote $ rand-between 10 20
-        |rand-hex-color! $ %{} :CodeEntry (:doc "|Generate random hexadecimal color string in format #rrggbb.") (:schema nil)
+        |rand-hex-color! $ %{} :CodeEntry (:doc "|Generate random hexadecimal color string in format #rrggbb. Example: (rand-hex-color!)") (:schema nil)
           :code $ quote
             defn rand-hex-color! () $ &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"rand_hex_color"
           :examples $ []
             quote $ rand-hex-color!
-        |rand-int $ %{} :CodeEntry (:doc "|Generate random integer. No args: large range, one arg: [0, n), two args: [from, to).") (:schema nil)
+        |rand-int $ %{} :CodeEntry (:doc "|Generate random integer. No args: large range, one arg: [0, n), two args: [from, to). Example: (rand-int 100)") (:schema nil)
           :code $ quote
             defn rand-int (? from to)
               &call-dylib-edn (get-dylib-path "\"/dylibs/libcalcit_std") "\"rand_int" from to
@@ -484,14 +484,14 @@
             calcit.std.rand :refer $ rand rand-int rand-shift rand-nth rand-between nanoid! rand-hex-color!
     |calcit.std.time $ %{} :FileEntry
       :defs $ {}
-        |set-interval $ %{} :CodeEntry (:doc "|Execute function repeatedly at intervals. Args: interval in milliseconds, function to repeat.") (:schema nil)
+        |set-interval $ %{} :CodeEntry (:doc "|Execute function repeatedly at intervals. Args: interval in milliseconds, function to repeat. Example: (set-interval 1000 (fn () (println \"tick\")))") (:schema nil)
           :code $ quote
             defn set-interval (t cb)
               &call-dylib-edn-fn (get-dylib-path "\"/dylibs/libcalcit_std") "\"set_interval" t cb
           :examples $ []
             quote $ set-interval 1000
               fn () $ println |tick
-        |set-timeout $ %{} :CodeEntry (:doc "|Execute function after delay. Args: delay in milliseconds, function to execute.") (:schema nil)
+        |set-timeout $ %{} :CodeEntry (:doc "|Execute function after delay. Args: delay in milliseconds, function to execute. Example: (set-timeout 1000 (fn () (println \"timeout\")))") (:schema nil)
           :code $ quote
             defn set-timeout (t cb)
               &call-dylib-edn-fn (get-dylib-path "\"/dylibs/libcalcit_std") "\"set_timeout" t cb

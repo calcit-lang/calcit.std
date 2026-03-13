@@ -1,7 +1,7 @@
 use cirru_edn::Edn;
 use std::path::{Path, PathBuf};
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn join_path(args: Vec<Edn>) -> Result<Edn, String> {
   if args.is_empty() {
     Err(format!(
@@ -27,7 +27,7 @@ pub fn join_path(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// naming like Node.js
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn path_dirname(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(s) = &args[0] {
@@ -44,7 +44,7 @@ pub fn path_dirname(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// naming like Node.js
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn path_basename(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(s) = &args[0] {
