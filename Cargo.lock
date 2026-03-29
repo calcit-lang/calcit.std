@@ -18,26 +18,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c08606f8c3cbf4ce6ec8e28fb0014a2c086708fe954eaa885384a6165172e7e8"
 
 [[package]]
-name = "bincode"
-version = "2.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "36eaf5d7b090263e8150820482d5d93cd964a81e4019913c972f4edcc6edb740"
-dependencies = [
- "bincode_derive",
- "serde",
- "unty",
-]
-
-[[package]]
-name = "bincode_derive"
-version = "2.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bf95709a440f45e986983918d0e8a1f30a9b1df04918fc828670606804ac3c09"
-dependencies = [
- "virtue",
-]
-
-[[package]]
 name = "bitflags"
 version = "2.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -60,11 +40,11 @@ checksum = "5d20789868f4b01b2f2caec9f5c4e0213b41e3e5702a50157d699ae31ced2fcb"
 
 [[package]]
 name = "calcit_std"
-version = "0.2.9"
+version = "0.2.10"
 dependencies = [
  "chrono",
  "cirru_edn",
- "cirru_parser 0.1.37",
+ "cirru_parser",
  "ctrlc",
  "glob",
  "md5",
@@ -112,12 +92,11 @@ dependencies = [
 
 [[package]]
 name = "cirru_edn"
-version = "0.7.3"
+version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f6f4f45b12dd75820a21e7209e7eae7d81f4aafa0bb0b04c547fe2609c12e0db"
+checksum = "b47f4173f6758afa15d0ad76bb9013a17b8a7da89a05e2b2a60cbc6b0c071ee9"
 dependencies = [
- "bincode",
- "cirru_parser 0.2.3",
+ "cirru_parser",
  "cjk",
  "hex",
  "serde",
@@ -125,21 +104,10 @@ dependencies = [
 
 [[package]]
 name = "cirru_parser"
-version = "0.1.37"
+version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ad05a584e6440fbc8a7cbc7b3ebc0c5cf86c837dcb0153dd8abfdf941c44fb72"
+checksum = "6cd74f684ca880e0f809554c676d1cede0bc688a0b184b62adef58f5e52b22ed"
 dependencies = [
- "bincode",
- "serde",
-]
-
-[[package]]
-name = "cirru_parser"
-version = "0.2.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "caf1a19f30e275287096a29e5b5981cf7416b38ab4a8782f8183a39424a1d35d"
-dependencies = [
- "bincode",
  "serde",
 ]
 
@@ -477,18 +445,6 @@ name = "unicode-ident"
 version = "1.0.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e6e4313cd5fcd3dad5cafa179702e2b244f760991f45397d14d4ebf38247da75"
-
-[[package]]
-name = "unty"
-version = "0.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6d49784317cd0d1ee7ec5c716dd598ec5b4483ea832a2dced265471cc0f690ae"
-
-[[package]]
-name = "virtue"
-version = "0.0.18"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "051eb1abcf10076295e815102942cc58f9d5e3b4560e46e53c21e8ff6f3af7b1"
 
 [[package]]
 name = "walkdir"
