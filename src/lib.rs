@@ -18,7 +18,12 @@ pub use process::execute_command;
 pub use random::{call_nanoid, rand, rand_hex_color, rand_int};
 pub use time::{set_interval, set_timeout};
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn abi_version() -> String {
   String::from("0.0.9")
+}
+
+#[unsafe(no_mangle)]
+pub fn edn_version() -> String {
+  cirru_edn::version().to_owned()
 }

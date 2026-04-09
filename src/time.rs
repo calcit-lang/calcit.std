@@ -3,7 +3,7 @@ use std::sync::Arc;
 use std::thread::{sleep, spawn};
 use std::time;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn set_timeout(
   args: Vec<Edn>,
   handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
@@ -31,7 +31,7 @@ pub fn set_timeout(
   }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn set_interval(
   args: Vec<Edn>,
   handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,

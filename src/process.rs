@@ -1,20 +1,20 @@
-use cirru_edn::Edn;
+use cirru_edn::{Edn, EdnListView};
 use std::process::Command;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
-      (Edn::Str(dir), Edn::List(ys)) => {
+      (Edn::Str(dir), Edn::List(EdnListView(ys))) => {
         let mut cmd = String::from("");
         let mut xs: Vec<String> = vec![];
 
-        for (idx, piece) in ys.0.iter().enumerate() {
+        for (idx, piece) in ys.iter().enumerate() {
           if let Edn::Str(s) = piece {
             if idx == 0 {
-              (**s).clone_into(&mut cmd);
+              cmd = s.to_string();
             } else {
-              xs.push((**s).to_owned());
+              xs.push(s.to_string());
             }
           } else {
             return Err(format!("execute-command expected string in list, got {piece}"));
@@ -25,7 +25,7 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
           Ok(t) => {
             let content = String::from_utf8(t.stdout).unwrap();
             let stderr = String::from_utf8(t.stderr).unwrap();
-            Ok(Edn::from(vec![Edn::Str(content.into()), Edn::Str(stderr.into())]))
+            Ok(Edn::List(EdnListView(vec![Edn::Str(content.into()), Edn::Str(stderr.into())])))
           }
           Err(e) => Err(format!("Failed to excute: {e}")),
         }

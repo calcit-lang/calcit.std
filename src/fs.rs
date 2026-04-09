@@ -1,6 +1,6 @@
 //! wraped some functions from std::fs https://doc.rust-lang.org/std/fs/index.html
 
-use cirru_edn::Edn;
+use cirru_edn::{Edn, EdnListView};
 use glob::glob;
 use std::fs::File;
 use std::io::{self, BufRead};
@@ -9,7 +9,7 @@ use std::sync::Arc;
 use std::{fs, vec};
 use walkdir::WalkDir;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn read_file(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -36,7 +36,7 @@ where
   Ok(io::BufReader::new(file).lines())
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn read_file_by_line(
   args: Vec<Edn>,
   handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
@@ -66,7 +66,7 @@ pub fn read_file_by_line(
   }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn write_file(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
@@ -84,7 +84,7 @@ pub fn write_file(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn append_file(args: Vec<Edn>) -> Result<Edn, String> {
   use std::fs::OpenOptions;
   use std::io::prelude::*;
@@ -107,7 +107,7 @@ pub fn append_file(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn path_exists(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -120,7 +120,7 @@ pub fn path_exists(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -133,7 +133,7 @@ pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
           }
           // println!("child dir: {:?}", content);
 
-          Ok(Edn::from(content))
+          Ok(Edn::List(EdnListView(content)))
         }
         Err(e) => Err(format!("Failed to read dir {name:?}: {e}")),
       }
@@ -147,7 +147,7 @@ pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
 
 /// wraps https://doc.rust-lang.org/std/fs/fn.create_dir.html
 /// throws error in many cases, path existed, missing parents
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn create_dir(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -162,7 +162,7 @@ pub fn create_dir(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// wraps https://doc.rust-lang.org/std/fs/fn.create_dir_all.html
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn create_dir_all(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -177,7 +177,7 @@ pub fn create_dir_all(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// wraps https://doc.rust-lang.org/std/fs/fn.rename.html
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn rename_path(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
@@ -196,7 +196,7 @@ pub fn rename_path(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// make sure path existed. skip if file content identical
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn check_write_file(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
@@ -236,7 +236,7 @@ pub fn check_write_file(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// walk a directory, return a list of files
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -248,7 +248,7 @@ pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
           content.push(Edn::Str(format!("{}", path.display()).into()));
         }
       }
-      Ok(Edn::from(content))
+      Ok(Edn::List(EdnListView(content)))
     } else {
       Err(format!("walk-dir expected a string, got: {}", &args[0]))
     }
@@ -258,7 +258,7 @@ pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// use glob to match paths recursively
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn glob_call(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -273,7 +273,7 @@ pub fn glob_call(args: Vec<Edn>) -> Result<Edn, String> {
           Err(e) => return Err(format!("Failed to read: {e}")),
         }
       }
-      Ok(Edn::from(content))
+      Ok(Edn::List(EdnListView(content)))
     } else {
       Err(format!("glob expected a string, got: {}", &args[0]))
     }

@@ -4,11 +4,11 @@ use cirru_edn::Edn;
 
 pub fn rand_number(n: f64) -> f64 {
   let mut rng = rand::thread_rng();
-  let y: f64 = rng.gen(); // generates a float between 0 and 1
+  let y: f64 = rng.r#gen(); // generates a float between 0 and 1
   y * n
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn rand(xs: Vec<Edn>) -> Result<Edn, String> {
   if xs.len() == 2 {
     match (&xs[0], &xs[1]) {
@@ -26,7 +26,7 @@ pub fn rand(xs: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn rand_int(xs: Vec<Edn>) -> Result<Edn, String> {
   if xs.len() == 2 {
     match (&xs[0], &xs[1]) {
@@ -56,7 +56,7 @@ pub fn f64_to_usize(f: f64) -> Result<usize, String> {
   }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn call_nanoid(xs: Vec<Edn>) -> Result<Edn, String> {
   if xs.len() == 2 {
     let size = match &xs[0] {
@@ -86,9 +86,9 @@ pub fn call_nanoid(xs: Vec<Edn>) -> Result<Edn, String> {
 }
 
 // cheap way creating hex color
-#[no_mangle]
+#[unsafe(no_mangle)]
 pub fn rand_hex_color(_xs: Vec<Edn>) -> Result<Edn, String> {
   let mut rng = rand::thread_rng();
-  let y: u32 = rng.gen();
+  let y: u32 = rng.r#gen();
   Ok(Edn::str(format!("#{:06x}", y >> 8)))
 }
