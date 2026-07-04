@@ -1,6 +1,6 @@
 
 {} (:about "|file is generated - never edit directly; learn cr edit/tree workflows before changing") (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.2.8)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.2.11)
     :modules $ []
   :entries $ {}
   :files $ {}
