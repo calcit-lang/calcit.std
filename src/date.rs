@@ -84,6 +84,7 @@ pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
                 let s = (*n / 1000.0) as i64;
                 let ns = ((*n % 1000.0) * 1_000_000.0) as u32;
                 if let LocalResult::Single(time) = FixedOffset::east_opt(0).unwrap().timestamp_opt(s, ns) {
+                  #[allow(clippy::collapsible_if)]
                   if let Edn::AnyRef(r) = Edn::any_ref(time) {
                     found = Some(r);
                   }
@@ -127,6 +128,7 @@ pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
       Edn::AnyRef(r) => {
         let v = r.0.read().unwrap();
         if let Some(time) = v.as_any().downcast_ref::<DateTime<FixedOffset>>() {
+          #[allow(clippy::mutable_key_type)]
           let mut data: HashMap<Edn, Edn> = HashMap::new();
           data.insert(Edn::tag("year"), Edn::Number(time.date_naive().year() as f64));
           data.insert(Edn::tag("month"), Edn::Number(time.date_naive().month() as f64));
