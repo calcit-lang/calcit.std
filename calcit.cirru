@@ -1,8 +1,9 @@
 
 {} (:about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `cr query` to inspect and `cr edit`/`cr tree` to modify. Run `cr docs agents --full` first. Manual edits must follow format and schema conventions, then run `cr edit format`.") (:package |calcit.std)
-  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.2.12)
+  :configs $ {} (:init-fn |calcit.std.test/main!) (:reload-fn |calcit.std.test/reload!) (:version |0.2.13)
     :modules $ []
   :entries $ {}
+    :stream-process $ {} (:init-fn |calcit.std.test.process/main!) (:reload-fn |calcit.std.test.process/main!) (:version |0.2.13)
   :files $ {}
     |calcit.std.date $ %{} :FileEntry
       :defs $ {}
@@ -236,6 +237,18 @@
             calcit.std.util :refer $ get-dylib-path
     |calcit.std.process $ %{} :FileEntry
       :defs $ {}
+        |ProcessOutput $ %{} :CodeEntry (:doc "|A streamed process output event.") (:schema :dynamic)
+          :code $ quote
+            defenum ProcessOutput (:stdout :string) (:stderr :string)
+          :examples $ []
+        |stream! $ %{} :CodeEntry (:doc "|Start a process and stream tagged stdout/stderr events to callback. Runs asynchronously.") (:schema :dynamic)
+          :code $ quote
+            defn stream! (command f ? dir)
+              assert "|command in list" $ and (list? command) (every? command string?)
+              &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |stream_command (either dir |./) command f
+          :examples $ []
+            quote $ stream! ([] |sh "|-c" "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2") $ fn (event)
+              println |received-ProcessOutput event
         |execute! $ %{} :CodeEntry (:doc "|Execute a shell command. Args: command as list of strings, optional working directory. Returns output or error. Example: (execute! [] \"ls\" \"-la\")") (:schema :dynamic)
           :code $ quote
             defn execute! (command ? dir)
@@ -415,6 +428,19 @@
             calcit.std.$meta :refer $ calcit-filename calcit-dirname
             calcit.std.fs :refer $ read-file! append-file! write-file! path-exists? read-dir! create-dir! create-dir-all! rename! check-write-file! walk-dir! glob! read-file-by-line!
             calcit.std.process :refer $ execute!
+    |calcit.std.test.process $ %{} :FileEntry
+      :defs $ {}
+        |main! $ %{} :CodeEntry (:doc "|Verify streamed stdout/stderr events from a child process.") (:schema :dynamic)
+          :code $ quote
+            defn main! ()
+              println |starting-streamed-process
+              stream! ([] |sh "|-c" "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2") $ fn (event)
+                println |received-ProcessOutput event
+          :examples $ []
+      :ns $ %{} :NsEntry (:doc |)
+        :code $ quote
+          ns calcit.std.test.process $ :require
+            calcit.std.process :refer $ stream! ProcessOutput
     |calcit.std.test.json $ %{} :FileEntry
       :defs $ {}
         |main! $ %{} :CodeEntry (:doc |) (:schema :dynamic)
