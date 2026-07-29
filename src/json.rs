@@ -25,6 +25,7 @@ pub fn json_to_edn(data: &Value) -> Edn {
       Edn::List(EdnListView(ys))
     }
     Value::Object(xs) => {
+      #[allow(clippy::mutable_key_type)]
       let mut ys: HashMap<Edn, Edn> = HashMap::new();
       for (k, v) in xs {
         let key = if k.starts_with(':') {
