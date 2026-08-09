@@ -4,9 +4,7 @@ use std::path::{Path, PathBuf};
 #[unsafe(no_mangle)]
 pub fn join_path(args: Vec<Edn>) -> Result<Edn, String> {
   if args.is_empty() {
-    Err(format!(
-      "join-path expected multiple arguments, got: {args:?}"
-    ))
+    Err(format!("join-path expected multiple arguments, got: {args:?}"))
   } else {
     let mut first = true;
     let mut buf: PathBuf = PathBuf::from("");

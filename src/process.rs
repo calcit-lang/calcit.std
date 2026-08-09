@@ -1,8 +1,8 @@
-use cirru_edn::{Edn, EdnListView, EdnTupleView};
+use cirru_edn::{Edn, EdnListView};
 use std::io::{BufRead, BufReader, Read};
 use std::process::{Command, Stdio};
-use std::sync::mpsc;
 use std::sync::Arc;
+use std::sync::mpsc;
 use std::thread;
 
 /// Reads one child's pipe without blocking the other pipe. Events are line-based
@@ -93,12 +93,7 @@ pub fn stream_command(
   drop(tx);
   thread::spawn(move || {
     for (name, content) in rx {
-      let tag = Edn::tag(name);
-      let event = Edn::Tuple(EdnTupleView {
-        tag: Arc::new(tag),
-        extra: vec![Edn::Str(content.into())],
-        enum_tag: Some(Arc::new(Edn::tag("ProcessOutput"))),
-      });
+      let event = Edn::typed_enum("ProcessOutput", name, vec![Edn::Str(content.into())]);
       if let Err(e) = handler(vec![event]) {
         eprintln!("stream callback failed: {e}");
         break;

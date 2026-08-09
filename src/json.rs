@@ -85,7 +85,7 @@ pub fn edn_to_json(data: &Edn, add_colon: bool) -> Result<Value, String> {
 
       Ok(Value::Object(data))
     }
-    Edn::Record(record) => {
+    Edn::Struct(record) => {
       let mut data = serde_json::Map::new();
       for entry in &record.pairs {
         data.insert(entry.0.to_string(), edn_to_json(&entry.1, add_colon)?);
