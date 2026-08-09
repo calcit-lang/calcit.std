@@ -9,6 +9,7 @@
 #/target
 
 .calcit-error.cirru
+.calcit/
 .compact-inc.cirru
 
 /dylibs/

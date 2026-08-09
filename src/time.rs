@@ -39,11 +39,13 @@ pub fn set_interval(
 ) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Number(n) = args[0] {
-      let task = spawn(move || loop {
-        if let Err(e) = handler(vec![]) {
-          println!("error for interval: {e}");
+      let task = spawn(move || {
+        loop {
+          if let Err(e) = handler(vec![]) {
+            println!("error for interval: {e}");
+          }
+          sleep(time::Duration::from_millis(n as u64));
         }
-        sleep(time::Duration::from_millis(n as u64));
       });
 
       task.join().expect("timer task");

@@ -1,9 +1,9 @@
 /// DateTime<FixedOffset> is used to store time internally
 ///
-use std::{collections::HashMap, sync::Arc};
+use std::collections::HashMap;
 
 use chrono::{DateTime, Datelike, Duration, FixedOffset, Local, LocalResult, NaiveDate, TimeZone, Timelike, Weekday};
-use cirru_edn::{Edn, EdnMapView, EdnTag, EdnTupleView};
+use cirru_edn::{Edn, EdnMapView, EdnTag};
 use std::ops::Add;
 
 /// calcit represents DateTime in f64
@@ -13,11 +13,11 @@ pub fn parse_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
       (Edn::Str(s), Edn::Nil) => match DateTime::parse_from_rfc3339(s) {
-        Ok(time) => Ok(Edn::any_ref(time.fixed_offset())),
+        Ok(time) => Ok(Edn::Number(time.timestamp_millis() as f64)),
         Err(e) => Err(format!("parse-time failed, {e}")),
       },
       (Edn::Str(s), Edn::Str(f)) => match DateTime::parse_from_str(s, f) {
-        Ok(time) => Ok(Edn::any_ref(time.fixed_offset())),
+        Ok(time) => Ok(Edn::Number(time.timestamp_millis() as f64)),
         Err(e) => Err(format!("parse-time failed, {s} {f} {e}")),
       },
       (_, _) => Err(format!("parse-time expected 2 arguments, got: {args:?}")),
@@ -29,7 +29,7 @@ pub fn parse_time(args: Vec<Edn>) -> Result<Edn, String> {
 
 #[unsafe(no_mangle)]
 pub fn now_bang(_args: Vec<Edn>) -> Result<Edn, String> {
-  Ok(Edn::any_ref(Local::now().fixed_offset()))
+  Ok(Edn::Number(Local::now().timestamp_millis() as f64))
 }
 
 /// TODO currently only return self, no offset involved yet
@@ -37,6 +37,7 @@ pub fn now_bang(_args: Vec<Edn>) -> Result<Edn, String> {
 pub fn get_timestamp(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     match &args[0] {
+      Edn::Number(n) => Ok(Edn::Number(*n)),
       Edn::AnyRef(r) => {
         let v = r.0.read().unwrap();
         if let Some(time) = v.as_any().downcast_ref::<DateTime<FixedOffset>>() {
@@ -72,7 +73,7 @@ pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
           _ => None,
         }
       }
-      Edn::Record(record) if record.tag == EdnTag::new("Date") => {
+      Edn::Struct(record) if record.name.as_ref() == "Date" => {
         let mut found = None;
         for entry in &record.pairs {
           if entry.0 == EdnTag::new("date") {
@@ -125,6 +126,14 @@ pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
 pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     match &args[0] {
+      Edn::Number(n) => {
+        let seconds = (*n / 1000.0) as i64;
+        let nanos = ((*n % 1000.0) * 1_000_000.0) as u32;
+        match FixedOffset::east_opt(0).unwrap().timestamp_opt(seconds, nanos) {
+          LocalResult::Single(time) => extract_time(vec![Edn::any_ref(time)]),
+          _ => Err(format!("extract-time expected timestamp, got: {n}")),
+        }
+      }
       Edn::AnyRef(r) => {
         let v = r.0.read().unwrap();
         if let Some(time) = v.as_any().downcast_ref::<DateTime<FixedOffset>>() {
@@ -169,21 +178,12 @@ pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
             .and_hms_opt(0, 0, 0)
             .ok_or("from_ymd got none")?,
         ) {
-          LocalResult::None => Ok(Edn::Tuple(EdnTupleView {
-            tag: Arc::new(Edn::tag("none")),
-            extra: vec![],
-            enum_tag: None,
-          })),
-          LocalResult::Single(d) => Ok(Edn::Tuple(EdnTupleView {
-            tag: Arc::new(Edn::tag("single")),
-            extra: vec![Edn::Number(d.timestamp_millis() as f64)],
-            enum_tag: None,
-          })),
-          LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(EdnTupleView {
-            tag: Arc::new(Edn::tag("ambiguous")),
-            extra: vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
-            enum_tag: None,
-          })),
+          LocalResult::None => Ok(Edn::enum_value("none", vec![])),
+          LocalResult::Single(d) => Ok(Edn::enum_value("single", vec![Edn::Number(d.timestamp_millis() as f64)])),
+          LocalResult::Ambiguous(d, d2) => Ok(Edn::enum_value(
+            "ambiguous",
+            vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
+          )),
         }
       }
       (a, b, c) => Err(format!("from-ymd expected 2 args, got: {a} {b} {c}")),
@@ -208,30 +208,17 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
           5 => Weekday::Fri,
           6 => Weekday::Sat,
           _ => {
-            return Ok(Edn::Tuple(EdnTupleView {
-              tag: Arc::new(Edn::tag("err")),
-              extra: vec![Edn::str(format!("invalid digit for weekday: {d}"))],
-              enum_tag: None,
-            }));
+            return Ok(Edn::enum_value("err", vec![Edn::str(format!("invalid digit for weekday: {d}"))]));
           }
         };
         match NaiveDate::from_isoywd_opt(*y as i32, *w as u32, weekday) {
           Some(time) => match Local.from_local_datetime(&time.and_hms_opt(0, 0, 0).ok_or("hms got none")?) {
-            LocalResult::None => Ok(Edn::Tuple(EdnTupleView {
-              tag: Arc::new(Edn::tag("none")),
-              extra: vec![],
-              enum_tag: None,
-            })),
-            LocalResult::Single(d) => Ok(Edn::Tuple(EdnTupleView {
-              tag: Arc::new(Edn::tag("single")),
-              extra: vec![Edn::Number(d.timestamp_millis() as f64)],
-              enum_tag: None,
-            })),
-            LocalResult::Ambiguous(d, d2) => Ok(Edn::Tuple(EdnTupleView {
-              tag: Arc::new(Edn::tag("single")),
-              extra: vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
-              enum_tag: None,
-            })),
+            LocalResult::None => Ok(Edn::enum_value("none", vec![])),
+            LocalResult::Single(d) => Ok(Edn::enum_value("single", vec![Edn::Number(d.timestamp_millis() as f64)])),
+            LocalResult::Ambiguous(d, d2) => Ok(Edn::enum_value(
+              "single",
+              vec![Edn::Number(d.timestamp_millis() as f64), Edn::Number(d2.timestamp_millis() as f64)],
+            )),
           },
           None => Err(format!("from-ywd got invalid args: {y} {w} {weekday}")),
         }
