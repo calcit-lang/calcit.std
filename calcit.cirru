@@ -39,21 +39,25 @@
           :code $ quote
             defn add-duration (date n k)
               %{} Date $ :date
-                &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |add_duration (:date date) n k
+                &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |add_duration
+                  option:unwrap $ get date :date
+                  , n k
           :examples $ []
             quote $ add-duration (get-time!) 7 :days
           :schema $ :: 'Dynamic
         |extract-time $ %{} 'CodeEntry (:doc "|Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields. Example: (extract-time (get-time!))")
           :code $ quote
             defn extract-time (x)
-              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |extract_time $ :date x
+              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |extract_time $ option:unwrap (get x :date)
           :examples $ []
             quote $ extract-time (get-time!)
           :schema $ :: 'Dynamic
         |format-time $ %{} 'CodeEntry (:doc "|Format Date object to string. Optional second parameter specifies format (default ISO format). Example: (format-time (get-time!) \"|%Y-%m-%d\")")
           :code $ quote
             defn format-time (time ? format)
-              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |format_time (:date time) format
+              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |format_time
+                option:unwrap $ get time :date
+                , format
           :examples $ []
             quote $ format-time (get-time!) |%Y-%m-%d
           :schema $ :: 'Dynamic
@@ -95,7 +99,7 @@
         |get-timestamp $ %{} 'CodeEntry (:doc "|Get timestamp (milliseconds) from Date object. Example: (get-timestamp (get-time!))")
           :code $ quote
             defn get-timestamp (date)
-              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |get_timestamp $ :date date
+              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |get_timestamp $ option:unwrap (get date :date)
           :examples $ []
             quote $ get-timestamp (get-time!)
           :schema $ :: 'Dynamic
