@@ -42,21 +42,27 @@
                 &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |add_duration (:date date) n k
           :examples $ []
             quote $ add-duration (get-time!) 7 :days
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'calcit.std.date/Date0)
+              :args $ [] 'calcit.std.date/Date0 'Number 'Dynamic
         |extract-time $ %{} 'CodeEntry (:doc "|Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields. Example: (extract-time (get-time!))")
           :code $ quote
             defn extract-time (x)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |extract_time $ :date x
           :examples $ []
             quote $ extract-time (get-time!)
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Dynamic)
+              :args $ [] 'calcit.std.date/Date0
         |format-time $ %{} 'CodeEntry (:doc "|Format Date object to string. Optional second parameter specifies format (default ISO format). Example: (format-time (get-time!) \"|%Y-%m-%d\")")
           :code $ quote
             defn format-time (time ? format)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |format_time (:date time) format
           :examples $ []
             quote $ format-time (get-time!) |%Y-%m-%d
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'String)
+              :args $ [] 'calcit.std.date/Date0 'Dynamic
         |from-ymd $ %{} 'CodeEntry (:doc "|Create Date object from year, month, day. Args: year, month (1-12), day (1-31). Example: (from-ymd 2024 1 15)")
           :code $ quote
             defn from-ymd (y m d)
@@ -98,7 +104,9 @@
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |get_timestamp $ :date date
           :examples $ []
             quote $ get-timestamp (get-time!)
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Fn
+            {} (:return 'Number)
+              :args $ [] 'calcit.std.date/Date0
         |parse-time $ %{} 'CodeEntry (:doc "|Parse time string to Date object. Args: time string, format string (e.g. %Y-%m-%d %H:%M:%S %z). Example: (parse-time \"|2024-01-01 12:00:00 +00:00\" \"|%Y-%m-%d %H:%M:%S %z\")")
           :code $ quote
             defn parse-time (time format)
