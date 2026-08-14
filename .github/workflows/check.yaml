@@ -20,6 +20,8 @@ jobs:
           components: clippy
 
       - uses: calcit-lang/setup-cr@0.0.9
+        with:
+          version: 0.13.15
 
       - name: Validate Calcit snapshot and type baseline
         run: |
