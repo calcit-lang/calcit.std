@@ -21,6 +21,16 @@ jobs:
 
       - uses: calcit-lang/setup-cr@0.0.9
 
+      - name: Validate Calcit snapshot and type baseline
+        run: |
+          caps --ci
+          cr calcit.cirru edit format
+          git diff --exit-code -- calcit.cirru
+          cr calcit.cirru --check-only
+          cr calcit.cirru analyze check-types --summary-only --format json
+          cr calcit.cirru analyze weak-types --only schema-dynamic,code-dynamic --intent unresolved --summary-only --format json
+          cr calcit.cirru analyze deprecated --summary-only --format json
+
       - run: cargo build --release
 
       - run: mkdir dylibs/ && ls target/release/ && cp -v target/release/libcalcit_std.* dylibs/
