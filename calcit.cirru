@@ -440,16 +440,17 @@
             {} (:return 'Number)
               :args $ [] 'Dynamic 'Dynamic
               :features $ #{} :js-ffi
-        |rand-nth $ %{} 'CodeEntry (:doc "|Randomly select one element from a list.")
+        |rand-nth $ %{} 'CodeEntry (:doc "|Randomly select one element from a list. Returns %none when the list is empty.")
           :code $ quote
             defn rand-nth (xs)
-              if (&list:empty? xs) nil $ get xs
+              if (&list:empty? xs) %none $ get xs
                 rand-int $ &- (&list:count xs) 1
           :examples $ []
             quote $ rand-nth ([] 1 2 3 4 5)
           :schema $ :: 'Fn
-            {} (:return 'Dynamic)
+            {}
               :args $ [] 'Dynamic
+              :return $ :: 'Option 'Dynamic
         |rand-shift $ %{} 'CodeEntry (:doc "|Generate random float within center ± shift range.")
           :code $ quote
             defn rand-shift (x y)
@@ -673,7 +674,7 @@
             defn main! () (println "|%%%%%% test random")
               assert-detect identity $ option:some?
                 rand-nth $ range 10
-              assert= nil $ rand-nth ([])
+              assert= %none $ rand-nth ([])
               assert= nil $ ;nil anything
               assert-detect identity $ <= 0 (rand) 100
               assert-detect identity $ <= 0 (rand 10) 10
