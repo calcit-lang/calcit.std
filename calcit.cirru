@@ -444,7 +444,7 @@
           :code $ quote
             defn rand-nth (xs)
               if (&list:empty? xs) %none $ get xs
-                rand-int $ &- (&list:count xs) 1
+                rand-int $ &list:count xs
           :examples $ []
             quote $ rand-nth ([] 1 2 3 4 5)
           :schema $ :: 'Fn
