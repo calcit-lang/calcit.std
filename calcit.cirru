@@ -1,10 +1,12 @@
 
-{} (:about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `cr query` to inspect and `cr edit`/`cr tree` to modify. Run `cr docs agents --full` first. Manual edits must follow format and schema conventions, then run `cr edit format`.") (:package |calcit.std) (:version |0.2.16)
+{} (:about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `cr query` to inspect and `cr edit`/`cr tree` to modify. Run `cr docs agents --full` first. Manual edits must follow format and schema conventions, then run `cr edit format`.") (:package |calcit.std)
   :entries $ {}
     :default $ {} (:description |) (:init-fn 'calcit.std.test/main!) (:mode :native) (:reload-fn 'calcit.std.test/reload!)
+      :feature-policy $ {}
       :modules $ []
       :type-slots $ {}
     :stream-process $ {} (:description |) (:init-fn 'calcit.std.test.process/main!) (:mode :native) (:reload-fn 'calcit.std.test.process/main!)
+      :feature-policy $ {}
       :modules $ []
       :type-slots $ {}
   :files $ {}
@@ -19,7 +21,7 @@
           :code $ quote
             defstruct Date0 $ :date 'Dynamic
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Enum
         |DateImpl $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defimpl DateImpl DateTrait
@@ -29,12 +31,12 @@
               .timestamp $ fn (self) (get-timestamp self)
               .extract $ fn (self) (extract-time self)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Impl
         |DateTrait $ %{} 'CodeEntry (:doc |)
           :code $ quote
             deftrait DateTrait (.format :fn) (.add :fn) (.timestamp :fn) (.extract :fn)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Trait
         |add-duration $ %{} 'CodeEntry (:doc "|Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc). Example: (add-duration (get-time!) 7 :days)")
           :code $ quote
             defn add-duration (date n k)
@@ -348,7 +350,7 @@
           :code $ quote
             defenum ProcessOutput (:stdout 'String) (:stderr 'String)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Enum
         |execute! $ %{} 'CodeEntry (:doc "|Execute a shell command. Args: command as list of strings, optional working directory. Returns output or error. Example: (execute! [] \"ls\" \"-la\")")
           :code $ quote
             defn execute! (command ? dir)
