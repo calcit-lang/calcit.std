@@ -65,4 +65,9 @@ for symbol in "${expected[@]}"; do
   fi
 done
 
+if grep -Eq '[[:space:]]_?(abi_version|edn_version|stream_command|read_file_by_line|set_timeout|set_interval)$' <<<"$symbols"; then
+  echo "found a legacy Rust-layout FFI export in $library" >&2
+  exit 1
+fi
+
 echo "verified ${#expected[@]} C-safe calcit.std exports in $library"
