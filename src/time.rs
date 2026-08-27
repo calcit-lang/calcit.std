@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Condvar, Mutex, OnceLock};
-use std::thread::{sleep, spawn};
+use std::thread::spawn;
 use std::time::Duration;
 
 use crate::ffi::{
@@ -192,52 +192,13 @@ pub unsafe extern "C" fn set_interval_calcit_ffi_async_v1(
   .unwrap_or(FFI_STATUS_INTERNAL_ERROR)
 }
 
-#[unsafe(no_mangle)]
-pub fn set_timeout(
-  args: Vec<Edn>,
-  handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
-  finish: Box<dyn FnOnce() + Send + Sync + 'static>,
-) -> Result<Edn, String> {
-  let duration = parse_duration(&args, "set-timeout")?;
-  let task = spawn(move || {
-    sleep(duration);
-    if let Err(error) = handler(vec![]) {
-      eprintln!("timeout callback failed: {error}");
-    }
-    finish();
-  });
-  task.join().map_err(|_| "timer task panicked".to_owned())?;
-  Ok(Edn::Nil)
-}
-
-#[unsafe(no_mangle)]
-pub fn set_interval(
-  args: Vec<Edn>,
-  handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
-  _finish: Box<dyn Fn() + Send + Sync + 'static>,
-) -> Result<Edn, String> {
-  let duration = parse_duration(&args, "set-interval")?;
-  if duration.is_zero() {
-    return Err("set-interval expected a positive duration".to_owned());
-  }
-  let task = spawn(move || {
-    loop {
-      sleep(duration);
-      if let Err(error) = handler(vec![]) {
-        eprintln!("interval callback failed: {error}");
-      }
-    }
-  });
-  task.join().map_err(|_| "interval task panicked".to_owned())?;
-  Ok(Edn::Nil)
-}
-
 #[cfg(test)]
 mod tests {
   use super::*;
   use crate::ffi::{AsyncTaskCancel, CalcitFfiAsyncHostV1, FFI_EVENT_COMPLETE, FFI_EVENT_EMIT, encode_callback_args};
   use std::ptr;
   use std::sync::OnceLock;
+  use std::thread::sleep;
   use std::time::Instant;
 
   type Config = (u32, u32, u64, AsyncTaskCancel);

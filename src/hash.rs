@@ -1,6 +1,5 @@
 use cirru_edn::Edn;
 
-#[unsafe(no_mangle)]
 pub fn md5(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(s) = &args[0] {

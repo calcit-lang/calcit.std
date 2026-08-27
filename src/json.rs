@@ -97,7 +97,6 @@ pub fn edn_to_json(data: &Edn, add_colon: bool) -> Result<Value, String> {
 }
 
 /// public interface to builtins
-#[unsafe(no_mangle)]
 pub fn parse_json(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     match &args[0] {
@@ -112,7 +111,6 @@ pub fn parse_json(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[unsafe(no_mangle)]
 pub fn stringify_json(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match &args[1] {

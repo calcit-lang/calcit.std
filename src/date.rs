@@ -8,7 +8,6 @@ use std::ops::Add;
 
 /// calcit represents DateTime in f64
 /// nil for no format
-#[unsafe(no_mangle)]
 pub fn parse_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
@@ -27,13 +26,11 @@ pub fn parse_time(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[unsafe(no_mangle)]
 pub fn now_bang(_args: Vec<Edn>) -> Result<Edn, String> {
   Ok(Edn::Number(Local::now().timestamp_millis() as f64))
 }
 
 /// TODO currently only return self, no offset involved yet
-#[unsafe(no_mangle)]
 pub fn get_timestamp(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     match &args[0] {
@@ -54,7 +51,6 @@ pub fn get_timestamp(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// nil for no format
-#[unsafe(no_mangle)]
 pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     let raw_time = match &args[0] {
@@ -127,7 +123,6 @@ pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// nil for no format
-#[unsafe(no_mangle)]
 pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     match &args[0] {
@@ -171,7 +166,6 @@ pub fn extract_time(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// create date from year/month/day
-#[unsafe(no_mangle)]
 pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 3 {
     match (&args[0], &args[1], &args[2]) {
@@ -199,7 +193,6 @@ pub fn from_ymd(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// create date from year/week/day
-#[unsafe(no_mangle)]
 pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 3 {
     match (&args[0], &args[1], &args[2]) {
@@ -235,7 +228,6 @@ pub fn from_ywd(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[unsafe(no_mangle)]
 pub fn add_duration(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 3 {
     let d = match &args[0] {

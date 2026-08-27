@@ -15,9 +15,8 @@ pub use date::{add_duration, format_time, now_bang, parse_time};
 pub use fs::{append_file, glob_call, path_exists, read_dir, read_file, walk_dir, write_file};
 pub use json::{parse_json, stringify_json};
 pub use path::join_path;
-pub use process::{execute_command, stream_command};
+pub use process::execute_command;
 pub use random::{call_nanoid, rand, rand_hex_color, rand_int};
-pub use time::{set_interval, set_timeout};
 
 use ffi::CalcitFfiBuffer;
 
@@ -66,13 +65,3 @@ export_buffer_method!(rand_calcit_ffi_v1, random::rand);
 export_buffer_method!(rand_int_calcit_ffi_v1, random::rand_int);
 export_buffer_method!(call_nanoid_calcit_ffi_v1, random::call_nanoid);
 export_buffer_method!(rand_hex_color_calcit_ffi_v1, random::rand_hex_color);
-
-#[unsafe(no_mangle)]
-pub fn abi_version() -> String {
-  String::from("0.0.9")
-}
-
-#[unsafe(no_mangle)]
-pub fn edn_version() -> String {
-  cirru_edn::version().to_owned()
-}

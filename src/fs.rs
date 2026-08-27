@@ -5,11 +5,9 @@ use glob::glob;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
-use std::sync::Arc;
 use std::{fs, vec};
 use walkdir::WalkDir;
 
-#[unsafe(no_mangle)]
 pub fn read_file(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -46,19 +44,6 @@ fn collect_file_lines(args: &[Edn]) -> Result<Vec<String>, String> {
     .map_err(|error| format!("failed reading line from {name:?}: {error}"))
 }
 
-#[unsafe(no_mangle)]
-pub fn read_file_by_line(
-  args: Vec<Edn>,
-  handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
-  finish: Box<dyn FnOnce() + Send + Sync + 'static>,
-) -> Result<Edn, String> {
-  for line in collect_file_lines(&args)? {
-    handler(vec![Edn::str(line)]).map_err(|error| format!("failed reading line: {error}"))?;
-  }
-  finish();
-  Ok(Edn::Nil)
-}
-
 /// Read a file line-by-line through blocking protocol v1.
 ///
 /// # Safety
@@ -84,7 +69,6 @@ pub unsafe extern "C" fn read_file_by_line_calcit_ffi_blocking_v1(
   }
 }
 
-#[unsafe(no_mangle)]
 pub fn write_file(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
@@ -102,7 +86,6 @@ pub fn write_file(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[unsafe(no_mangle)]
 pub fn append_file(args: Vec<Edn>) -> Result<Edn, String> {
   use std::fs::OpenOptions;
   use std::io::prelude::*;
@@ -129,7 +112,6 @@ pub fn append_file(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[unsafe(no_mangle)]
 pub fn path_exists(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -142,7 +124,6 @@ pub fn path_exists(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[unsafe(no_mangle)]
 pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -170,7 +151,6 @@ pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
 
 /// wraps https://doc.rust-lang.org/std/fs/fn.create_dir.html
 /// throws error in many cases, path existed, missing parents
-#[unsafe(no_mangle)]
 pub fn create_dir(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -185,7 +165,6 @@ pub fn create_dir(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// wraps https://doc.rust-lang.org/std/fs/fn.create_dir_all.html
-#[unsafe(no_mangle)]
 pub fn create_dir_all(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -200,7 +179,6 @@ pub fn create_dir_all(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// wraps https://doc.rust-lang.org/std/fs/fn.rename.html
-#[unsafe(no_mangle)]
 pub fn rename_path(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
@@ -219,7 +197,6 @@ pub fn rename_path(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// make sure path existed. skip if file content identical
-#[unsafe(no_mangle)]
 pub fn check_write_file(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
@@ -260,7 +237,6 @@ pub fn check_write_file(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// walk a directory, return a list of files
-#[unsafe(no_mangle)]
 pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
@@ -282,7 +258,6 @@ pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
 }
 
 /// use glob to match paths recursively
-#[unsafe(no_mangle)]
 pub fn glob_call(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {

@@ -25,7 +25,6 @@ pub fn rand(xs: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-#[unsafe(no_mangle)]
 pub fn rand_int(xs: Vec<Edn>) -> Result<Edn, String> {
   if xs.len() == 2 {
     match (&xs[0], &xs[1]) {
@@ -55,7 +54,6 @@ pub fn f64_to_usize(f: f64) -> Result<usize, String> {
   }
 }
 
-#[unsafe(no_mangle)]
 pub fn call_nanoid(xs: Vec<Edn>) -> Result<Edn, String> {
   if xs.len() == 2 {
     let size = match &xs[0] {
@@ -82,7 +80,6 @@ pub fn call_nanoid(xs: Vec<Edn>) -> Result<Edn, String> {
 }
 
 // cheap way creating hex color
-#[unsafe(no_mangle)]
 pub fn rand_hex_color(_xs: Vec<Edn>) -> Result<Edn, String> {
   let mut rng = rand::thread_rng();
   let y: u32 = rng.r#gen();

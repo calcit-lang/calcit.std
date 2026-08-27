@@ -31,7 +31,6 @@ fn parse_command(args: &[Edn], method: &str) -> Result<(String, String, Vec<Stri
   Ok((dir.to_string(), program.to_string(), extra_args))
 }
 
-#[unsafe(no_mangle)]
 pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
   let (dir, program, extra_args) = parse_command(&args, "execute-command")?;
   let output = Command::new(program)
@@ -416,48 +415,6 @@ pub unsafe extern "C" fn on_ctrl_c_calcit_ffi_async_v1(
     unsafe { start_on_ctrl_c_async_v1(request_ptr, request_len, task, host) }
   }))
   .unwrap_or(FFI_STATUS_INTERNAL_ERROR)
-}
-
-#[unsafe(no_mangle)]
-pub fn stream_command(
-  args: Vec<Edn>,
-  handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
-  finish: Box<dyn FnOnce() + Send + Sync + 'static>,
-) -> Result<Edn, String> {
-  let (dir, program, extra_args) = parse_command(&args, "stream-command")?;
-  let mut child = Command::new(program)
-    .current_dir(dir)
-    .args(extra_args)
-    .stdout(Stdio::piped())
-    .stderr(Stdio::piped())
-    .spawn()
-    .map_err(|error| format!("failed to spawn command: {error}"))?;
-  let stdout = child.stdout.take().ok_or("failed to capture stdout")?;
-  let stderr = child.stderr.take().ok_or("failed to capture stderr")?;
-  let (tx, rx) = mpsc::channel();
-  forward_lines(stdout, "stdout", tx.clone());
-  forward_lines(stderr, "stderr", tx.clone());
-  drop(tx);
-  thread::spawn(move || {
-    for event in rx {
-      match event {
-        PipeEvent::Line(name, content) => {
-          let event = Edn::typed_enum("ProcessOutput", name, vec![Edn::Str(content.into())]);
-          if let Err(error) = handler(vec![event]) {
-            eprintln!("stream callback failed: {error}");
-            break;
-          }
-        }
-        PipeEvent::Error(name, error) => {
-          eprintln!("failed to read process {name}: {error}");
-          break;
-        }
-      }
-    }
-    let _ = child.wait();
-    finish();
-  });
-  Ok(Edn::Nil)
 }
 
 #[cfg(test)]
