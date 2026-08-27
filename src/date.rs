@@ -107,8 +107,13 @@ pub fn format_time(args: Vec<Edn>) -> Result<Edn, String> {
         if let Some(time) = v.as_any().downcast_ref::<DateTime<FixedOffset>>() {
           match &args[1] {
             Edn::Nil => Ok(Edn::Str(time.to_rfc3339().into())),
-            Edn::Str(f) => Ok(Edn::Str(time.format(f).to_string().into())),
-            _ => Err(format!("format-time expected string, got: {args:?}")),
+            Edn::Enum(option) if option.variant.as_ref() == "none" && option.extra.is_empty() => Ok(Edn::Str(time.to_rfc3339().into())),
+            Edn::Enum(option) if option.variant.as_ref() == "some" && option.extra.len() == 1 => match &option.extra[0] {
+              Edn::Str(format) => Ok(Edn::Str(time.format(format).to_string().into())),
+              value => Err(format!("format-time expected Option<String>, got some({value})")),
+            },
+            Edn::Str(format) => Ok(Edn::Str(time.format(format).to_string().into())),
+            _ => Err(format!("format-time expected Option<String>, got: {args:?}")),
           }
         } else {
           Err(format!("format-time expected DateTime, got: {v:?}"))

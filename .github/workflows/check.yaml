@@ -12,14 +12,14 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
           components: clippy
 
-      - uses: calcit-lang/setup-calcit@v1
+      - uses: calcit-lang/setup-calcit@v1.3.0
 
       - name: Validate Calcit snapshot and type baseline
         run: |
@@ -27,12 +27,25 @@ jobs:
           calcit calcit.cirru edit format
           git diff --exit-code -- calcit.cirru
           calcit calcit.cirru --check-only
-          calcit calcit.cirru analyze check-types --summary-only --format json
-          calcit calcit.cirru analyze weak-types --only schema-dynamic,code-dynamic --intent unresolved --summary-only --format json
-          calcit calcit.cirru analyze deprecated --summary-only --format json
+          calcit calcit.cirru analyze quality --baseline config/calcit-quality.json --format json
 
       - run: cargo build --release
 
-      - run: mkdir dylibs/ && ls target/release/ && cp -v target/release/libcalcit_std.* dylibs/
+      - run: cargo test
 
-      - run: cr
+      - run: cargo clippy --all-targets -- -D warnings
+
+      - run: mkdir -p dylibs/ && ls target/release/ && cp -v target/release/libcalcit_std.* dylibs/
+
+      - run: caps --strict --ci
+
+      - run: bash scripts/check-c-safe-ffi.sh
+
+      - name: Trace focused cross-toolchain random FFI call
+        run: |
+          calcit --trace-ffi calcit.cirru eval --dep ./ -- 'ns app.main $ :require
+            calcit.std.rand :refer $ rand rand-int rand-nth
+
+          println (rand-nth $ range 10) (rand) (rand-int 10)'
+
+      - run: calcit calcit.cirru

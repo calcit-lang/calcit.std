@@ -8,7 +8,6 @@ pub fn rand_number(n: f64) -> f64 {
   y * n
 }
 
-#[unsafe(no_mangle)]
 pub fn rand(xs: Vec<Edn>) -> Result<Edn, String> {
   if xs.len() == 2 {
     match (&xs[0], &xs[1]) {
@@ -60,10 +59,7 @@ pub fn f64_to_usize(f: f64) -> Result<usize, String> {
 pub fn call_nanoid(xs: Vec<Edn>) -> Result<Edn, String> {
   if xs.len() == 2 {
     let size = match &xs[0] {
-      Edn::Number(n) => match f64_to_usize(*n) {
-        Ok(size) => Some(size),
-        Err(e) => return Err(e),
-      },
+      Edn::Number(n) => Some(f64_to_usize(*n)?),
       Edn::Nil => None, // nanoid defaults to 21
       a => return Err(format!("expected usize, got: {a}")),
     };

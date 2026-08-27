@@ -1,6 +1,6 @@
 [package]
 name = "calcit_std"
-version = "0.2.16"
+version = "0.2.19"
 authors = ["jiyinyiyong <jiyinyiyong@gmail.com>"]
 edition = "2024"
 
@@ -8,7 +8,7 @@ edition = "2024"
 [lib]
 name = "calcit_std"
 path = "src/lib.rs"
-crate-type = ["dylib"] # Creates dynamic lib
+crate-type = ["cdylib"] # Self-contained C ABI library; avoids Rust symbol interposition with the host.
 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

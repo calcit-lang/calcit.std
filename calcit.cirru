@@ -16,7 +16,7 @@
           :code $ quote
             def Date $ impl-traits Date0 DateImpl
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Impl
         |Date0 $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defstruct Date0 $ :date 'Dynamic
@@ -26,7 +26,7 @@
           :code $ quote
             defimpl DateImpl DateTrait
               .format $ fn (self & args)
-                format-time self $ option:unwrap-or (first args) nil
+                format-time self $ first args
               .add $ fn (self n k) (add-duration self n k)
               .timestamp $ fn (self) (get-timestamp self)
               .extract $ fn (self) (extract-time self)
@@ -60,14 +60,13 @@
               :features $ #{} :js-ffi
         |format-time $ %{} 'CodeEntry (:doc "|Format Date object to string. Optional second parameter specifies format (default ISO format). Example: (format-time (get-time!) \"|%Y-%m-%d\")")
           :code $ quote
-            defn format-time (time ? format)
+            defn format-time (time format)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |format_time (:date time) format
           :examples $ []
             quote $ format-time (get-time!) |%Y-%m-%d
           :schema $ :: 'Fn
             {} (:return 'String)
-              :args $ [] 'calcit.std.date/Date0 'Dynamic
-              :features $ #{} :js-ffi
+              :args $ [] 'calcit.std.date/Date0 (:: 'Option 'String)
         |from-ymd $ %{} 'CodeEntry (:doc "|Create Date object from year, month, day. Args: year, month (1-12), day (1-31). Example: (from-ymd 2024 1 15)")
           :code $ quote
             defn from-ymd (y m d)
@@ -451,8 +450,9 @@
             quote $ rand-nth ([] 1 2 3 4 5)
           :schema $ :: 'Fn
             {}
-              :args $ [] 'Dynamic
-              :return $ :: 'Option 'Dynamic
+              :args $ [] (:: 'List 'T)
+              :generics $ [] 'T
+              :return $ :: 'Option 'T
         |rand-shift $ %{} 'CodeEntry (:doc "|Generate random float within center ± shift range.")
           :code $ quote
             defn rand-shift (x y)
@@ -499,7 +499,7 @@
               assert= |a/b/c $ join-path |a |b |c
               assert= |a/b $ path-dirname |a/b/c
               assert= |c $ path-basename |a/b/c
-              , nil
+              , &unit
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
@@ -543,7 +543,7 @@
           :code $ quote
             defn main! () (println &newline "|%%%% test date")
               println "|GET TIME" $ get-time!
-              echo |time: $ format-time (get-time!) "|%Y-%m-%d %H:%M:%S %z"
+              echo |time: $ format-time (get-time!) (%some "|%Y-%m-%d %H:%M:%S %z")
               assert= 1417176009000 $ get-timestamp (parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z")
               ; assert= "|2014-11-28 12:00:09 +0000" $ format-time
                 %{} Date $ :date 1417176009000
@@ -626,26 +626,7 @@
                 assert=
                   parse-json $ stringify-json data
                   {} (|a 1) (|b 2) (|c |k)
-              , nil
-          :examples $ []
-          :schema $ :: 'Fn
-            {} (:return 'Unit)
-              :args $ []
-        |slurp-cirru-edn $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            defmacro slurp-cirru-edn (file)
-              with-cpu-time $ stringify-json
-                first $ with-cpu-time
-                  parse-cirru $ read-file file
-                , true
-          :examples $ []
-          :schema $ :: 'Macro
-            {}
-              :args $ [] 'String
-              :features $ #{} :js-ffi
-        |try-large-json $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            defn try-large-json () $ slurp-cirru-edn |/Users/chen/repo/calcit-lang/apis/docs/apis.cirru
+              , &unit
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
@@ -677,7 +658,6 @@
               assert-detect identity $ option:some?
                 rand-nth $ range 10
               assert= %none $ rand-nth ([])
-              assert= nil $ ;nil anything
               assert-detect identity $ <= 0 (rand) 100
               assert-detect identity $ <= 0 (rand 10) 10
               assert-detect identity $ <= 20 (rand 20 30) 30
@@ -738,8 +718,10 @@
             defmacro get-dylib-ext () $ case-default (&get-os) |.so (:macos |.dylib) (:windows |.dll)
           :examples $ []
           :schema $ :: 'Macro
-            {} (:return 'String)
-              :args $ []
+            {}
+              :capabilities $ #{} :platform-read
+              :expansion $ :: 'Expr 'String
+              :required $ []
         |get-dylib-path $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn get-dylib-path (p)
