@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+run_smoke() {
+  local source="$1"
+  calcit calcit.cirru exec --dep ./ < "$source" &
+  local task_pid=$!
+  (
+    sleep 10
+    kill -TERM "$task_pid" 2>/dev/null || true
+  ) &
+  local watchdog_pid=$!
+  local status=0
+  wait "$task_pid" || status=$?
+  kill "$watchdog_pid" 2>/dev/null || true
+  wait "$watchdog_pid" 2>/dev/null || true
+  if [[ "$status" -ne 0 ]]; then
+    echo "async smoke failed: $source (status $status)" >&2
+    return "$status"
+  fi
+}
+
+run_smoke tests/ffi-async/timeout.cirru
+run_smoke tests/ffi-async/interval-cancel.cirru
+run_smoke tests/ffi-async/process-cancel.cirru
+
+calcit calcit.cirru exec --dep ./ < tests/ffi-async/ctrl-c.cirru &
+ctrl_pid=$!
+(
+  sleep 10
+  kill -TERM "$ctrl_pid" 2>/dev/null || true
+) &
+watchdog_pid=$!
+sleep 1
+kill -INT "$ctrl_pid"
+status=0
+wait "$ctrl_pid" || status=$?
+kill "$watchdog_pid" 2>/dev/null || true
+wait "$watchdog_pid" 2>/dev/null || true
+if [[ "$status" -ne 0 ]]; then
+  echo "async smoke failed: Ctrl+C stream (status $status)" >&2
+  exit "$status"
+fi
+
+echo "verified C-safe timer, process, cancellation, and Ctrl+C async paths"

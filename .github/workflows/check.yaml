@@ -37,9 +37,19 @@ jobs:
 
       - run: mkdir -p dylibs/ && ls target/release/ && cp -v target/release/libcalcit_std.* dylibs/
 
+      - name: Validate runnable docs and async examples
+        run: |
+          calcit calcit.cirru docs check-md README.md --dep ./ --failures-only
+          calcit calcit.cirru analyze check-examples --ns calcit.std.process --def stream!
+          calcit calcit.cirru analyze check-examples --ns calcit.std.process --def on-ctrl-c
+          calcit calcit.cirru analyze check-examples --ns calcit.std.time --def set-timeout
+          calcit calcit.cirru analyze check-examples --ns calcit.std.time --def set-interval
+
       - run: caps --strict --ci
 
       - run: bash scripts/check-c-safe-ffi.sh
+
+      - run: bash scripts/check-c-safe-async.sh
 
       - name: Trace focused cross-toolchain random FFI call
         run: |

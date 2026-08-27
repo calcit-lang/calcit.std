@@ -14,13 +14,15 @@ mkdir -p dylibs/ && cp -v target/release/libcalcit_std.dylib dylibs/ # supported
 All 30 synchronous native methods prefer C-safe buffer protocol v1.
 `read-file-by-line!` uses blocking protocol v1, so its callback stays on the
 Calcit host thread without passing Rust closures or EDN containers across the
-dylib boundary. Legacy Rust symbols remain temporary per-method fallbacks.
+dylib boundary. Timers, process output, and Ctrl+C subscriptions use async
+protocol v1 and return opaque cancellable task capabilities. Legacy Rust
+symbols remain temporary per-method fallbacks.
 Maintainers can run `bash scripts/check-c-safe-ffi.sh` after building/copying
 the release dylib to verify that every expected C entry point is exported.
 
 Providing:
 
-```cirru
+```cirru.no-check
 calcit.std.fs/read-file! a
 calcit.std.fs/write-file! a b
 calcit.std.fs/append-file! a b
@@ -38,12 +40,19 @@ calcit.std.fs/rename! from to
 calcit.std.fs/read-file-by-line! a $ fn (line) (println line)
 ```
 
-```cirru
+```cirru.no-check
 calcit.std.process/execute! a
+
+def process-task $ calcit.std.process/stream!
+  [] |sh |-c "|printf 'ready\\n'; exec sleep 5"
+  fn (event) (println event)
+  , (%none)
+
+&ffi-task-cancel process-task :shutdown
 ```
 
 ```cirru
-calcit.std.json/stringify-json data true
+calcit.std.json/stringify-json ({} (:answer 42)) true
 
 calcit.std.json/parse-json "|{\"a\": [1, 2], \":b\": 3}"
 ```
@@ -51,17 +60,14 @@ calcit.std.json/parse-json "|{\"a\": [1, 2], \":b\": 3}"
 Date object is wrapped as `%{} Date {:date <timestamp>}`:
 
 ```cirru
-calcit.std.date/Date
-; virtual data for Date
-
 calcit.std.date/get-time!
 ; %{} Date (:date &any-ref)
 
 calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
 
-calcit.std.date/format-time (get-time!) "|%Y-%m-%d %H:%M:%S %z"
+calcit.std.date/format-time (calcit.std.date/get-time!) (%some "|%Y-%m-%d %H:%M:%S %z")
 
-calcit.std.date/extract-time (get-time!)
+calcit.std.date/extract-time $ calcit.std.date/get-time!
 ; {} (:minute 6) (:hour 16) (:month 11) (:second 48) (:day 10)
 
 calcit.std.date/from-ymd 2021 11 11
@@ -69,7 +75,7 @@ calcit.std.date/from-ymd 2021 11 11
 calcit.std.date/from-ywd 2021 45 6
 ; %{} Date (:date 1636732800000)
 
-calcit.std.date/add-duration (get-time!) 4 :days
+calcit.std.date/add-duration (calcit.std.date/get-time!) 4 :days
 ```
 
 ```cirru
@@ -92,12 +98,14 @@ calcit.std.rand/nanoid! 9 |abcd (; "charset")
 calcit.std.rand/rand-hex-color!
 ```
 
-```cirru
-calcit.std.time/set-timeout 1000 $ fn ()
+```cirru.no-check
+def timeout-task $ calcit.std.time/set-timeout 1000 $ fn ()
   println |timeout
 
-calcit.std.time/set-interval 1000 $ fn ()
+def interval-task $ calcit.std.time/set-interval 1000 $ fn ()
   println |repeated
+
+&ffi-task-cancel interval-task :shutdown
 ```
 
 ```cirru
@@ -105,7 +113,7 @@ calcit.std.hash/md5 |content
 ```
 
 ```cirru
-calcit.std.path/join-path & xs
+calcit.std.path/join-path |a |b |c
 
 calcit.std.path/path-dirname |a/b/c
 ; |a/b

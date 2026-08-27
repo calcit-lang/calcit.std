@@ -7,7 +7,7 @@
   },
   "metrics": {
     "typeNone": 0,
-    "typeNotFull": 16,
+    "typeNotFull": 12,
     "schemaDynamic": 0,
     "codeDynamic": 0,
     "codeNil": 0,
@@ -116,28 +116,6 @@
       "deprecatedCalls": 0,
       "unsafeCoerce": 0
     },
-    "calcit.std.process/on-ctrl-c": {
-      "typeNone": 0,
-      "typeNotFull": 1,
-      "schemaDynamic": 0,
-      "codeDynamic": 0,
-      "codeNil": 0,
-      "unresolved": 0,
-      "declaredOptional": 0,
-      "deprecatedCalls": 0,
-      "unsafeCoerce": 0
-    },
-    "calcit.std.process/stream!": {
-      "typeNone": 0,
-      "typeNotFull": 1,
-      "schemaDynamic": 0,
-      "codeDynamic": 0,
-      "codeNil": 0,
-      "unresolved": 0,
-      "declaredOptional": 0,
-      "deprecatedCalls": 0,
-      "unsafeCoerce": 0
-    },
     "calcit.std.rand/nanoid!": {
       "typeNone": 0,
       "typeNotFull": 1,
@@ -161,28 +139,6 @@
       "unsafeCoerce": 0
     },
     "calcit.std.rand/rand-int": {
-      "typeNone": 0,
-      "typeNotFull": 1,
-      "schemaDynamic": 0,
-      "codeDynamic": 0,
-      "codeNil": 0,
-      "unresolved": 0,
-      "declaredOptional": 0,
-      "deprecatedCalls": 0,
-      "unsafeCoerce": 0
-    },
-    "calcit.std.time/set-interval": {
-      "typeNone": 0,
-      "typeNotFull": 1,
-      "schemaDynamic": 0,
-      "codeDynamic": 0,
-      "codeNil": 0,
-      "unresolved": 0,
-      "declaredOptional": 0,
-      "deprecatedCalls": 0,
-      "unsafeCoerce": 0
-    },
-    "calcit.std.time/set-timeout": {
       "typeNone": 0,
       "typeNotFull": 1,
       "schemaDynamic": 0,
