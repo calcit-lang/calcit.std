@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 2,
+  "scope": {
+    "namespace": null,
+    "namespacePrefix": null,
+    "includeDependencies": false
+  },
+  "metrics": {
+    "typeNone": 0,
+    "typeNotFull": 16,
+    "schemaDynamic": 0,
+    "codeDynamic": 0,
+    "codeNil": 0,
+    "unresolved": 0,
+    "declaredOptional": 0,
+    "deprecatedCalls": 0,
+    "unsafeCoerce": 0
+  },
+  "definitions": {
+    "calcit.std.date/add-duration": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.date/extract-time": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.fs/glob!": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.fs/read-dir!": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.fs/read-file-by-line!": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.fs/walk-dir!": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.json/parse-json": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.json/stringify-json": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.process/execute!": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.process/on-ctrl-c": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.process/stream!": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.rand/nanoid!": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.rand/rand": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.rand/rand-int": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.time/set-interval": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    },
+    "calcit.std.time/set-timeout": {
+      "typeNone": 0,
+      "typeNotFull": 1,
+      "schemaDynamic": 0,
+      "codeDynamic": 0,
+      "codeNil": 0,
+      "unresolved": 0,
+      "declaredOptional": 0,
+      "deprecatedCalls": 0,
+      "unsafeCoerce": 0
+    }
+  }
+}

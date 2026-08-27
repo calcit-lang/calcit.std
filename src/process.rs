@@ -39,8 +39,8 @@ pub fn execute_command(args: Vec<Edn>) -> Result<Edn, String> {
 
         match Command::new(cmd).current_dir(&**dir).args(&xs).output() {
           Ok(t) => {
-            let content = String::from_utf8(t.stdout).unwrap();
-            let stderr = String::from_utf8(t.stderr).unwrap();
+            let content = String::from_utf8(t.stdout).map_err(|error| format!("command stdout is not UTF-8: {error}"))?;
+            let stderr = String::from_utf8(t.stderr).map_err(|error| format!("command stderr is not UTF-8: {error}"))?;
             Ok(Edn::List(EdnListView(vec![Edn::Str(content.into()), Edn::Str(stderr.into())])))
           }
           Err(e) => Err(format!("Failed to excute: {e}")),

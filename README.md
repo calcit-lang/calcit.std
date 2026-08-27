@@ -8,8 +8,15 @@ Install to `~/.config/calcit/modules/`, compile and provide dylib file:
 
 ```bash
 cargo build --release
-mkdir dylibs/ && cp -v target/release/libcalcit_std.dylib dylibs/ # supported macos only
+mkdir -p dylibs/ && cp -v target/release/libcalcit_std.dylib dylibs/ # supported macos only
 ```
+
+All 30 synchronous native methods prefer C-safe buffer protocol v1.
+`read-file-by-line!` uses blocking protocol v1, so its callback stays on the
+Calcit host thread without passing Rust closures or EDN containers across the
+dylib boundary. Legacy Rust symbols remain temporary per-method fallbacks.
+Maintainers can run `bash scripts/check-c-safe-ffi.sh` after building/copying
+the release dylib to verify that every expected C entry point is exported.
 
 Providing:
 

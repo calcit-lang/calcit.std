@@ -19,7 +19,7 @@ pub fn read_file(args: Vec<Edn>) -> Result<Edn, String> {
         Err(e) => Err(format!("Failed to read file {name:?}: {e}")),
       }
     } else {
-      Err(format!("read-file expected 1 filename, got {:?}", &args[0]))
+      Err(format!("read-file expected 1 filename, got {:?}", args[0]))
     }
   } else {
     Err(format!("read-file expected 1 argument, got {args:?}"))
@@ -36,33 +36,51 @@ where
   Ok(io::BufReader::new(file).lines())
 }
 
+fn collect_file_lines(args: &[Edn]) -> Result<Vec<String>, String> {
+  let [Edn::Str(name)] = args else {
+    return Err(format!("read-file-by-line expected 1 filename, got {args:?}"));
+  };
+  let lines = read_lines(&**name).map_err(|error| format!("Failed to read file {name:?}: {error}"))?;
+  lines
+    .collect::<Result<Vec<_>, _>>()
+    .map_err(|error| format!("failed reading line from {name:?}: {error}"))
+}
+
 #[unsafe(no_mangle)]
 pub fn read_file_by_line(
   args: Vec<Edn>,
   handler: Arc<dyn Fn(Vec<Edn>) -> Result<Edn, String> + Send + Sync + 'static>,
   finish: Box<dyn FnOnce() + Send + Sync + 'static>,
 ) -> Result<Edn, String> {
-  if args.len() == 1 {
-    if let Edn::Str(name) = &args[0] {
-      match read_lines(&**name) {
-        Ok(lines) => {
-          // Consumes the iterator, returns an (Optional) String
-          for line in lines.map_while(Result::ok) {
-            match handler(vec![Edn::str(line)]) {
-              Ok(_) => {}
-              Err(e) => return Err(format!("failed reading line: {e}")),
-            }
-          }
-          finish();
-          Ok(Edn::Nil)
-        }
-        Err(e) => Err(format!("Failed to read file {name:?}: {e}")),
+  for line in collect_file_lines(&args)? {
+    handler(vec![Edn::str(line)]).map_err(|error| format!("failed reading line: {error}"))?;
+  }
+  finish();
+  Ok(Edn::Nil)
+}
+
+/// Read a file line-by-line through blocking protocol v1.
+///
+/// # Safety
+///
+/// Request bytes and descriptors must remain readable, and `output` writable,
+/// for this call.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn read_file_by_line_calcit_ffi_blocking_v1(
+  request_ptr: *const u8,
+  request_len: usize,
+  task: *const crate::ffi::CalcitFfiAsyncTaskV1,
+  host: *const crate::ffi::CalcitFfiBlockingHostV1,
+  output: *mut crate::ffi::CalcitFfiBuffer,
+) -> i32 {
+  // SAFETY: the shared adapter validates and copies all call-scoped inputs.
+  unsafe {
+    crate::ffi::run_blocking_adapter(request_ptr, request_len, task, host, output, |args, task, host| {
+      for line in collect_file_lines(&args)? {
+        crate::ffi::invoke_blocking_callback(host, task, vec![Edn::str(line)])?;
       }
-    } else {
-      Err(format!("read-file-by-line expected 1 filename, got {:?}", &args[0]))
-    }
-  } else {
-    Err(format!("read-file-by-line expected 1 argument, got {args:?}"))
+      Ok(Edn::Nil)
+    })
   }
 }
 
@@ -92,7 +110,11 @@ pub fn append_file(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 2 {
     match (&args[0], &args[1]) {
       (Edn::Str(name), Edn::Str(content)) => {
-        let mut file = OpenOptions::new().append(true).open(&**name).unwrap();
+        let mut file = OpenOptions::new()
+          .create(true)
+          .append(true)
+          .open(&**name)
+          .map_err(|error| format!("Failed to open file {name:?} for append: {error}"))?;
 
         if let Err(e) = writeln!(file, "{content}") {
           Err(format!("Failed to append to file {name:?}: {e}"))
@@ -128,8 +150,9 @@ pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
       match task {
         Ok(children) => {
           let mut content: Vec<Edn> = vec![];
-          for c in children {
-            content.push(Edn::Str(format!("{}", c.unwrap().path().display()).into()));
+          for child in children {
+            let child = child.map_err(|error| format!("Failed to read child of {name:?}: {error}"))?;
+            content.push(Edn::Str(format!("{}", child.path().display()).into()));
           }
           // println!("child dir: {:?}", content);
 
@@ -138,7 +161,7 @@ pub fn read_dir(args: Vec<Edn>) -> Result<Edn, String> {
         Err(e) => Err(format!("Failed to read dir {name:?}: {e}")),
       }
     } else {
-      Err(format!("read-dir expected a string, {}", &args[0]))
+      Err(format!("read-dir expected a string, {}", args[0]))
     }
   } else {
     Err(format!("read-dir expected 1 argument, got: {args:?}"))
@@ -154,7 +177,7 @@ pub fn create_dir(args: Vec<Edn>) -> Result<Edn, String> {
       fs::create_dir(&**name).map_err(|e| e.to_string())?;
       Ok(Edn::Nil)
     } else {
-      Err(format!("create-dir! expected 1 filename, got {:?}", &args[0]))
+      Err(format!("create-dir! expected 1 filename, got {:?}", args[0]))
     }
   } else {
     Err(format!("create-dir! expected 1 argument, got {args:?}"))
@@ -169,7 +192,7 @@ pub fn create_dir_all(args: Vec<Edn>) -> Result<Edn, String> {
       fs::create_dir_all(&**name).map_err(|e| e.to_string())?;
       Ok(Edn::Nil)
     } else {
-      Err(format!("create-dir-all! expected 1 filename, got {:?}", &args[0]))
+      Err(format!("create-dir-all! expected 1 filename, got {:?}", args[0]))
     }
   } else {
     Err(format!("create-dir-all! expected 1 argument, got {args:?}"))
@@ -217,9 +240,10 @@ pub fn check_write_file(args: Vec<Edn>) -> Result<Edn, String> {
             Err(e) => Err(e.to_string()),
           }
         } else {
-          let parent = Path::new(&**name).parent().expect("some parent");
-          if !parent.exists() {
-            fs::create_dir_all(parent).expect("create target path");
+          if let Some(parent) = Path::new(&**name).parent().filter(|parent| !parent.as_os_str().is_empty())
+            && !parent.exists()
+          {
+            fs::create_dir_all(parent).map_err(|error| format!("Failed to create parent directory {parent:?}: {error}"))?;
           }
           let task = fs::write(&**name, &**content);
           match task {
@@ -242,7 +266,7 @@ pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
     if let Edn::Str(name) = &args[0] {
       let mut content: Vec<Edn> = vec![];
       for entry in WalkDir::new(&**name) {
-        let entry = entry.unwrap();
+        let entry = entry.map_err(|error| format!("Failed to walk {name:?}: {error}"))?;
         let path = entry.path();
         if path.is_file() {
           content.push(Edn::Str(format!("{}", path.display()).into()));
@@ -250,7 +274,7 @@ pub fn walk_dir(args: Vec<Edn>) -> Result<Edn, String> {
       }
       Ok(Edn::List(EdnListView(content)))
     } else {
-      Err(format!("walk-dir expected a string, got: {}", &args[0]))
+      Err(format!("walk-dir expected a string, got: {}", args[0]))
     }
   } else {
     Err(format!("walk-dir expected 1 argument, got: {args:?}"))
@@ -263,7 +287,7 @@ pub fn glob_call(args: Vec<Edn>) -> Result<Edn, String> {
   if args.len() == 1 {
     if let Edn::Str(name) = &args[0] {
       let mut content: Vec<Edn> = vec![];
-      for entry in glob(name).expect("expand glob result") {
+      for entry in glob(name).map_err(|error| format!("Invalid glob pattern {name:?}: {error}"))? {
         match entry {
           Ok(entry) => {
             if entry.is_file() {
@@ -275,7 +299,7 @@ pub fn glob_call(args: Vec<Edn>) -> Result<Edn, String> {
       }
       Ok(Edn::List(EdnListView(content)))
     } else {
-      Err(format!("glob expected a string, got: {}", &args[0]))
+      Err(format!("glob expected a string, got: {}", args[0]))
     }
   } else {
     Err(format!("glob expected 1 argument, got: {args:?}"))
