@@ -1,6 +1,8 @@
 use cirru_edn::{Edn, EdnListView};
 use std::mem::size_of;
 use std::panic::{AssertUnwindSafe, catch_unwind};
+use std::thread::sleep;
+use std::time::Duration;
 use std::{ptr, slice};
 
 pub const FFI_PROTOCOL_VERSION: u32 = 1;
@@ -8,6 +10,16 @@ pub const FFI_STATUS_OK: i32 = 0;
 pub const FFI_STATUS_INVALID_PAYLOAD: i32 = 8;
 pub const FFI_STATUS_INTERNAL_ERROR: i32 = 9;
 pub const FFI_STATUS_CALLBACK_ERROR: i32 = 10;
+pub const FFI_STATUS_HANDLE_CLOSING: i32 = 3;
+pub const FFI_STATUS_HANDLE_FINISHED: i32 = 4;
+pub const FFI_STATUS_QUEUE_FULL: i32 = 7;
+pub const FFI_TASK_ONE_SHOT: u32 = 1;
+pub const FFI_TASK_STREAM: u32 = 2;
+pub const FFI_TASK_SERIAL_EVENTS: u32 = 1;
+pub const FFI_TASK_COALESCE_ALLOWED: u32 = 1 << 1;
+pub const FFI_EVENT_EMIT: u32 = 1;
+pub const FFI_EVENT_COMPLETE: u32 = 2;
+pub const FFI_EVENT_FAIL: u32 = 3;
 const MAX_BUFFER_BYTES: usize = 256 * 1024 * 1024;
 
 #[repr(C)]
@@ -26,6 +38,23 @@ pub struct CalcitFfiAsyncTaskV1 {
   pub handle: u64,
   pub kind: u32,
   pub flags: u32,
+}
+
+pub type AsyncHostEnqueue = unsafe extern "C" fn(u64, u64, u32, u64, *const u8, usize) -> i32;
+pub type AsyncTaskCancel = unsafe extern "C" fn(u64, u64, *const u8, usize) -> i32;
+pub type AsyncResponseResolve = unsafe extern "C" fn(u64, u64, u32, *const u8, usize) -> i32;
+pub type AsyncHostConfigure = unsafe extern "C" fn(u64, u64, u32, u32, u64, Option<AsyncTaskCancel>) -> i32;
+pub type AsyncHostOpenResponse = unsafe extern "C" fn(u64, u64, u64, u64, Option<AsyncResponseResolve>, *mut u64) -> i32;
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct CalcitFfiAsyncHostV1 {
+  pub protocol_version: u32,
+  pub struct_size: u32,
+  pub context: u64,
+  pub enqueue: Option<AsyncHostEnqueue>,
+  pub configure_task: Option<AsyncHostConfigure>,
+  pub open_response: Option<AsyncHostOpenResponse>,
 }
 
 pub type BlockingHostInvoke = unsafe extern "C" fn(u64, u64, *const u8, usize, *mut CalcitFfiBuffer) -> i32;
@@ -59,6 +88,16 @@ unsafe fn copy_task_descriptor(value: *const CalcitFfiAsyncTaskV1) -> Result<Cal
   // SAFETY: forwarded from the versioned blocking ABI contract.
   let (version, size) = unsafe { read_abi_header(value) }?;
   if version != FFI_PROTOCOL_VERSION || size < size_of::<CalcitFfiAsyncTaskV1>() as u32 {
+    return Err(FFI_STATUS_INVALID_PAYLOAD);
+  }
+  // SAFETY: the validated size covers every v1 field.
+  Ok(unsafe { ptr::read_unaligned(value) })
+}
+
+unsafe fn copy_async_host(value: *const CalcitFfiAsyncHostV1) -> Result<CalcitFfiAsyncHostV1, i32> {
+  // SAFETY: forwarded from the versioned async ABI contract.
+  let (version, size) = unsafe { read_abi_header(value) }?;
+  if version != FFI_PROTOCOL_VERSION || size < size_of::<CalcitFfiAsyncHostV1>() as u32 {
     return Err(FFI_STATUS_INVALID_PAYLOAD);
   }
   // SAFETY: the validated size covers every v1 field.
@@ -119,6 +158,77 @@ pub fn encode_edn(value: &Edn) -> Result<Vec<u8>, String> {
   cirru_edn::format(value, true)
     .map(String::into_bytes)
     .map_err(|error| format!("failed to encode Cirru EDN: {error}"))
+}
+
+pub fn encode_callback_args(values: Vec<Edn>) -> Result<Vec<u8>, String> {
+  encode_edn(&Edn::List(EdnListView(values)))
+}
+
+pub fn encode_failure(message: impl Into<String>) -> Vec<u8> {
+  encode_edn(&Edn::str(message.into())).unwrap_or_else(|_| b"|failed-to-encode-calcit-std-error".to_vec())
+}
+
+pub fn enqueue_with_backpressure(host: CalcitFfiAsyncHostV1, task: CalcitFfiAsyncTaskV1, kind: u32, payload: &[u8]) -> i32 {
+  let Some(enqueue) = host.enqueue else {
+    return FFI_STATUS_INVALID_PAYLOAD;
+  };
+  loop {
+    // SAFETY: descriptors were copied from the host and payload remains readable for this call.
+    let status = unsafe { enqueue(host.context, task.handle, kind, 0, payload.as_ptr(), payload.len()) };
+    if status != FFI_STATUS_QUEUE_FULL {
+      return status;
+    }
+    sleep(Duration::from_millis(1));
+  }
+}
+
+pub fn publish_emit(host: CalcitFfiAsyncHostV1, task: CalcitFfiAsyncTaskV1, args: Vec<Edn>) -> i32 {
+  match encode_callback_args(args) {
+    Ok(payload) => enqueue_with_backpressure(host, task, FFI_EVENT_EMIT, &payload),
+    Err(_) => FFI_STATUS_INTERNAL_ERROR,
+  }
+}
+
+pub fn publish_complete(host: CalcitFfiAsyncHostV1, task: CalcitFfiAsyncTaskV1) -> i32 {
+  enqueue_with_backpressure(host, task, FFI_EVENT_COMPLETE, b"&unit")
+}
+
+pub fn publish_failure(host: CalcitFfiAsyncHostV1, task: CalcitFfiAsyncTaskV1, message: impl Into<String>) -> i32 {
+  let payload = encode_failure(message);
+  enqueue_with_backpressure(host, task, FFI_EVENT_FAIL, &payload)
+}
+
+pub unsafe fn prepare_async_call(
+  request_ptr: *const u8,
+  request_len: usize,
+  task: *const CalcitFfiAsyncTaskV1,
+  host: *const CalcitFfiAsyncHostV1,
+) -> Result<(Vec<Edn>, CalcitFfiAsyncTaskV1, CalcitFfiAsyncHostV1), i32> {
+  // SAFETY: the exported caller forwards descriptors and request bytes from the host contract.
+  let task = unsafe { copy_task_descriptor(task) }?;
+  // SAFETY: the versioned host descriptor is readable for this start call.
+  let host = unsafe { copy_async_host(host) }?;
+  if host.enqueue.is_none() || host.configure_task.is_none() {
+    return Err(FFI_STATUS_INVALID_PAYLOAD);
+  }
+  // SAFETY: request bytes remain readable for this call and are copied by the decoder.
+  let args = unsafe { decode_request(request_ptr, request_len) }.map_err(|_| FFI_STATUS_INVALID_PAYLOAD)?;
+  Ok((args, task, host))
+}
+
+pub fn configure_task(
+  host: CalcitFfiAsyncHostV1,
+  task: CalcitFfiAsyncTaskV1,
+  kind: u32,
+  flags: u32,
+  task_context: u64,
+  cancel: AsyncTaskCancel,
+) -> i32 {
+  let Some(configure) = host.configure_task else {
+    return FFI_STATUS_INVALID_PAYLOAD;
+  };
+  // SAFETY: copied host function pointers remain valid while the host runs.
+  unsafe { configure(host.context, task.handle, kind, flags, task_context, Some(cancel)) }
 }
 
 unsafe fn write_output(output: *mut CalcitFfiBuffer, bytes: Vec<u8>) -> i32 {
@@ -277,6 +387,7 @@ mod tests {
     assert_eq!(calcit_ffi_async_version(), 1);
     assert_eq!(size_of::<CalcitFfiBuffer>(), size_of::<usize>() * 3);
     assert_eq!(size_of::<CalcitFfiAsyncTaskV1>(), 24);
+    assert_eq!(size_of::<CalcitFfiAsyncHostV1>(), 40);
     assert_eq!(size_of::<CalcitFfiBlockingHostV1>(), 40);
   }
 

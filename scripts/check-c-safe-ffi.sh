@@ -41,6 +41,10 @@ expected=(
   walk_dir_calcit_ffi_v1
   glob_call_calcit_ffi_v1
   read_file_by_line_calcit_ffi_blocking_v1
+  set_timeout_calcit_ffi_async_v1
+  set_interval_calcit_ffi_async_v1
+  stream_command_calcit_ffi_async_v1
+  on_ctrl_c_calcit_ffi_async_v1
   md5_calcit_ffi_v1
   parse_json_calcit_ffi_v1
   stringify_json_calcit_ffi_v1
