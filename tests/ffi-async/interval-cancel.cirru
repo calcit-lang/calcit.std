@@ -6,4 +6,5 @@ let
   reset! task-ref $ set-interval 10 $ fn ()
     println |interval-fired
     &ffi-task-cancel @task-ref :smoke-complete
+    , &unit
   println |interval-started

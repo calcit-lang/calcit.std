@@ -6,4 +6,5 @@ let
   reset! task-ref $ on-ctrl-c $ fn ()
     println |ctrl-c-received
     &ffi-task-cancel @task-ref :smoke-complete
+    , &unit
   println |ctrl-c-ready

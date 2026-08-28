@@ -2,9 +2,13 @@
 
 set -euo pipefail
 
+module_dir="${CALCIT_STD_MODULE_DIR:-./}"
+
 run_smoke() {
   local source="$1"
-  calcit calcit.cirru exec --dep ./ < "$source" &
+  local snippet
+  snippet="$(<"$source")"
+  calcit eval --dep "$module_dir" -- "$snippet" &
   local task_pid=$!
   (
     sleep 10
@@ -25,7 +29,8 @@ run_smoke tests/ffi-async/timeout.cirru
 run_smoke tests/ffi-async/interval-cancel.cirru
 run_smoke tests/ffi-async/process-cancel.cirru
 
-calcit calcit.cirru exec --dep ./ < tests/ffi-async/ctrl-c.cirru &
+ctrl_snippet="$(<tests/ffi-async/ctrl-c.cirru)"
+calcit eval --dep "$module_dir" -- "$ctrl_snippet" &
 ctrl_pid=$!
 (
   sleep 10

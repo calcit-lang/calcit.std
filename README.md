@@ -1,6 +1,8 @@
 ## Calcit STD
 
-> standard libray for Calcit in Rust runtime.
+> Calcit 在 Rust runtime 上的标准原生模块。
+>
+> Standard native module for Calcit on the Rust runtime.
 
 ### Usages
 
@@ -11,14 +13,35 @@ cargo build --release
 mkdir -p dylibs/ && cp -v target/release/libcalcit_std.dylib dylibs/ # supported macos only
 ```
 
-All 30 synchronous native methods prefer C-safe buffer protocol v1.
+全部 30 个同步原生方法使用 C-safe buffer protocol v1。`read-file-by-line!`
+使用 blocking protocol v1，因此回调始终在 Calcit host 线程执行，不会让 Rust
+closure 或 EDN 容器跨越 dylib 边界。timer、process output 和 Ctrl+C subscription
+使用 async protocol v1，并返回 opaque、可取消的 task capability。
+
+All 30 synchronous native methods use C-safe buffer protocol v1.
 `read-file-by-line!` uses blocking protocol v1, so its callback stays on the
 Calcit host thread without passing Rust closures or EDN containers across the
 dylib boundary. Timers, process output, and Ctrl+C subscriptions use async
-protocol v1 and return opaque cancellable task capabilities. Legacy Rust
-symbols remain temporary per-method fallbacks.
-Maintainers can run `bash scripts/check-c-safe-ffi.sh` after building/copying
-the release dylib to verify that every expected C entry point is exported.
+protocol v1 and return opaque cancellable task capabilities.
+
+ABI descriptor、buffer ownership、Cirru EDN transport、backpressure 和 adapter
+实现统一来自 [`calcit_native_ffi`](https://github.com/calcit-lang/calcit-native-ffi)。
+本仓库只保留 std 业务逻辑和少量兼容 wrapper，避免各原生模块复制协议模板。
+
+ABI descriptors, buffer ownership, Cirru EDN transport, backpressure, and
+adapters come from
+[`calcit_native_ffi`](https://github.com/calcit-lang/calcit-native-ffi). This
+repository keeps only std-specific behavior and thin compatibility wrappers,
+so native modules do not fork protocol boilerplate.
+
+维护者在构建并复制 release dylib 后，可运行
+`bash scripts/check-c-safe-ffi.sh` 检查所有预期 C entry point。
+
+After building and copying the release dylib, maintainers can run
+`bash scripts/check-c-safe-ffi.sh` to verify every expected C entry point, and
+`bash scripts/check-c-safe-async.sh` for real timer, process, cancellation, and
+Ctrl+C callback paths. Set `CALCIT_STD_MODULE_DIR` when validating an isolated
+module copy.
 
 Providing:
 
