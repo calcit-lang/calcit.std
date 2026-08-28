@@ -39,9 +39,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d20789868f4b01b2f2caec9f5c4e0213b41e3e5702a50157d699ae31ced2fcb"
 
 [[package]]
+name = "calcit_native_ffi"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a985b8b73c1025a00f7e03bfc673c8e44e5671be78af4783b856b8f85464cc66"
+dependencies = [
+ "cirru_edn",
+]
+
+[[package]]
 name = "calcit_std"
 version = "0.2.21"
 dependencies = [
+ "calcit_native_ffi",
  "chrono",
  "cirru_edn",
  "cirru_parser",

@@ -8,5 +8,6 @@ let
     fn (event)
       println event
       &ffi-task-cancel @task-ref :smoke-complete
+      , &unit
     , (%none)
   println |process-stream-started

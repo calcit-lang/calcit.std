@@ -3,3 +3,4 @@ ns app.main $ :require
 
 set-timeout 10 $ fn ()
   println |timeout-fired
+  , &unit

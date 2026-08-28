@@ -3,6 +3,9 @@ extern crate nanoid;
 
 mod date;
 mod ffi;
+
+calcit_native_ffi::export_buffer_abi_v1!();
+calcit_native_ffi::export_async_abi_v1!();
 mod fs;
 mod hash;
 mod json;
