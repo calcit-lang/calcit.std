@@ -81,7 +81,7 @@ def process-task $ calcit.std.process/stream!
   fn (event) (println event)
   , (%none)
 
-&ffi-task-cancel process-task :shutdown
+process-task.cancel-with :shutdown
 ```
 
 ```cirru
@@ -138,7 +138,7 @@ def timeout-task $ calcit.std.time/set-timeout 1000 $ fn ()
 def interval-task $ calcit.std.time/set-interval 1000 $ fn ()
   println |repeated
 
-&ffi-task-cancel interval-task :shutdown
+interval-task.cancel-with :shutdown
 ```
 
 ```cirru

@@ -364,14 +364,14 @@
         |on-ctrl-c $ %{} 'CodeEntry (:doc "|Register a callback function to handle Ctrl+C signal.")
           :code $ quote
             defn on-ctrl-c (f)
-              &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |on_ctrl_c f
+              ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |on_ctrl_c f
           :examples $ []
             quote $ let
                 task $ on-ctrl-c
                   fn () $ println |Exiting...
-              &ffi-task-cancel task :example-complete
+              task.cancel-with :example-complete
           :schema $ :: 'Fn
-            {} (:return 'AnyRef)
+            {} (:return 'FfiTask)
               :args $ []
                 :: 'Fn $ {} (:return 'Unit)
                   :args $ []
@@ -380,13 +380,13 @@
           :code $ quote
             defn stream! (command f dir)
               assert "|command in list" $ and (list? command) (every? command string?)
-              &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |stream_command (.unwrap-or dir |./) command f
+              ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |stream_command (.unwrap-or dir |./) command f
           :examples $ []
             quote $ stream! ([] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2")
               fn (event) (println |received-ProcessOutput event)
               %none
           :schema $ :: 'Fn
-            {} (:return 'AnyRef)
+            {} (:return 'FfiTask)
               :args $ [] (:: 'List 'String)
                 :: 'Fn $ {} (:return 'Unit)
                   :args $ [] 'calcit.std.process/ProcessOutput
@@ -695,14 +695,14 @@
         |set-interval $ %{} 'CodeEntry (:doc "|Execute function repeatedly at intervals. Args: interval in milliseconds, function to repeat. Example: (set-interval 1000 (fn () (println \"tick\")))")
           :code $ quote
             defn set-interval (t cb)
-              &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |set_interval t cb
+              ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |set_interval t cb
           :examples $ []
             quote $ let
                 task $ set-interval 10
                   fn () $ println |tick
-              &ffi-task-cancel task :example-complete
+              task.cancel-with :example-complete
           :schema $ :: 'Fn
-            {} (:return 'AnyRef)
+            {} (:return 'FfiTask)
               :args $ [] 'Number
                 :: 'Fn $ {} (:return 'Unit)
                   :args $ []
@@ -710,14 +710,14 @@
         |set-timeout $ %{} 'CodeEntry (:doc "|Execute function after delay. Args: delay in milliseconds, function to execute. Example: (set-timeout 1000 (fn () (println \"timeout\")))")
           :code $ quote
             defn set-timeout (t cb)
-              &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |set_timeout t cb
+              ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |set_timeout t cb
           :examples $ []
             quote $ let
                 task $ set-timeout 10
                   fn () $ println |timeout
-              &ffi-task-cancel task :example-complete
+              task.cancel-with :example-complete
           :schema $ :: 'Fn
-            {} (:return 'AnyRef)
+            {} (:return 'FfiTask)
               :args $ [] 'Number
                 :: 'Fn $ {} (:return 'Unit)
                   :args $ []
