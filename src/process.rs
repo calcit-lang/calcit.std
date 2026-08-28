@@ -11,7 +11,7 @@ use std::time::Duration;
 use crate::ffi::{
   CalcitFfiAsyncHostV1, CalcitFfiAsyncTaskV1, FFI_STATUS_HANDLE_CLOSING, FFI_STATUS_HANDLE_FINISHED, FFI_STATUS_INTERNAL_ERROR,
   FFI_STATUS_INVALID_PAYLOAD, FFI_STATUS_OK, FFI_TASK_SERIAL_EVENTS, FFI_TASK_STREAM, configure_task, prepare_async_call,
-  publish_complete, publish_emit, publish_failure,
+  publish_complete, publish_emit_until, publish_failure,
 };
 
 fn parse_command(args: &[Edn], method: &str) -> Result<(String, String, Vec<String>), String> {
@@ -149,7 +149,9 @@ fn run_process_stream(
     match event {
       PipeEvent::Line(name, content) => {
         let event = Edn::typed_enum("ProcessOutput", name, vec![Edn::Str(content.into())]);
-        let status = publish_emit(control.host, control.task, vec![event]);
+        let status = publish_emit_until(control.host, control.task, vec![event], || {
+          !control.cancelled.load(Ordering::Acquire)
+        });
         if status != FFI_STATUS_OK {
           if !matches!(status, FFI_STATUS_HANDLE_CLOSING | FFI_STATUS_HANDLE_FINISHED) {
             failure = Some(format!("host rejected process output with status {status}"));
@@ -309,7 +311,7 @@ fn dispatch_ctrl_c() {
   let mut finished = vec![];
   for (context, control) in controls {
     if !control.finished.load(Ordering::Acquire) {
-      let status = publish_emit(control.host, control.task, vec![]);
+      let status = publish_emit_until(control.host, control.task, vec![], || !control.finished.load(Ordering::Acquire));
       if matches!(status, FFI_STATUS_HANDLE_CLOSING | FFI_STATUS_HANDLE_FINISHED) {
         control.finished.store(true, Ordering::Release);
         finished.push(context);
@@ -429,6 +431,8 @@ mod tests {
   static EVENTS: OnceLock<Mutex<EventLog>> = OnceLock::new();
   static CONFIG: OnceLock<Mutex<Option<Config>>> = OnceLock::new();
   static TEST_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+  static BLOCK_EMIT: AtomicBool = AtomicBool::new(false);
+  static QUEUE_FULL_CALLS: AtomicU64 = AtomicU64::new(0);
 
   unsafe extern "C" fn enqueue(
     _context: u64,
@@ -438,6 +442,10 @@ mod tests {
     payload_ptr: *const u8,
     payload_len: usize,
   ) -> i32 {
+    if kind == FFI_EVENT_EMIT && BLOCK_EMIT.load(Ordering::Acquire) {
+      QUEUE_FULL_CALLS.fetch_add(1, Ordering::Relaxed);
+      return calcit_native_ffi::status::QUEUE_FULL;
+    }
     let payload = if payload_len == 0 {
       vec![]
     } else {
@@ -566,5 +574,28 @@ mod tests {
     let (context, cancel) = CONFIG.get().expect("config").lock().expect("config").expect("configured");
     assert_eq!(unsafe { cancel(context, task.handle, ptr::null(), 0) }, FFI_STATUS_OK);
     wait_for_event_count(FFI_EVENT_COMPLETE, complete_before + 1);
+  }
+
+  #[test]
+  fn process_cancellation_interrupts_queue_backpressure() {
+    let _guard = TEST_LOCK.get_or_init(|| Mutex::new(())).lock().expect("test lock");
+    EVENTS.get_or_init(|| Mutex::new(vec![])).lock().expect("events").clear();
+    QUEUE_FULL_CALLS.store(0, Ordering::Release);
+    BLOCK_EMIT.store(true, Ordering::Release);
+    let request = command_request("printf 'blocked\\n'; exec sleep 5");
+    let (task, host) = descriptors(204);
+    assert_eq!(
+      unsafe { stream_command_calcit_ffi_async_v1(request.as_ptr(), request.len(), &task, &host) },
+      FFI_STATUS_OK
+    );
+    let deadline = Instant::now() + Duration::from_secs(1);
+    while QUEUE_FULL_CALLS.load(Ordering::Acquire) == 0 {
+      assert!(Instant::now() < deadline, "process output never reached queue backpressure");
+      thread::sleep(Duration::from_millis(2));
+    }
+    let (context, cancel) = CONFIG.get().expect("config").lock().expect("config").expect("configured");
+    assert_eq!(unsafe { cancel(context, task.handle, ptr::null(), 0) }, FFI_STATUS_OK);
+    wait_for_event_count(FFI_EVENT_COMPLETE, 1);
+    BLOCK_EMIT.store(false, Ordering::Release);
   }
 }

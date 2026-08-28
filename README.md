@@ -34,6 +34,16 @@ adapters come from
 repository keeps only std-specific behavior and thin compatibility wrappers,
 so native modules do not fork protocol boilerplate.
 
+process output、timer 与 Ctrl+C 普通事件在等待 host queue 时会检查各自的取消
+状态，最长 10ms 响应一次；持续 `QUEUE_FULL` 默认 5 秒后失败。terminal
+`complete` / `fail` 不应用业务取消 predicate，确保任务可靠收尾。
+
+Ordinary process-output, timer, and Ctrl+C events observe their own
+cancellation state while waiting for host queue capacity, with at most 10ms
+between checks; persistent `QUEUE_FULL` fails after the default five-second
+deadline. Terminal `complete` / `fail` events do not use the business
+cancellation predicate, ensuring reliable task cleanup.
+
 维护者在构建并复制 release dylib 后，可运行
 `bash scripts/check-c-safe-ffi.sh` 检查所有预期 C entry point。
 

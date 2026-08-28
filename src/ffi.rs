@@ -1,5 +1,4 @@
 use cirru_edn::Edn;
-use std::time::Duration;
 
 pub use calcit_native_ffi::{
   CalcitFfiAsyncHostV1, CalcitFfiAsyncTaskV1, CalcitFfiBlockingHostV1, CalcitFfiBuffer, configure_task, invoke_blocking_callback,
@@ -24,7 +23,7 @@ pub const FFI_EVENT_EMIT: u32 = calcit_native_ffi::event_kind::EMIT;
 pub const FFI_EVENT_COMPLETE: u32 = calcit_native_ffi::event_kind::COMPLETE;
 
 fn default_backpressure() -> calcit_native_ffi::BackpressurePolicy {
-  calcit_native_ffi::BackpressurePolicy::unbounded(Duration::from_millis(1))
+  calcit_native_ffi::BackpressurePolicy::default()
 }
 
 pub unsafe fn prepare_async_call(
@@ -45,8 +44,11 @@ pub unsafe fn prepare_async_call(
   Ok((args, task, host))
 }
 
-pub fn publish_emit(host: CalcitFfiAsyncHostV1, task: CalcitFfiAsyncTaskV1, args: Vec<Edn>) -> i32 {
-  calcit_native_ffi::publish_emit(host, task, args, default_backpressure())
+pub fn publish_emit_until<F>(host: CalcitFfiAsyncHostV1, task: CalcitFfiAsyncTaskV1, args: Vec<Edn>, should_continue: F) -> i32
+where
+  F: FnMut() -> bool,
+{
+  calcit_native_ffi::publish_emit_until(host, task, args, default_backpressure(), should_continue)
 }
 
 pub fn publish_complete(host: CalcitFfiAsyncHostV1, task: CalcitFfiAsyncTaskV1) -> i32 {

@@ -9,7 +9,7 @@ use std::time::Duration;
 use crate::ffi::{
   CalcitFfiAsyncHostV1, CalcitFfiAsyncTaskV1, FFI_STATUS_HANDLE_FINISHED, FFI_STATUS_INTERNAL_ERROR, FFI_STATUS_INVALID_PAYLOAD,
   FFI_STATUS_OK, FFI_TASK_COALESCE_ALLOWED, FFI_TASK_ONE_SHOT, FFI_TASK_SERIAL_EVENTS, FFI_TASK_STREAM, configure_task,
-  prepare_async_call, publish_complete, publish_emit, publish_failure,
+  prepare_async_call, publish_complete, publish_emit_until, publish_failure,
 };
 
 struct TimerControl {
@@ -132,13 +132,17 @@ unsafe fn start_timer_async_v1(
           if wait_until(&control, duration) {
             break;
           }
-          let status = publish_emit(control.host, control.task, vec![]);
+          let status = publish_emit_until(control.host, control.task, vec![], || {
+            !*control.cancelled.lock().unwrap_or_else(|poisoned| poisoned.into_inner())
+          });
           if status != FFI_STATUS_OK {
             break;
           }
         }
       } else if !wait_until(&control, duration) {
-        let _ = publish_emit(control.host, control.task, vec![]);
+        let _ = publish_emit_until(control.host, control.task, vec![], || {
+          !*control.cancelled.lock().unwrap_or_else(|poisoned| poisoned.into_inner())
+        });
       }
     }));
     if outcome.is_err() {
@@ -198,12 +202,16 @@ mod tests {
   use crate::ffi::{AsyncTaskCancel, CalcitFfiAsyncHostV1, FFI_EVENT_COMPLETE, FFI_EVENT_EMIT, encode_callback_args};
   use std::ptr;
   use std::sync::OnceLock;
+  use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
   use std::thread::sleep;
   use std::time::Instant;
 
   type Config = (u32, u32, u64, AsyncTaskCancel);
   static EVENTS: OnceLock<Mutex<Vec<u32>>> = OnceLock::new();
   static CONFIG: OnceLock<Mutex<Option<Config>>> = OnceLock::new();
+  static TEST_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+  static BLOCK_EMIT: AtomicBool = AtomicBool::new(false);
+  static QUEUE_FULL_CALLS: AtomicU64 = AtomicU64::new(0);
 
   unsafe extern "C" fn enqueue(
     _context: u64,
@@ -213,6 +221,10 @@ mod tests {
     _payload_ptr: *const u8,
     _payload_len: usize,
   ) -> i32 {
+    if kind == FFI_EVENT_EMIT && BLOCK_EMIT.load(Ordering::Acquire) {
+      QUEUE_FULL_CALLS.fetch_add(1, Ordering::Relaxed);
+      return calcit_native_ffi::status::QUEUE_FULL;
+    }
     EVENTS.get_or_init(|| Mutex::new(vec![])).lock().expect("events").push(kind);
     FFI_STATUS_OK
   }
@@ -262,6 +274,8 @@ mod tests {
 
   #[test]
   fn interval_is_coalescible_and_acknowledges_cancellation() {
+    let _guard = TEST_LOCK.get_or_init(|| Mutex::new(())).lock().expect("test lock");
+    BLOCK_EMIT.store(false, Ordering::Release);
     EVENTS.get_or_init(|| Mutex::new(vec![])).lock().expect("events").clear();
     *CONFIG.get_or_init(|| Mutex::new(None)).lock().expect("config") = None;
     let request = encode_callback_args(vec![Edn::Number(5.0)]).expect("request");
@@ -280,6 +294,7 @@ mod tests {
 
   #[test]
   fn timers_reject_invalid_durations() {
+    let _guard = TEST_LOCK.get_or_init(|| Mutex::new(())).lock().expect("test lock");
     let (task, host) = descriptors(102);
     for duration in [Edn::Number(-1.0), Edn::Number(f64::NAN), Edn::str("soon")] {
       let request = encode_callback_args(vec![duration]).expect("request");
@@ -293,5 +308,29 @@ mod tests {
       unsafe { set_interval_calcit_ffi_async_v1(zero.as_ptr(), zero.len(), &task, &host) },
       FFI_STATUS_INVALID_PAYLOAD
     );
+  }
+
+  #[test]
+  fn timer_cancellation_interrupts_queue_backpressure() {
+    let _guard = TEST_LOCK.get_or_init(|| Mutex::new(())).lock().expect("test lock");
+    EVENTS.get_or_init(|| Mutex::new(vec![])).lock().expect("events").clear();
+    *CONFIG.get_or_init(|| Mutex::new(None)).lock().expect("config") = None;
+    QUEUE_FULL_CALLS.store(0, Ordering::Release);
+    BLOCK_EMIT.store(true, Ordering::Release);
+    let request = encode_callback_args(vec![Edn::Number(1.0)]).expect("request");
+    let (task, host) = descriptors(103);
+    assert_eq!(
+      unsafe { set_interval_calcit_ffi_async_v1(request.as_ptr(), request.len(), &task, &host) },
+      FFI_STATUS_OK
+    );
+    let deadline = Instant::now() + Duration::from_secs(1);
+    while QUEUE_FULL_CALLS.load(Ordering::Acquire) == 0 {
+      assert!(Instant::now() < deadline, "timer event never reached queue backpressure");
+      sleep(Duration::from_millis(2));
+    }
+    let (_, _, context, cancel) = CONFIG.get().expect("config").lock().expect("config lock").expect("configured");
+    assert_eq!(unsafe { cancel(context, task.handle, ptr::null(), 0) }, FFI_STATUS_OK);
+    wait_for(FFI_EVENT_COMPLETE);
+    BLOCK_EMIT.store(false, Ordering::Release);
   }
 }
