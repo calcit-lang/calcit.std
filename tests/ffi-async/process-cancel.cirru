@@ -7,7 +7,7 @@ let
     [] |sh |-c "|printf 'process-started\\n'; exec sleep 5"
     fn (event)
       println event
-      &ffi-task-cancel @task-ref :smoke-complete
+      .cancel-with @task-ref :smoke-complete
       , &unit
     , (%none)
   println |process-stream-started
