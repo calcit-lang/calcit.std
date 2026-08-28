@@ -40,9 +40,9 @@ checksum = "5d20789868f4b01b2f2caec9f5c4e0213b41e3e5702a50157d699ae31ced2fcb"
 
 [[package]]
 name = "calcit_native_ffi"
-version = "0.1.1"
+version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "977684888aab24f6e9fc76a5f6f836c88fb375d86aa3314aa4a7daee83f40f72"
+checksum = "42a8cfaff7caed355a63e9df68c57cea5af1d01b1b37734ed812a4a9ed2faeed"
 dependencies = [
  "cirru_edn",
 ]
