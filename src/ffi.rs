@@ -3,7 +3,7 @@ use std::time::Duration;
 
 pub use calcit_native_ffi::{
   CalcitFfiAsyncHostV1, CalcitFfiAsyncTaskV1, CalcitFfiBlockingHostV1, CalcitFfiBuffer, configure_task, invoke_blocking_callback,
-  run_blocking_adapter, run_buffer_adapter,
+  run_blocking_adapter,
 };
 
 #[cfg(test)]
