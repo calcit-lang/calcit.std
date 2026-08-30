@@ -24,27 +24,34 @@ pub fn read_file(args: Vec<Edn>) -> Result<Edn, String> {
   }
 }
 
-// The output is wrapped in a Result to allow matching on errors
-// Returns an Iterator to the Reader of the lines of the file.
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+fn stream_reader_lines<R, F>(reader: R, source: &str, mut on_line: F) -> Result<(), String>
 where
-  P: AsRef<Path>,
+  R: BufRead,
+  F: FnMut(String) -> Result<(), String>,
 {
-  let file = File::open(filename)?;
-  Ok(io::BufReader::new(file).lines())
+  for line in reader.lines() {
+    let line = line.map_err(|error| format!("failed reading line from {source}: {error}"))?;
+    on_line(line)?;
+  }
+  Ok(())
 }
 
-fn collect_file_lines(args: &[Edn]) -> Result<Vec<String>, String> {
+fn stream_file_lines<F>(args: &[Edn], on_line: F) -> Result<(), String>
+where
+  F: FnMut(String) -> Result<(), String>,
+{
   let [Edn::Str(name)] = args else {
     return Err(format!("read-file-by-line expected 1 filename, got {args:?}"));
   };
-  let lines = read_lines(&**name).map_err(|error| format!("Failed to read file {name:?}: {error}"))?;
-  lines
-    .collect::<Result<Vec<_>, _>>()
-    .map_err(|error| format!("failed reading line from {name:?}: {error}"))
+  let file = File::open(&**name).map_err(|error| format!("Failed to read file {name:?}: {error}"))?;
+  stream_reader_lines(io::BufReader::new(file), &format!("{name:?}"), on_line)
 }
 
-/// Read a file line-by-line through blocking protocol v1.
+/// Stream a file line-by-line through blocking protocol v1.
+///
+/// Each line is delivered before the next line is read. Terminators match
+/// [`BufRead::lines`]: `\n` and a preceding `\r` are removed. Callback errors
+/// or host/task closing stop the read immediately.
 ///
 /// # Safety
 ///
@@ -61,9 +68,10 @@ pub unsafe extern "C" fn read_file_by_line_calcit_ffi_blocking_v1(
   // SAFETY: the shared adapter validates and copies all call-scoped inputs.
   unsafe {
     crate::ffi::run_blocking_adapter(request_ptr, request_len, task, host, output, |args, task, host| {
-      for line in collect_file_lines(&args)? {
+      stream_file_lines(&args, |line| {
         crate::ffi::invoke_blocking_callback(host, task, vec![Edn::str(line)])?;
-      }
+        Ok(())
+      })?;
       Ok(Edn::Nil)
     })
   }
@@ -278,5 +286,75 @@ pub fn glob_call(args: Vec<Edn>) -> Result<Edn, String> {
     }
   } else {
     Err(format!("glob expected 1 argument, got: {args:?}"))
+  }
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  use std::io::{BufReader, Cursor, Read};
+
+  struct ReadOnceThenPanic {
+    emitted: bool,
+  }
+
+  impl Read for ReadOnceThenPanic {
+    fn read(&mut self, output: &mut [u8]) -> io::Result<usize> {
+      assert!(!self.emitted, "reader advanced after callback failure");
+      self.emitted = true;
+      let line = b"first\n";
+      output[..line.len()].copy_from_slice(line);
+      Ok(line.len())
+    }
+  }
+
+  struct RepeatingLines {
+    remaining: usize,
+  }
+
+  impl Read for RepeatingLines {
+    fn read(&mut self, output: &mut [u8]) -> io::Result<usize> {
+      if self.remaining == 0 {
+        return Ok(0);
+      }
+      let lines = self.remaining.min(output.len() / 2);
+      for chunk in output[..lines * 2].as_chunks_mut::<2>().0 {
+        chunk.copy_from_slice(b"x\n");
+      }
+      self.remaining -= lines;
+      Ok(lines * 2)
+    }
+  }
+
+  #[test]
+  fn line_stream_preserves_lines_semantics_without_terminators() {
+    let mut lines = Vec::new();
+    stream_reader_lines(Cursor::new(b"one\r\ntwo\nthree"), "memory", |line| {
+      lines.push(line);
+      Ok(())
+    })
+    .expect("stream lines");
+    assert_eq!(lines, ["one", "two", "three"]);
+  }
+
+  #[test]
+  fn callback_failure_stops_before_reading_more_input() {
+    let reader = BufReader::with_capacity(8, ReadOnceThenPanic { emitted: false });
+    let error = stream_reader_lines(reader, "guarded", |_| Err("callback stopped".to_owned())).expect_err("callback failure");
+    assert_eq!(error, "callback stopped");
+  }
+
+  #[test]
+  fn large_generated_input_is_delivered_without_a_full_input_buffer() {
+    const LINE_COUNT: usize = 1_000_000;
+    let reader = BufReader::with_capacity(4096, RepeatingLines { remaining: LINE_COUNT });
+    let mut delivered = 0;
+    stream_reader_lines(reader, "generated", |line| {
+      assert_eq!(line, "x");
+      delivered += 1;
+      Ok(())
+    })
+    .expect("stream generated lines");
+    assert_eq!(delivered, LINE_COUNT);
   }
 }

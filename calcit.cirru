@@ -217,17 +217,21 @@
             {} (:return 'String)
               :args $ [] 'String
               :features $ #{} :js-ffi
-        'read-file-by-line! $ %{} 'CodeEntry (:doc "|Read file line by line and call the callback function for each line. Args: file path, callback function. Example: (read-file-by-line! \"file.txt\" (fn (line) (println line)))")
+        'read-file-by-line! $ %{} 'CodeEntry (:doc "|Streams a file lazily through the blocking C-safe FFI and calls the callback once per line. The callback receives String and returns Unit. Line terminators are removed like BufRead::lines; callback failure or host closing stops reading immediately. Peak native memory is bounded by the reader buffer plus the longest line.")
           :code $ quote
             defn read-file-by-line! (name cb)
               &blocking-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |read_file_by_line name cb
           :examples $ []
-            quote $ read-file-by-line! |file.txt
-              fn (line) (println line)
+            quote $ let
+                lines-ref $ atom ([])
+              read-file-by-line! |Cargo.toml $ fn (line) (swap! lines-ref conj line) &unit
+              assert= (%some |[package])
+                first $ deref lines-ref
           :schema $ :: 'Fn
             {} (:return 'Unit)
-              :args $ [] 'String 'Dynamic
-              :features $ #{} :js-ffi
+              :args $ [] 'String
+                :: 'Fn $ {} (:return 'Unit)
+                  :args $ [] 'String
         'rename! $ %{} 'CodeEntry (:doc "|Rename or move a file/directory. Args: source path, destination path. Example: (rename! \"old.txt\" \"new.txt\")")
           :code $ quote
             defn rename! (from to)

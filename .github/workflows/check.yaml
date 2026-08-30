@@ -40,6 +40,7 @@ jobs:
       - name: Validate runnable docs and async examples
         run: |
           calcit calcit.cirru docs check-md README.md --dep ./ --failures-only
+          calcit calcit.cirru analyze check-examples --ns calcit.std.fs --def read-file-by-line!
           calcit calcit.cirru analyze check-examples --ns calcit.std.process --def stream!
           calcit calcit.cirru analyze check-examples --ns calcit.std.process --def on-ctrl-c
           calcit calcit.cirru analyze check-examples --ns calcit.std.time --def set-timeout
