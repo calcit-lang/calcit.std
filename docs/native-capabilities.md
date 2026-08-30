@@ -35,6 +35,27 @@ entry_for:
 - `calcit.std.path`: platform-aware path composition and inspection.
 - `calcit.std.rand` and `calcit.std.hash`: random identifiers and hashing helpers.
 
+## Typed FFI contract pilot
+
+`calcit.std.hash/md5` is the sync-pure reference contract for typed FFI
+generation. Its `(String) -> String` logical schema is lowered as a synchronous
+`pure-function` over `edn-buffer-v1`, with no callback, resource, or host-state
+lifecycle.
+
+```bash
+calcit calcit.cirru ffi export --json --ns calcit.std.hash
+```
+
+This read-only export gives bindgen a minimal deterministic baseline before it
+handles opaque resources and async streams. `md5` remains an ordinary
+method-free hashing helper; the contract metadata does not move host effects
+into pure application updaters.
+
+`calcit.std.hash/md5` 是 typed FFI generator 的同步纯函数基准契约：逻辑签名
+为 `(String) -> String`，通过 `edn-buffer-v1` 同步 lowering，不涉及 callback、
+resource 或 host-state 生命周期。该只读导出为后续 opaque resource 与 async
+stream 生成提供最小确定性基线。
+
 ## Blocking and asynchronous work
 
 `read-file-by-line!` uses the blocking host protocol so callbacks execute on the Calcit host thread. Lines are delivered lazily from a fixed-size reader; the module retains at most the reader buffer and current longest line rather than the full file. Line terminators follow `BufRead::lines` semantics (`\n` and a preceding `\r` are removed), and callback failure or host closing stops the read immediately.
