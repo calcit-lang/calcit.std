@@ -274,6 +274,7 @@
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |md5 s
           :examples $ []
             quote $ md5 |hello
+          :ffi $ {} (:backend :native) (:invoke :sync) (:kind :pure-function) (:symbol |md5) (:transport :edn-buffer-v1)
           :schema $ :: 'Fn
             {} (:return 'String)
               :args $ [] 'String

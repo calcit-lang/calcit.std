@@ -49,7 +49,7 @@ process output、timer 与 Ctrl+C 普通事件在等待 host queue 时会检查�
 状态，最长 10ms 响应一次；持续 `QUEUE_FULL` 默认 5 秒后失败。terminal
 `complete` / `fail` 不应用业务取消 predicate，确保任务可靠收尾。
 
-要求 Calcit `0.13.68` 或更高版本，以便取消时清理已排队的非终态事件，
+要求 Calcit `0.13.69` 或更高版本，以便取消时清理已排队的非终态事件，
 同时保留任务的 completion 或 failure 事件。
 
 Ordinary process-output, timer, and Ctrl+C events observe their own
@@ -58,8 +58,18 @@ between checks; persistent `QUEUE_FULL` fails after the default five-second
 deadline. Terminal `complete` / `fail` events do not use the business
 cancellation predicate, ensuring reliable task cleanup.
 
-Calcit `0.13.68` or newer is required so cancellation also purges queued
+Calcit `0.13.69` or newer is required so cancellation also purges queued
 non-terminal events while preserving the task's completion or failure event.
+
+维护者可只读导出类型化 native contract；`calcit.std.hash/md5` 是当前
+sync-pure generator pilot：
+
+```bash
+calcit calcit.cirru ffi export --json --ns calcit.std.hash
+```
+
+Maintainers can export the typed native contract without loading the dylib;
+`calcit.std.hash/md5` is the current sync-pure generator pilot.
 
 维护者在构建并复制 release dylib 后，可运行
 `bash scripts/check-c-safe-ffi.sh` 检查所有预期 C entry point。
