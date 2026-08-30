@@ -163,4 +163,8 @@ calcit.std.path/path-basename |a/b/c
 
 ### License
 
+For a searchable capability map and lifecycle guidance, use
+`calcit docs read "Calcit Std native capabilities" --module calcit.std` after
+the module is installed.
+
 MIT
