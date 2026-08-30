@@ -24,6 +24,17 @@ Calcit host thread without passing Rust closures or EDN containers across the
 dylib boundary. Timers, process output, and Ctrl+C subscriptions use async
 protocol v1 and return opaque cancellable task capabilities.
 
+`read-file-by-line!` 通过固定大小 `BufReader` 立即逐行调用 callback，不再先把
+完整文件收集到内存；峰值为 O(reader buffer + longest line)。行为与 Rust
+`BufRead::lines` 一致：移除 `\n` 以及其前面的 `\r`。callback error、task
+closing 或 host rejection 会立即停止后续读取。
+
+`read-file-by-line!` invokes the callback immediately for each line through a
+fixed-size `BufReader` instead of collecting the complete file first. Peak
+memory is O(reader buffer + longest line). Matching `BufRead::lines`, it removes
+the trailing `\n` and an immediately preceding `\r`. Callback errors, task
+closing, and host rejection stop further reads immediately.
+
 ABI descriptor、buffer ownership、Cirru EDN transport、backpressure 和 adapter
 实现统一来自 [`calcit_native_ffi`](https://github.com/calcit-lang/calcit-native-ffi)。
 本仓库只保留 std 业务逻辑和少量兼容 wrapper，避免各原生模块复制协议模板。
@@ -38,7 +49,7 @@ process output、timer 与 Ctrl+C 普通事件在等待 host queue 时会检查�
 状态，最长 10ms 响应一次；持续 `QUEUE_FULL` 默认 5 秒后失败。terminal
 `complete` / `fail` 不应用业务取消 predicate，确保任务可靠收尾。
 
-要求 Calcit `0.13.60` 或更高版本，以便取消时清理已排队的非终态事件，
+要求 Calcit `0.13.68` 或更高版本，以便取消时清理已排队的非终态事件，
 同时保留任务的 completion 或 failure 事件。
 
 Ordinary process-output, timer, and Ctrl+C events observe their own
@@ -47,7 +58,7 @@ between checks; persistent `QUEUE_FULL` fails after the default five-second
 deadline. Terminal `complete` / `fail` events do not use the business
 cancellation predicate, ensuring reliable task cleanup.
 
-Calcit `0.13.60` or newer is required so cancellation also purges queued
+Calcit `0.13.68` or newer is required so cancellation also purges queued
 non-terminal events while preserving the task's completion or failure event.
 
 维护者在构建并复制 release dylib 后，可运行

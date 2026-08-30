@@ -37,7 +37,9 @@ entry_for:
 
 ## Blocking and asynchronous work
 
-`read-file-by-line!` uses the blocking host protocol so callbacks execute on the Calcit host thread. Process streams, timers, and Ctrl-C subscriptions return typed `FfiTask` capabilities. Retain the task when lifecycle control matters and cancel it explicitly during shutdown or reload.
+`read-file-by-line!` uses the blocking host protocol so callbacks execute on the Calcit host thread. Lines are delivered lazily from a fixed-size reader; the module retains at most the reader buffer and current longest line rather than the full file. Line terminators follow `BufRead::lines` semantics (`\n` and a preceding `\r` are removed), and callback failure or host closing stops the read immediately.
+
+Process streams, timers, and Ctrl-C subscriptions return typed `FfiTask` capabilities. Retain the task when lifecycle control matters and cancel it explicitly during shutdown or reload.
 
 ```cirru.no-check
 def task $ calcit.std.time/set-interval 1000 $ fn ()
