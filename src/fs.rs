@@ -318,7 +318,7 @@ mod tests {
         return Ok(0);
       }
       let lines = self.remaining.min(output.len() / 2);
-      for chunk in output[..lines * 2].chunks_exact_mut(2) {
+      for chunk in output[..lines * 2].as_chunks_mut::<2>().0 {
         chunk.copy_from_slice(b"x\n");
       }
       self.remaining -= lines;
