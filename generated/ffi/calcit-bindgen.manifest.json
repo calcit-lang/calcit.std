@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 2,
+  "generator": "calcit-bindgen",
+  "generatorVersion": "0.1.0",
+  "interfaceVersion": 2,
+  "package": "calcit.std",
+  "packageVersion": "0.2.29",
+  "digestAlgorithm": "fnv1a-128",
+  "contractDigest": "c8b5daf1570aef8ccfa1dfcf7ddfc1a9",
+  "backends": [
+    "rust"
+  ],
+  "files": [
+    {
+      "path": "interface.json",
+      "digest": "c8b5daf1570aef8ccfa1dfcf7ddfc1a9"
+    },
+    {
+      "path": "rust/bindings.rs",
+      "digest": "768268fabf3bce563f677ad7d8b4ef4d"
+    }
+  ]
+}

@@ -7,6 +7,9 @@ on:
 
 name: Test
 
+permissions:
+  contents: read
+
 jobs:
   build_and_test:
     name: Test
@@ -21,6 +24,9 @@ jobs:
 
       - uses: calcit-lang/setup-calcit@v1.3.0
 
+      - name: Install the production FFI generator
+        run: cargo install calcit-bindgen --version 0.1.0 --locked
+
       - name: Validate Calcit snapshot and type baseline
         run: |
           caps --ci
@@ -28,6 +34,9 @@ jobs:
           git diff --exit-code -- calcit.cirru
           calcit calcit.cirru --check-only
           calcit calcit.cirru analyze quality --baseline config/calcit-quality.json --format json
+          mkdir -p target/ffi-interface
+          calcit calcit.cirru ffi export --json --ns calcit.std.hash > target/ffi-interface/calcit-std-hash.json
+          calcit-bindgen check target/ffi-interface/calcit-std-hash.json --out generated/ffi --backend rust
 
       - run: cargo build --release
 

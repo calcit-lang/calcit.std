@@ -4,7 +4,6 @@ extern crate nanoid;
 mod date;
 mod ffi;
 
-calcit_native_ffi::export_buffer_abi_v1!();
 calcit_native_ffi::export_async_abi_v1!();
 mod fs;
 mod hash;
@@ -13,6 +12,19 @@ mod path;
 mod process;
 mod random;
 mod time;
+
+include!("../generated/ffi/rust/bindings.rs");
+
+struct CalcitStdGeneratedFfi;
+
+impl CalcitStdFfi for CalcitStdGeneratedFfi {
+  fn calcit_std_hash_md5(&self, arg0: String) -> Result<String, String> {
+    Ok(hash::md5(&arg0))
+  }
+}
+
+static CALCIT_STD_GENERATED_FFI: CalcitStdGeneratedFfi = CalcitStdGeneratedFfi;
+export_calcit_std_ffi!(CALCIT_STD_GENERATED_FFI);
 
 pub use date::{add_duration, format_time, now_bang, parse_time};
 pub use fs::{append_file, glob_call, path_exists, read_dir, read_file, walk_dir, write_file};
@@ -40,7 +52,6 @@ calcit_native_ffi::export_edn_buffer_method_v1!(rename_path_calcit_ffi_v1, fs::r
 calcit_native_ffi::export_edn_buffer_method_v1!(check_write_file_calcit_ffi_v1, fs::check_write_file);
 calcit_native_ffi::export_edn_buffer_method_v1!(walk_dir_calcit_ffi_v1, fs::walk_dir);
 calcit_native_ffi::export_edn_buffer_method_v1!(glob_call_calcit_ffi_v1, fs::glob_call);
-calcit_native_ffi::export_edn_buffer_method_v1!(md5_calcit_ffi_v1, hash::md5);
 calcit_native_ffi::export_edn_buffer_method_v1!(parse_json_calcit_ffi_v1, json::parse_json);
 calcit_native_ffi::export_edn_buffer_method_v1!(stringify_json_calcit_ffi_v1, json::stringify_json);
 calcit_native_ffi::export_edn_buffer_method_v1!(join_path_calcit_ffi_v1, path::join_path);

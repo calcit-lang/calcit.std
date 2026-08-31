@@ -1,13 +1,14 @@
-use cirru_edn::Edn;
+pub fn md5(value: &str) -> String {
+  format!("{:x}", md5::compute(value))
+}
 
-pub fn md5(args: Vec<Edn>) -> Result<Edn, String> {
-  if args.len() == 1 {
-    if let Edn::Str(s) = &args[0] {
-      Ok(Edn::Str(format!("{:x}", md5::compute(&**s)).into()))
-    } else {
-      Err(format!("md5 expected a string, {}", args[0]))
-    }
-  } else {
-    Err(format!("md5 expected 1 arguement, got: {args:?}"))
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn hashes_utf8_input_to_lowercase_hex() {
+    assert_eq!(md5("hello"), "5d41402abc4b2a76b9719d911017c592");
+    assert_eq!(md5("你好"), "7eca689f0d3389d9dea66ae112e5cfd7");
   }
 }
