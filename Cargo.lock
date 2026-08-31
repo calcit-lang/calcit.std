@@ -49,7 +49,7 @@ dependencies = [
 
 [[package]]
 name = "calcit_std"
-version = "0.2.29"
+version = "0.2.30"
 dependencies = [
  "calcit_native_ffi",
  "chrono",
