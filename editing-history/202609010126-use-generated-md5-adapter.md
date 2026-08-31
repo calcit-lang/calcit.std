@@ -11,6 +11,7 @@
 - 对齐 Cargo package version 与 deps.cirru 的 0.2.29，并增加 UTF-8 MD5 单测。
 - 将开发工具链固定版本同步到最新 Calcit 0.13.72，同时保留 README 中
   0.13.69+ 的运行时兼容下限。
+- 将验证 workflow 的 `GITHUB_TOKEN` 显式限制为只读仓库内容权限。
 
 ## English
 
@@ -25,3 +26,5 @@
 - Align the Cargo package version with deps.cirru 0.2.29 and add a UTF-8 MD5 test.
 - Align the development toolchain pin with the latest Calcit 0.13.72 while
   retaining the documented 0.13.69+ runtime compatibility floor.
+- Explicitly restrict the validation workflow's `GITHUB_TOKEN` to read-only
+  repository contents.
