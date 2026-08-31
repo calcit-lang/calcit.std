@@ -61,15 +61,20 @@ cancellation predicate, ensuring reliable task cleanup.
 Calcit `0.13.69` or newer is required so cancellation also purges queued
 non-terminal events while preserving the task's completion or failure event.
 
-维护者可只读导出类型化 native contract；`calcit.std.hash/md5` 是当前
-sync-pure generator pilot：
+`calcit.std.hash/md5` 已使用 `calcit-bindgen 0.1.0` 的 managed Rust adapter，
+不再手写 symbol、arity、EDN codec 或 buffer export。维护者可只读导出类型化
+contract，并检查仓库内 generated artifact 是否过期：
 
 ```bash
-calcit calcit.cirru ffi export --json --ns calcit.std.hash
+mkdir -p target/ffi-interface
+calcit calcit.cirru ffi export --json --ns calcit.std.hash > target/ffi-interface/calcit-std-hash.json
+calcit-bindgen check target/ffi-interface/calcit-std-hash.json --out generated/ffi --backend rust
 ```
 
-Maintainers can export the typed native contract without loading the dylib;
-`calcit.std.hash/md5` is the current sync-pure generator pilot.
+`calcit.std.hash/md5` now uses the managed Rust adapter from
+`calcit-bindgen 0.1.0`; its symbol, arity, EDN codec, and buffer export are no
+longer handwritten. CI exports the typed contract and rejects stale generated
+artifacts with the commands above.
 
 维护者在构建并复制 release dylib 后，可运行
 `bash scripts/check-c-safe-ffi.sh` 检查所有预期 C entry point。

@@ -17,6 +17,8 @@ check/quality gate，并用 release dylib 执行 `calcit calcit.cirru` 的真实
 FFI 公共协议、descriptor 校验、buffer ownership、Cirru EDN transport 和
 adapter 由 `calcit_native_ffi` 维护。本仓库只实现 std 的业务行为；若协议能力
 不足，应先扩展共享 crate 并补齐契约测试，不要在本仓库复制模板实现。
+`generated/ffi/` 由 `calcit-bindgen 0.1.0` 管理，不得手改；修改
+`calcit.std.hash/md5` contract 后必须重新生成，并运行同 backend 集合的 `check`。
 
 ## English
 
@@ -40,3 +42,6 @@ release dylib.
 ownership, Cirru EDN transport, and adapters. This repository implements only
 std behavior. If the protocol lacks a capability, extend the shared crate and
 its contract tests instead of copying the template here.
+`generated/ffi/` is managed by `calcit-bindgen 0.1.0` and must not be edited
+by hand. Regenerate after changing the `calcit.std.hash/md5` contract and run
+`check` with the same backend set.
