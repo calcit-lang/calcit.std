@@ -655,6 +655,7 @@
             defn main! () (println |starting-streamed-process)
               stream! ([] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2")
                 fn (event) (println |received-ProcessOutput event)
+              , &unit
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
