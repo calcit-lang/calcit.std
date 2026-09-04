@@ -22,7 +22,7 @@ jobs:
           toolchain: stable
           components: clippy
 
-      - uses: calcit-lang/setup-calcit@v1.3.0
+      - uses: calcit-lang/setup-calcit@v1
         with:
           tools: calcit,caps
 
