@@ -13,13 +13,14 @@
     'calcit.std.date $ %{} 'FileEntry
       :defs $ {}
         'Date $ %{} 'CodeEntry (:doc "|Date record type wrapping timestamps. Provides static methods: :now (current time), :parse (parse string), :timestamp (get timestamp), :add (add duration), :format (format output).")
-          :code $ quote
-            def Date $ impl-traits Date0 DateImpl
+          :code $ quote (def Date Date0)
           :examples $ []
           :schema $ :: 'Impl
         'Date0 $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defstruct Date0 $ :date 'Dynamic
+            def Date0 $ impl-traits
+              defstruct Date0 $ :date 'Dynamic
+              , DateImpl
           :examples $ []
           :schema $ :: 'Enum
         'DateImpl $ %{} 'CodeEntry (:doc |)
@@ -655,6 +656,7 @@
             defn main! () (println |starting-streamed-process)
               stream! ([] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2")
                 fn (event) (println |received-ProcessOutput event)
+              , &unit
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
