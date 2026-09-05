@@ -13,13 +13,14 @@
     'calcit.std.date $ %{} 'FileEntry
       :defs $ {}
         'Date $ %{} 'CodeEntry (:doc "|Date record type wrapping timestamps. Provides static methods: :now (current time), :parse (parse string), :timestamp (get timestamp), :add (add duration), :format (format output).")
-          :code $ quote
-            def Date $ impl-traits Date0 DateImpl
+          :code $ quote (def Date Date0)
           :examples $ []
           :schema $ :: 'Impl
         'Date0 $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defstruct Date0 $ :date 'Dynamic
+            def Date0 $ impl-traits
+              defstruct Date0 $ :date 'Dynamic
+              , DateImpl
           :examples $ []
           :schema $ :: 'Enum
         'DateImpl $ %{} 'CodeEntry (:doc |)
