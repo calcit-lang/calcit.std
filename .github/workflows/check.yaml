@@ -28,13 +28,16 @@ jobs:
 
       # Remove after the first release containing calcit-lang/calcit#922.
       - name: Install strict check-examples runner fix
-        run: cargo install --git https://github.com/calcit-lang/calcit.git --rev 689e8b2f1071fd9c2c4297149db7a5232ed29936 --locked --force calcit
+        run: |
+          cargo install --git https://github.com/calcit-lang/calcit.git --rev 689e8b2f1071fd9c2c4297149db7a5232ed29936 --locked --force calcit
+          echo "$CARGO_HOME/bin" >> "$GITHUB_PATH"
 
       - name: Install the production FFI generator
         run: cargo install calcit-bindgen --version 0.1.0 --locked
 
       - name: Validate Calcit snapshot and type baseline
         run: |
+          test "$(command -v calcit)" = "$CARGO_HOME/bin/calcit"
           caps --ci
           calcit calcit.cirru edit format
           git diff --exit-code -- calcit.cirru
