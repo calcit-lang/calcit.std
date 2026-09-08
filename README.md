@@ -49,8 +49,8 @@ process output、timer 与 Ctrl+C 普通事件在等待 host queue 时会检查�
 状态，最长 10ms 响应一次；持续 `QUEUE_FULL` 默认 5 秒后失败。terminal
 `complete` / `fail` 不应用业务取消 predicate，确保任务可靠收尾。
 
-要求 Calcit `0.13.69` 或更高版本，以便取消时清理已排队的非终态事件，
-同时保留任务的 completion 或 failure 事件。
+要求 Calcit `0.14.3`。项目在 `--strict-types` 下保持零类型债务，不使用
+`--compat-types`；可选参数使用 `Option`，集合 schema 均声明具体元素类型。
 
 Ordinary process-output, timer, and Ctrl+C events observe their own
 cancellation state while waiting for host queue capacity, with at most 10ms
@@ -58,8 +58,9 @@ between checks; persistent `QUEUE_FULL` fails after the default five-second
 deadline. Terminal `complete` / `fail` events do not use the business
 cancellation predicate, ensuring reliable task cleanup.
 
-Calcit `0.13.69` or newer is required so cancellation also purges queued
-non-terminal events while preserving the task's completion or failure event.
+Calcit `0.14.3` is required. The project passes the zero-debt `--strict-types`
+gate without `--compat-types`; optional parameters use `Option`, and collection
+schemas declare concrete element types.
 
 `calcit.std.hash/md5` 已使用 `calcit-bindgen 0.1.0` 的 managed Rust adapter，
 不再手写 symbol、arity、EDN codec 或 buffer export。维护者可只读导出类型化
@@ -106,7 +107,7 @@ calcit.std.fs/read-file-by-line! a $ fn (line) (println line)
 ```
 
 ```cirru.no-check
-calcit.std.process/execute! a
+calcit.std.process/execute! $ [] |ls |-la
 
 def process-task $ calcit.std.process/stream!
   [] |sh |-c "|printf 'ready\\n'; exec sleep 5"
@@ -116,17 +117,22 @@ def process-task $ calcit.std.process/stream!
 process-task.cancel-with :shutdown
 ```
 
-```cirru
-calcit.std.json/stringify-json ({} (:answer 42)) true
+JSON parsing and serialization now use the Calcit core APIs directly:
 
-calcit.std.json/parse-json "|{\"a\": [1, 2], \":b\": 3}"
+```cirru
+json-stringify $ {} (:answer 42)
+json-parse "|{\"a\": [1, 2], \"b\": 3}"
 ```
 
-Date object is wrapped as `%{} Date {:date <timestamp>}`:
+The former `calcit.std.json` wrappers were removed because their open Dynamic
+parse result cannot satisfy a zero-debt library contract. Use the reviewed core
+boundary and decode external data into a closed type before business logic.
+
+Date values are represented as `%{} Date0 {:date <timestamp-ms>}`:
 
 ```cirru
 calcit.std.date/get-time!
-; %{} Date (:date &any-ref)
+; %{} Date0 (:date 1735689600000)
 
 calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
 
@@ -136,29 +142,29 @@ calcit.std.date/extract-time $ calcit.std.date/get-time!
 ; {} (:minute 6) (:hour 16) (:month 11) (:second 48) (:day 10)
 
 calcit.std.date/from-ymd 2021 11 11
-; %{} Date (:date 1636560000000)
+; %{} Date0 (:date 1636560000000)
 calcit.std.date/from-ywd 2021 45 6
-; %{} Date (:date 1636732800000)
+; %{} Date0 (:date 1636732800000)
 
 calcit.std.date/add-duration (calcit.std.date/get-time!) 4 :days
 ```
 
 ```cirru
 calcit.std.rand/rand
-calcit.std.rand/rand 10
-calcit.std.rand/rand 10 100 (; "from 10 to 100")
+calcit.std.rand/rand $ %some 10
+calcit.std.rand/rand (%some 10) (%some 100) (; "from 10 to 100")
 
 calcit.std.rand/rand-int
-calcit.std.rand/rand-int 10
-calcit.std.rand/rand-int 10 100 (; "from 10 to 100")
+calcit.std.rand/rand-int $ %some 10
+calcit.std.rand/rand-int (%some 10) (%some 100) (; "from 10 to 100")
 
 calcit.std.rand/rand-nth ([] 1 2 3)
 calcit.std.rand/rand-shift 10 4 (; "10+-4")
 calcit.std.rand/rand-between 10 20
 
 calcit.std.rand/nanoid!
-calcit.std.rand/nanoid! 9
-calcit.std.rand/nanoid! 9 |abcd (; "charset")
+calcit.std.rand/nanoid! $ %some 9
+calcit.std.rand/nanoid! (%some 9) (%some |abcd) (; "charset")
 
 calcit.std.rand/rand-hex-color!
 ```

@@ -34,8 +34,8 @@ jobs:
           caps --ci
           calcit calcit.cirru edit format
           git diff --exit-code -- calcit.cirru
-          calcit calcit.cirru --check-only
-          calcit calcit.cirru analyze quality --baseline config/calcit-quality.json --format json
+          calcit calcit.cirru --check-only --strict-types
+          calcit calcit.cirru analyze quality --format json
           mkdir -p target/ffi-interface
           calcit calcit.cirru ffi export --json --ns calcit.std.hash > target/ffi-interface/calcit-std-hash.json
           calcit-bindgen check target/ffi-interface/calcit-std-hash.json --out generated/ffi --backend rust
@@ -68,6 +68,6 @@ jobs:
           calcit --trace-ffi calcit.cirru eval --dep ./ -- 'ns app.main $ :require
             calcit.std.rand :refer $ rand rand-int rand-nth
 
-          println (rand-nth $ range 10) (rand) (rand-int 10)'
+          println (rand-nth $ range 10) (rand) (rand-int $ %some 10)'
 
       - run: calcit calcit.cirru
