@@ -26,6 +26,10 @@ jobs:
         with:
           tools: calcit,caps
 
+      # Remove after the first release containing calcit-lang/calcit#922.
+      - name: Install strict check-examples runner fix
+        run: cargo install --git https://github.com/calcit-lang/calcit.git --rev 689e8b2f1071fd9c2c4297149db7a5232ed29936 --locked --force calcit
+
       - name: Install the production FFI generator
         run: cargo install calcit-bindgen --version 0.1.0 --locked
 
@@ -68,6 +72,6 @@ jobs:
           calcit --trace-ffi calcit.cirru eval --dep ./ -- 'ns app.main $ :require
             calcit.std.rand :refer $ rand rand-int rand-nth
 
-          println (rand-nth $ range 10) (rand) (rand-int $ %some 10)'
+          println (rand-nth $ range 10) (rand (%none) (%none)) (rand-int (%some 10) (%none))'
 
       - run: calcit calcit.cirru

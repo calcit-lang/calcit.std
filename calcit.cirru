@@ -307,7 +307,7 @@
               assert "|command in list" $ and (list? command) (every? command string?)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (option:unwrap-or dir |./) command
           :examples $ []
-            quote $ execute! ([] |ls |-la)
+            quote $ execute! ([] |ls |-la) (%none)
           :schema $ :: 'Fn
             {}
               :args $ [] (:: 'List 'String) (:: 'Option 'String)
@@ -356,7 +356,7 @@
             defn nanoid! (size chars)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |call_nanoid size chars
           :examples $ []
-            quote $ nanoid! (%some 10)
+            quote $ nanoid! (%some 10) (%none)
           :schema $ :: 'Fn
             {} (:return 'String)
               :args $ [] (:: 'Option 'Number) (:: 'Option 'String)
@@ -376,6 +376,7 @@
             defn rand-between (x y)
               &+ x $ rand
                 %some $ &- y x
+                %none
           :examples $ []
             quote $ rand-between 10 20
           :schema $ :: 'Fn
@@ -395,7 +396,7 @@
             defn rand-int (from to)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand_int from to
           :examples $ []
-            quote $ rand-int (%some 100)
+            quote $ rand-int (%some 100) (%none)
           :schema $ :: 'Fn
             {} (:return 'Number)
               :args $ [] (:: 'Option 'Number) (:: 'Option 'Number)
@@ -404,7 +405,9 @@
           :code $ quote
             defn rand-nth (xs)
               if (&list:empty? xs) %none $ get xs
-                rand-int $ %some (&list:count xs)
+                rand-int
+                  %some $ &list:count xs
+                  %none
           :examples $ []
             quote $ rand-nth ([] 1 2 3 4 5)
           :schema $ :: 'Fn
@@ -416,7 +419,9 @@
           :code $ quote
             defn rand-shift (x y)
               &+ (&- x y)
-                rand $ %some (&* 2 y)
+                rand
+                  %some $ &* 2 y
+                  %none
           :examples $ []
             quote $ rand-shift 10 2
           :schema $ :: 'Fn
@@ -544,7 +549,7 @@
                 println |lines @*c
               println (path-exists? |README.md) (path-exists? |build.js)
               println $ read-dir! |./
-              println |dirs: $ execute! ([] |ls)
+              println |dirs: $ execute! ([] |ls) (%none)
               println "|all paths size:" $ count (walk-dir! |target)
               println "|rs files:" $ glob! |src/*.rs
               create-dir! |target/dir1
@@ -587,9 +592,11 @@
                 rand-nth $ range 10
               assert= %none $ rand-nth
                 take (range 1) 0
-              assert-detect identity $ <= 0 (rand) 100
               assert-detect identity $ <= 0
-                rand $ %some 10
+                rand (%none) (%none)
+                , 100
+              assert-detect identity $ <= 0
+                rand (%some 10) (%none)
                 , 10
               assert-detect identity $ <= 20
                 rand (%some 20) (%some 30)
@@ -600,16 +607,18 @@
               assert "|try .rand-between" $ &let
                 x $ rand-between 10 5
                 and (>= x 5) (<= x 10)
-              assert-detect identity $ <= 0 (rand-int) 100
               assert-detect identity $ <= 0
-                rand-int $ %some 10
+                rand-int (%none) (%none)
+                , 100
+              assert-detect identity $ <= 0
+                rand-int (%some 10) (%none)
                 , 10
               assert-detect identity $ <= 20
                 rand-int (%some 20) (%some 30)
                 , 30
               println "|%%%% test id"
               assert= 9 $ count
-                nanoid! $ %some 9
+                nanoid! (%some 9) (%none)
               assert= |aaaaa $ nanoid! (%some 5) (%some |a)
               println $ rand-hex-color!
           :examples $ []

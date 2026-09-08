@@ -107,7 +107,7 @@ calcit.std.fs/read-file-by-line! a $ fn (line) (println line)
 ```
 
 ```cirru.no-check
-calcit.std.process/execute! $ [] |ls |-la
+calcit.std.process/execute! ([] |ls |-la) (%none)
 
 def process-task $ calcit.std.process/stream!
   [] |sh |-c "|printf 'ready\\n'; exec sleep 5"
@@ -150,20 +150,20 @@ calcit.std.date/add-duration (calcit.std.date/get-time!) 4 :days
 ```
 
 ```cirru
-calcit.std.rand/rand
-calcit.std.rand/rand $ %some 10
+calcit.std.rand/rand (%none) (%none)
+calcit.std.rand/rand (%some 10) (%none)
 calcit.std.rand/rand (%some 10) (%some 100) (; "from 10 to 100")
 
-calcit.std.rand/rand-int
-calcit.std.rand/rand-int $ %some 10
+calcit.std.rand/rand-int (%none) (%none)
+calcit.std.rand/rand-int (%some 10) (%none)
 calcit.std.rand/rand-int (%some 10) (%some 100) (; "from 10 to 100")
 
 calcit.std.rand/rand-nth ([] 1 2 3)
 calcit.std.rand/rand-shift 10 4 (; "10+-4")
 calcit.std.rand/rand-between 10 20
 
-calcit.std.rand/nanoid!
-calcit.std.rand/nanoid! $ %some 9
+calcit.std.rand/nanoid! (%none) (%none)
+calcit.std.rand/nanoid! (%some 9) (%none)
 calcit.std.rand/nanoid! (%some 9) (%some |abcd) (; "charset")
 
 calcit.std.rand/rand-hex-color!
