@@ -404,8 +404,8 @@
         'rand-nth $ %{} 'CodeEntry (:doc "|Randomly select one element from a list. Returns %none when the list is empty.")
           :code $ quote
             defn rand-nth (xs)
-              if (&list:empty? xs) %none $ get xs
-                rand-int
+              if (&list:empty? xs) (%none)
+                get xs $ rand-int
                   %some $ &list:count xs
                   %none
           :examples $ []
@@ -590,8 +590,8 @@
             defn main! () (println "|%%%%%% test random")
               assert-detect identity $ option:some?
                 rand-nth $ range 10
-              assert= %none $ rand-nth
-                take (range 1) 0
+              assert= (%none)
+                rand-nth $ take (range 1) 0
               assert-detect identity $ <= 0
                 rand (%none) (%none)
                 , 100
