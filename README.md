@@ -49,7 +49,7 @@ process output、timer 与 Ctrl+C 普通事件在等待 host queue 时会检查�
 状态，最长 10ms 响应一次；持续 `QUEUE_FULL` 默认 5 秒后失败。terminal
 `complete` / `fail` 不应用业务取消 predicate，确保任务可靠收尾。
 
-要求 Calcit `0.14.3`。项目在 `--strict-types` 下保持零类型债务，不使用
+要求 Calcit `0.14.5`。项目在 `--strict-types` 下保持零类型债务，不使用
 `--compat-types`；可选参数使用 `Option`，集合 schema 均声明具体元素类型。
 
 Ordinary process-output, timer, and Ctrl+C events observe their own
@@ -58,7 +58,7 @@ between checks; persistent `QUEUE_FULL` fails after the default five-second
 deadline. Terminal `complete` / `fail` events do not use the business
 cancellation predicate, ensuring reliable task cleanup.
 
-Calcit `0.14.3` is required. The project passes the zero-debt `--strict-types`
+Calcit `0.14.5` is required. The project passes the zero-debt `--strict-types`
 gate without `--compat-types`; optional parameters use `Option`, and collection
 schemas declare concrete element types.
 

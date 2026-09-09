@@ -26,23 +26,22 @@ jobs:
         with:
           tools: calcit,caps
 
-      # Remove after the first release containing calcit-lang/calcit#922.
-      - name: Install strict check-examples runner fix
+      - name: Verify released tool versions
         run: |
-          cargo install --git https://github.com/calcit-lang/calcit.git --rev 689e8b2f1071fd9c2c4297149db7a5232ed29936 --locked --force calcit
-          echo "$CARGO_HOME/bin" >> "$GITHUB_PATH"
+          test "$(calcit --version)" = "0.14.5"
+          test "$(caps --version)" = "caps 0.1.1"
 
       - name: Install the production FFI generator
         run: cargo install calcit-bindgen --version 0.1.0 --locked
 
       - name: Validate Calcit snapshot and type baseline
         run: |
-          test "$(command -v calcit)" = "$CARGO_HOME/bin/calcit"
           caps --ci
           calcit calcit.cirru edit format
           git diff --exit-code -- calcit.cirru
           calcit calcit.cirru --check-only --strict-types
           calcit calcit.cirru analyze quality --format json
+          calcit calcit.cirru analyze check-types --summary-only --format json
           mkdir -p target/ffi-interface
           calcit calcit.cirru ffi export --json --ns calcit.std.hash > target/ffi-interface/calcit-std-hash.json
           calcit-bindgen check target/ffi-interface/calcit-std-hash.json --out generated/ffi --backend rust
@@ -58,6 +57,7 @@ jobs:
       - name: Validate runnable docs and async examples
         run: |
           calcit calcit.cirru docs check-md README.md --dep ./ --failures-only
+          calcit calcit.cirru docs check-md docs/native-capabilities.md --dep ./ --failures-only
           calcit calcit.cirru analyze check-examples --ns calcit.std.fs --def read-file-by-line!
           calcit calcit.cirru analyze check-examples --ns calcit.std.process --def stream!
           calcit calcit.cirru analyze check-examples --ns calcit.std.process --def on-ctrl-c
