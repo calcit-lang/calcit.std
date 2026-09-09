@@ -26,6 +26,11 @@ jobs:
         with:
           tools: calcit,caps
 
+      - name: Verify released tool versions
+        run: |
+          test "$(calcit --version)" = "0.14.5"
+          test "$(caps --version)" = "caps 0.1.1"
+
       - name: Install the production FFI generator
         run: cargo install calcit-bindgen --version 0.1.0 --locked
 
@@ -34,8 +39,9 @@ jobs:
           caps --ci
           calcit calcit.cirru edit format
           git diff --exit-code -- calcit.cirru
-          calcit calcit.cirru --check-only
-          calcit calcit.cirru analyze quality --baseline config/calcit-quality.json --format json
+          calcit calcit.cirru --check-only --strict-types
+          calcit calcit.cirru analyze quality --format json
+          calcit calcit.cirru analyze check-types --summary-only --format json
           mkdir -p target/ffi-interface
           calcit calcit.cirru ffi export --json --ns calcit.std.hash > target/ffi-interface/calcit-std-hash.json
           calcit-bindgen check target/ffi-interface/calcit-std-hash.json --out generated/ffi --backend rust
@@ -51,6 +57,7 @@ jobs:
       - name: Validate runnable docs and async examples
         run: |
           calcit calcit.cirru docs check-md README.md --dep ./ --failures-only
+          calcit calcit.cirru docs check-md docs/native-capabilities.md --dep ./ --failures-only
           calcit calcit.cirru analyze check-examples --ns calcit.std.fs --def read-file-by-line!
           calcit calcit.cirru analyze check-examples --ns calcit.std.process --def stream!
           calcit calcit.cirru analyze check-examples --ns calcit.std.process --def on-ctrl-c
@@ -68,6 +75,6 @@ jobs:
           calcit --trace-ffi calcit.cirru eval --dep ./ -- 'ns app.main $ :require
             calcit.std.rand :refer $ rand rand-int rand-nth
 
-          println (rand-nth $ range 10) (rand) (rand-int 10)'
+          println (rand-nth $ range 10) (rand (%none) (%none)) (rand-int (%some 10) (%none))'
 
       - run: calcit calcit.cirru

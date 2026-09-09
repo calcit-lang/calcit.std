@@ -12,42 +12,21 @@
   :files $ {}
     'calcit.std.date $ %{} 'FileEntry
       :defs $ {}
-        'Date $ %{} 'CodeEntry (:doc "|Date record type wrapping timestamps. Provides static methods: :now (current time), :parse (parse string), :timestamp (get timestamp), :add (add duration), :format (format output).")
-          :code $ quote (def Date Date0)
-          :examples $ []
-          :schema $ :: 'Impl
         'Date0 $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            def Date0 $ impl-traits
-              defstruct Date0 $ :date 'Dynamic
-              , DateImpl
+            defstruct Date0 $ :date 'Number
           :examples $ []
           :schema $ :: 'Enum
-        'DateImpl $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            defimpl DateImpl DateTrait
-              .format $ fn (self & args)
-                format-time self $ first args
-              .add $ fn (self n k) (add-duration self n k)
-              .timestamp $ fn (self) (get-timestamp self)
-              .extract $ fn (self) (extract-time self)
-          :examples $ []
-          :schema $ :: 'Impl
-        'DateTrait $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            deftrait DateTrait (.format :fn) (.add :fn) (.timestamp :fn) (.extract :fn)
-          :examples $ []
-          :schema $ :: 'Trait
         'add-duration $ %{} 'CodeEntry (:doc "|Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc). Example: (add-duration (get-time!) 7 :days)")
           :code $ quote
             defn add-duration (date n k)
-              %{} Date $ :date
+              %{} Date0 $ :date
                 &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |add_duration (:date date) n k
           :examples $ []
             quote $ add-duration (get-time!) 7 :days
           :schema $ :: 'Fn
             {} (:return 'calcit.std.date/Date0)
-              :args $ [] 'calcit.std.date/Date0 'Number 'Dynamic
+              :args $ [] 'calcit.std.date/Date0 'Number 'Tag
               :features $ #{} :js-ffi
         'extract-time $ %{} 'CodeEntry (:doc "|Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields. Example: (extract-time (get-time!))")
           :code $ quote
@@ -56,15 +35,16 @@
           :examples $ []
             quote $ extract-time (get-time!)
           :schema $ :: 'Fn
-            {} (:return 'Dynamic)
+            {}
               :args $ [] 'calcit.std.date/Date0
               :features $ #{} :js-ffi
-        'format-time $ %{} 'CodeEntry (:doc "|Format Date object to string. Optional second parameter specifies format (default ISO format). Example: (format-time (get-time!) \"|%Y-%m-%d\")")
+              :return $ :: 'Map 'Tag 'Number
+        'format-time $ %{} 'CodeEntry (:doc "|Format Date object to string. The optional format is Option<String>; %none uses ISO format, for example (format-time (get-time!) (%some \"|%Y-%m-%d\")).")
           :code $ quote
             defn format-time (time format)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |format_time (:date time) format
           :examples $ []
-            quote $ format-time (get-time!) |%Y-%m-%d
+            quote $ format-time (get-time!) (%some |%Y-%m-%d)
           :schema $ :: 'Fn
             {} (:return 'String)
               :args $ [] 'calcit.std.date/Date0 (:: 'Option 'String)
@@ -74,7 +54,7 @@
               match
                 &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |from_ymd y m d
                 (:single d)
-                  %{} Date $ :date d
+                  %{} Date0 $ :date d
                 (:ambiguous a b)
                   raise $ str "|ambiguous: " a "| " b
                 (:none) (raise "|cannot construct")
@@ -91,7 +71,7 @@
               match
                 &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |from_ywd y w d
                 (:single d)
-                  %{} Date $ :date d
+                  %{} Date0 $ :date d
                 (:ambiguous a b)
                   raise $ str "|ambiguous: " a "| " b
                 (:none) (raise "|cannot construct")
@@ -104,7 +84,7 @@
               :features $ #{} :js-ffi
         'get-time! $ %{} 'CodeEntry (:doc "|Get current system time as a Date object. Example: (get-time!)")
           :code $ quote
-            defn get-time! () $ %{} Date
+            defn get-time! () $ %{} Date0
               :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |now_bang
           :examples $ []
             quote $ get-time!
@@ -124,7 +104,7 @@
         'parse-time $ %{} 'CodeEntry (:doc "|Parse time string to Date object. Args: time string, format string (e.g. %Y-%m-%d %H:%M:%S %z). Example: (parse-time \"|2024-01-01 12:00:00 +00:00\" \"|%Y-%m-%d %H:%M:%S %z\")")
           :code $ quote
             defn parse-time (time format)
-              %{} Date $ :date
+              %{} Date0 $ :date
                 &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |parse_time time format
           :examples $ []
             quote $ parse-time "|2024-01-01 12:00:00 +00:00" "|%Y-%m-%d %H:%M:%S %z"
@@ -144,7 +124,6 @@
             defn append-file! (name content)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |append_file name content
           :examples $ []
-            quote $ append-file! |log.txt | "New log entry"
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ [] 'String 'String
@@ -163,7 +142,6 @@
             defn create-dir! (name)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |create_dir name
           :examples $ []
-            quote $ create-dir! |new-folder
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ [] 'String
@@ -173,7 +151,6 @@
             defn create-dir-all! (name)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |create_dir_all name
           :examples $ []
-            quote $ create-dir-all! |path/to/nested/dir
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ [] 'String
@@ -183,11 +160,12 @@
             defn glob! (name)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |glob_call name
           :examples $ []
-            quote $ glob! | src/**/*.rs
+            quote $ glob! |src/**/*.rs
           :schema $ :: 'Fn
-            {} (:return 'List)
+            {}
               :args $ [] 'String
               :features $ #{} :js-ffi
+              :return $ :: 'List 'String
         'path-exists? $ %{} 'CodeEntry (:doc "|Check if a file or directory exists at the given path. Returns boolean. Example: (path-exists? \"README.md\")")
           :code $ quote
             defn path-exists? (name)
@@ -205,15 +183,16 @@
           :examples $ []
             quote $ read-dir! |src
           :schema $ :: 'Fn
-            {} (:return 'List)
+            {}
               :args $ [] 'String
               :features $ #{} :js-ffi
+              :return $ :: 'List 'String
         'read-file! $ %{} 'CodeEntry (:doc "|Read entire file content as a string. Args: file path. Example: (read-file! \"README.md\")")
           :code $ quote
             defn read-file! (name)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |read_file name
           :examples $ []
-            quote $ read-file! |example.txt
+            quote $ read-file! |README.md
           :schema $ :: 'Fn
             {} (:return 'String)
               :args $ [] 'String
@@ -223,11 +202,8 @@
             defn read-file-by-line! (name cb)
               &blocking-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |read_file_by_line name cb
           :examples $ []
-            quote $ let
-                lines-ref $ atom ([])
-              read-file-by-line! |Cargo.toml $ fn (line) (swap! lines-ref conj line) &unit
-              assert= (%some |[package])
-                first $ deref lines-ref
+            quote $ read-file-by-line! |Cargo.toml
+              fn (line) &unit
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ [] 'String
@@ -238,7 +214,6 @@
             defn rename! (from to)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rename_path from to
           :examples $ []
-            quote $ rename! |old.txt |new.txt
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ [] 'String 'String
@@ -249,15 +224,15 @@
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |walk_dir name
           :examples $ []
           :schema $ :: 'Fn
-            {} (:return 'List)
+            {}
               :args $ [] 'String
               :features $ #{} :js-ffi
+              :return $ :: 'List 'String
         'write-file! $ %{} 'CodeEntry (:doc "|Write content to file (overwrite). Args: file path, content string. Example: (write-file! \"output.txt\" \"Hello, World!\")")
           :code $ quote
             defn write-file! (name content)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |write_file name content
           :examples $ []
-            quote $ write-file! |output.txt | "Hello, World!"
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ [] 'String 'String
@@ -283,36 +258,6 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns calcit.std.hash $ :require
-            calcit.std.$meta :refer $ calcit-dirname
-            calcit.std.util :refer $ get-dylib-path
-    'calcit.std.json $ %{} 'FileEntry
-      :defs $ {}
-        'parse-json $ %{} 'CodeEntry (:doc "|Parse JSON string to Calcit data structures. String keys remain as strings, keyword keys become keywords. Example: (parse-json \"|{\\\"a\\\": [1, 2], \\\":b\\\": 3}\")")
-          :code $ quote
-            defn parse-json (s)
-              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |parse_json s
-          :examples $ []
-            quote $ parse-json "|{\"a\": [1, 2], \":b\": 3}"
-          :schema $ :: 'Fn
-            {} (:return 'Dynamic)
-              :args $ [] 'String
-              :features $ #{} :js-ffi
-        'stringify-json $ %{} 'CodeEntry (:doc "|Serialize Calcit data structures to JSON string. Second parameter colon? when true converts keywords to strings with colon prefix. Example: (stringify-json {:a 1} true)")
-          :code $ quote
-            defn stringify-json (data ? colon?)
-              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |stringify_json data colon?
-          :examples $ []
-            quote $ stringify-json ([] 1 2 3)
-            quote $ stringify-json
-              {} (:a 1) (:b 2)
-              , true
-          :schema $ :: 'Fn
-            {} (:return 'String)
-              :args $ [] 'Dynamic 'Dynamic
-              :features $ #{} :js-ffi
-      :ns $ %{} 'NsEntry (:doc |)
-        :code $ quote
-          ns calcit.std.json $ :require
             calcit.std.$meta :refer $ calcit-dirname
             calcit.std.util :refer $ get-dylib-path
     'calcit.std.path $ %{} 'FileEntry
@@ -356,17 +301,18 @@
             defenum ProcessOutput (:stdout 'String) (:stderr 'String)
           :examples $ []
           :schema $ :: 'Enum
-        'execute! $ %{} 'CodeEntry (:doc "|Execute a shell command. Args: command as list of strings, optional working directory. Returns output or error. Example: (execute! [] \"ls\" \"-la\")")
+        'execute! $ %{} 'CodeEntry (:doc "|Execute a command from a List<String>. The optional working directory defaults to ./; pass %some path to override it. Returns [stdout stderr].")
           :code $ quote
-            defn execute! (command ? dir)
+            defn execute! (command dir)
               assert "|command in list" $ and (list? command) (every? command string?)
-              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (either dir |./) command
+              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (option:unwrap-or dir |./) command
           :examples $ []
-            quote $ execute! ([] |ls | -la)
+            quote $ execute! ([] |ls |-la) (%none)
           :schema $ :: 'Fn
-            {} (:return 'Dynamic)
-              :args $ [] 'Dynamic 'Dynamic
+            {}
+              :args $ [] (:: 'List 'String) (:: 'Option 'String)
               :features $ #{} :js-ffi
+              :return $ :: 'List 'String
         'on-ctrl-c $ %{} 'CodeEntry (:doc "|Register a callback function to handle Ctrl+C signal.")
           :code $ quote
             defn on-ctrl-c (f)
@@ -386,7 +332,7 @@
           :code $ quote
             defn stream! (command f dir)
               assert "|command in list" $ and (list? command) (every? command string?)
-              ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |stream_command (.unwrap-or dir |./) command f
+              ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |stream_command (option:unwrap-or dir |./) command f
           :examples $ []
             quote $ stream! ([] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2")
               fn (event) (println |received-ProcessOutput event)
@@ -405,32 +351,32 @@
             calcit.std.util :refer $ get-dylib-path
     'calcit.std.rand $ %{} 'FileEntry
       :defs $ {}
-        'nanoid! $ %{} 'CodeEntry (:doc "|Generate nanoid string. Optional: size (default 21), chars (character set). Example: (nanoid! 9)")
+        'nanoid! $ %{} 'CodeEntry (:doc "|Generate a nanoid string. Size and character set are Option values; omitted values use nanoid defaults.")
           :code $ quote
-            defn nanoid! (? size chars)
+            defn nanoid! (size chars)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |call_nanoid size chars
           :examples $ []
-            quote $ nanoid!
-            quote $ nanoid! 10
+            quote $ nanoid! (%some 10) (%none)
           :schema $ :: 'Fn
             {} (:return 'String)
-              :args $ [] 'Dynamic 'Dynamic
+              :args $ [] (:: 'Option 'Number) (:: 'Option 'String)
               :features $ #{} :js-ffi
-        'rand $ %{} 'CodeEntry (:doc "|Generate random float. No args: [0, 1), one arg: [0, n), two args: [from, to). Example: (rand 10 100)")
+        'rand $ %{} 'CodeEntry (:doc "|Generate a random float. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand (%some 10) (%some 100)).")
           :code $ quote
-            defn rand (? from to)
+            defn rand (from to)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand from to
           :examples $ []
-            quote $ rand
-            quote $ rand 10 100
+            quote $ rand (%some 10) (%some 100)
           :schema $ :: 'Fn
             {} (:return 'Number)
-              :args $ [] 'Dynamic 'Dynamic
+              :args $ [] (:: 'Option 'Number) (:: 'Option 'Number)
               :features $ #{} :js-ffi
         'rand-between $ %{} 'CodeEntry (:doc "|Generate random float between from and to.")
           :code $ quote
             defn rand-between (x y)
-              &+ x $ rand (&- y x)
+              &+ x $ rand
+                %some $ &- y x
+                %none
           :examples $ []
             quote $ rand-between 10 20
           :schema $ :: 'Fn
@@ -445,21 +391,23 @@
             {} (:return 'String)
               :args $ []
               :features $ #{} :js-ffi
-        'rand-int $ %{} 'CodeEntry (:doc "|Generate random integer. No args: large range, one arg: [0, n), two args: [from, to). Example: (rand-int 100)")
+        'rand-int $ %{} 'CodeEntry (:doc "|Generate a random integer. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand-int (%some 10) (%some 100)).")
           :code $ quote
-            defn rand-int (? from to)
+            defn rand-int (from to)
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand_int from to
           :examples $ []
-            quote $ rand-int 100
+            quote $ rand-int (%some 100) (%none)
           :schema $ :: 'Fn
             {} (:return 'Number)
-              :args $ [] 'Dynamic 'Dynamic
+              :args $ [] (:: 'Option 'Number) (:: 'Option 'Number)
               :features $ #{} :js-ffi
         'rand-nth $ %{} 'CodeEntry (:doc "|Randomly select one element from a list. Returns %none when the list is empty.")
           :code $ quote
             defn rand-nth (xs)
-              if (&list:empty? xs) %none $ get xs
-                rand-int $ &list:count xs
+              if (&list:empty? xs) (%none)
+                get xs $ rand-int
+                  %some $ &list:count xs
+                  %none
           :examples $ []
             quote $ rand-nth ([] 1 2 3 4 5)
           :schema $ :: 'Fn
@@ -471,7 +419,9 @@
           :code $ quote
             defn rand-shift (x y)
               &+ (&- x y)
-                rand $ &* 2 y
+                rand
+                  %some $ &* 2 y
+                  %none
           :examples $ []
             quote $ rand-shift 10 2
           :schema $ :: 'Fn
@@ -500,7 +450,7 @@
               :args $ []
         'run-tests $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defn run-tests () (fs/main!) (json/main!) (date/main!) (random/main!) (test-path)
+            defn run-tests () (fs/main!) (date/main!) (random/main!) (test-path)
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
@@ -518,6 +468,7 @@
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ []
+              :features $ #{} :js-ffi
         'try-ctrlc! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn try-ctrlc! () $ on-ctrl-c
@@ -546,7 +497,7 @@
               :args $ []
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
-          ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.json :as json) (calcit.std.test.rand :as random)
+          ns calcit.std.test $ :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.rand :as random)
             calcit.std.process :refer $ on-ctrl-c
             calcit.std.time :refer $ set-timeout set-interval
             calcit.std.hash :refer $ md5
@@ -559,25 +510,20 @@
               println "|GET TIME" $ get-time!
               echo |time: $ format-time (get-time!) (%some "|%Y-%m-%d %H:%M:%S %z")
               assert= 1417176009000 $ get-timestamp (parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z")
-              ; assert= "|2014-11-28 12:00:09 +0000" $ format-time
-                %{} Date $ :date 1417176009000
-                , "|%Y-%m-%d %H:%M:%S %z"
               w-log $ extract-time (get-time!)
               w-log $ from-ymd 2021 11 11
               w-log $ from-ywd 2021 45 6
-              w-log $ .format (from-ywd 2022 1 2) "|%Y-%m-%d %H-%M"
-              let
-                  d $ from-ymd 2021 11 11
-                do (println |single....)
-                  ; assert= |2021-11-12 $ -> d (.add 1 :days) (format-time |%Y-%m-%d)
-                  ; assert= "|2021-11-11 01-00" $ -> d (.add 1 :hours) (format-time "|%Y-%m-%d %H-%M")
-                  ; assert= "|2021-11-11 00-01" $ -> d (.add 1 :minutes) (format-time "|%Y-%m-%d %H-%M")
-                  ; assert= "|2021-11-10 16-00" $ -> d (.add -8 :hours) (format-time "|%Y-%m-%d %H-%M")
-              println $ -> (get-time!) (.add 1 :hours) (.add 2 :minutes) (.format "|%Y-%m-%d %H-%M")
+              w-log $ format-time (from-ywd 2022 1 2) (%some "|%Y-%m-%d %H-%M")
+              println $ format-time
+                add-duration
+                  add-duration (get-time!) 1 :hours
+                  , 2 :minutes
+                %some "|%Y-%m-%d %H-%M"
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ []
+              :features $ #{} :js-ffi
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn reload! () $ main!
@@ -588,7 +534,7 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns calcit.std.test.date $ :require
-            calcit.std.date :refer $ parse-time format-time get-time! extract-time from-ymd from-ywd add-duration Date get-timestamp
+            calcit.std.date :refer $ parse-time format-time get-time! extract-time from-ymd from-ywd add-duration get-timestamp
     'calcit.std.test.fs $ %{} 'FileEntry
       :defs $ {}
         'main! $ %{} 'CodeEntry (:doc |)
@@ -603,7 +549,7 @@
                 println |lines @*c
               println (path-exists? |README.md) (path-exists? |build.js)
               println $ read-dir! |./
-              println |dirs: $ execute! ([] |ls)
+              println |dirs: $ execute! ([] |ls) (%none)
               println "|all paths size:" $ count (walk-dir! |target)
               println "|rs files:" $ glob! |src/*.rs
               create-dir! |target/dir1
@@ -621,34 +567,6 @@
             calcit.std.$meta :refer $ calcit-filename calcit-dirname
             calcit.std.fs :refer $ read-file! append-file! write-file! path-exists? read-dir! create-dir! create-dir-all! rename! check-write-file! walk-dir! glob! read-file-by-line!
             calcit.std.process :refer $ execute!
-    'calcit.std.test.json $ %{} 'FileEntry
-      :defs $ {}
-        'main! $ %{} 'CodeEntry (:doc |)
-          :code $ quote
-            defn main! () $ do (println "|%%%% test for json")
-              println $ stringify-json ([] 1 2 3 :a)
-              assert= (parse-json "|{\"a\": [1, 2], \":b\": 3}")
-                {}
-                  |a $ [] 1 2
-                  :b 3
-              &let
-                data $ {} (|a 1) (:b 2) (:c :k)
-                assert= data $ parse-json
-                  w-log $ stringify-json data true
-              &let
-                data $ {} (|a 1) (:b 2) (:c :k)
-                assert=
-                  parse-json $ stringify-json data
-                  {} (|a 1) (|b 2) (|c |k)
-              , &unit
-          :examples $ []
-          :schema $ :: 'Fn
-            {} (:return 'Unit)
-              :args $ []
-      :ns $ %{} 'NsEntry (:doc |)
-        :code $ quote
-          ns calcit.std.test.json $ :require
-            calcit.std.json :refer $ parse-json stringify-json
     'calcit.std.test.process $ %{} 'FileEntry
       :defs $ {}
         'main! $ %{} 'CodeEntry (:doc "|Verify streamed stdout/stderr events from a child process.")
@@ -672,27 +590,42 @@
             defn main! () (println "|%%%%%% test random")
               assert-detect identity $ option:some?
                 rand-nth $ range 10
-              assert= %none $ rand-nth ([])
-              assert-detect identity $ <= 0 (rand) 100
-              assert-detect identity $ <= 0 (rand 10) 10
-              assert-detect identity $ <= 20 (rand 20 30) 30
+              assert= (%none)
+                rand-nth $ take (range 1) 0
+              assert-detect identity $ <= 0
+                rand (%none) (%none)
+                , 100
+              assert-detect identity $ <= 0
+                rand (%some 10) (%none)
+                , 10
+              assert-detect identity $ <= 20
+                rand (%some 20) (%some 30)
+                , 30
               assert "|try .rand-shift" $ &let
                 x $ rand-shift 10 5
                 and (>= x 5) (<= x 15)
               assert "|try .rand-between" $ &let
                 x $ rand-between 10 5
                 and (>= x 5) (<= x 10)
-              assert-detect identity $ <= 0 (rand-int) 100
-              assert-detect identity $ <= 0 (rand-int 10) 10
-              assert-detect identity $ <= 20 (rand-int 20 30) 30
+              assert-detect identity $ <= 0
+                rand-int (%none) (%none)
+                , 100
+              assert-detect identity $ <= 0
+                rand-int (%some 10) (%none)
+                , 10
+              assert-detect identity $ <= 20
+                rand-int (%some 20) (%some 30)
+                , 30
               println "|%%%% test id"
-              assert= 9 $ count (nanoid! 9)
-              assert= |aaaaa $ nanoid! 5 |a
+              assert= 9 $ count
+                nanoid! (%some 9) (%none)
+              assert= |aaaaa $ nanoid! (%some 5) (%some |a)
               println $ rand-hex-color!
           :examples $ []
           :schema $ :: 'Fn
             {} (:return 'Unit)
               :args $ []
+              :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns calcit.std.test.rand $ :require
