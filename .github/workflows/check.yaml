@@ -28,7 +28,7 @@ jobs:
 
       - name: Verify released tool versions
         run: |
-          test "$(calcit --version)" = "0.14.5"
+          test "$(calcit --version)" = "0.14.7"
           test "$(caps --version)" = "caps 0.1.1"
 
       - name: Install the production FFI generator
