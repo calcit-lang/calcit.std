@@ -84,8 +84,8 @@
               :features $ #{} :js-ffi
         'get-time! $ %{} 'CodeEntry (:doc "|Get current system time as a Date object. Example: (get-time!)")
           :code $ quote
-            defn get-time! () $ %{} Date0
-              :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |now_bang
+            defn get-time! () $ Date0 :date
+              &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |now_bang
           :examples $ []
             quote $ get-time!
           :schema $ :: 'Fn

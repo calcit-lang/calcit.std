@@ -4,20 +4,20 @@
   "generatorVersion": "0.1.0",
   "interfaceVersion": 2,
   "package": "calcit.std",
-  "packageVersion": "0.2.31",
+  "packageVersion": "0.2.32",
   "digestAlgorithm": "fnv1a-128",
-  "contractDigest": "b39daa52011c7c88664bd413806df6fe",
+  "contractDigest": "6949a71e7390a22e7d774f4830d59de9",
   "backends": [
     "rust"
   ],
   "files": [
     {
       "path": "interface.json",
-      "digest": "b39daa52011c7c88664bd413806df6fe"
+      "digest": "6949a71e7390a22e7d774f4830d59de9"
     },
     {
       "path": "rust/bindings.rs",
-      "digest": "00783b6b384078f6e93a5ec0524e4548"
+      "digest": "6ba28c708303261878642b84a797eb5d"
     }
   ]
 }
