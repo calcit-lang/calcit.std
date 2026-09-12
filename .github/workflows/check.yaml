@@ -15,20 +15,22 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
 
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
         with:
           toolchain: stable
           components: clippy
 
-      - uses: calcit-lang/setup-calcit@v1
+      - uses: calcit-lang/setup-calcit@ca701be5a471759e442aa053cd100720bbe1f09f # v1
         with:
           tools: calcit,caps
 
       - name: Verify released tool versions
         run: |
-          test "$(calcit --version)" = "0.14.7"
+          test "$(calcit --version)" = "0.14.11"
           test "$(caps --version)" = "caps 0.1.1"
 
       - name: Install the production FFI generator
