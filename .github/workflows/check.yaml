@@ -30,11 +30,11 @@ jobs:
 
       - name: Verify released tool versions
         run: |
-          test "$(calcit --version)" = "0.15.1"
+          test "$(calcit --version)" = "0.15.2"
           test "$(caps --version)" = "caps 0.1.1"
 
       - name: Install the production FFI generator
-        run: cargo install calcit-bindgen --version 0.1.0 --locked
+        run: cargo install calcit-bindgen --version 0.1.1 --locked
 
       - name: Validate Calcit snapshot and type baseline
         run: |
