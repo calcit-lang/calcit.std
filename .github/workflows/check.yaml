@@ -34,7 +34,11 @@ jobs:
           test "$(caps --version)" = "caps 0.1.1"
 
       - name: Install the production FFI generator
-        run: cargo install calcit-bindgen --version 0.1.0 --locked
+        run: |
+          cargo install calcit-bindgen \
+            --git https://github.com/calcit-lang/calcit-bindgen.git \
+            --rev 41166c61af4ea1788e4a8e3274640360a5f83d6b \
+            --locked
 
       - name: Validate Calcit snapshot and type baseline
         run: |
