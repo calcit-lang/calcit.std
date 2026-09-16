@@ -1,7 +1,7 @@
 {
   "schemaVersion": 3,
   "generator": "calcit-bindgen",
-  "generatorVersion": "0.1.0",
+  "generatorVersion": "0.1.1",
   "interfaceVersion": 3,
   "package": "calcit.std",
   "packageVersion": "0.2.32",

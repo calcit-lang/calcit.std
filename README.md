@@ -62,7 +62,7 @@ Calcit `0.14.5` is required. The project passes the zero-debt `--strict-types`
 gate without `--compat-types`; optional parameters use `Option`, and collection
 schemas declare concrete element types.
 
-`calcit.std.hash/md5` 已使用 `calcit-bindgen 0.1.0` 的 managed Rust adapter，
+`calcit.std.hash/md5` 已使用 `calcit-bindgen 0.1.1` 的 managed Rust adapter，
 不再手写 symbol、arity、EDN codec 或 buffer export。维护者可只读导出类型化
 contract，并检查仓库内 generated artifact 是否过期：
 
@@ -73,7 +73,7 @@ calcit-bindgen check target/ffi-interface/calcit-std-hash.json --out generated/f
 ```
 
 `calcit.std.hash/md5` now uses the managed Rust adapter from
-`calcit-bindgen 0.1.0`; its symbol, arity, EDN codec, and buffer export are no
+`calcit-bindgen 0.1.1`; its symbol, arity, EDN codec, and buffer export are no
 longer handwritten. CI exports the typed contract and rejects stale generated
 artifacts with the commands above.
 
