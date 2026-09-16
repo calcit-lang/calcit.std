@@ -503,6 +503,7 @@
             stream!
               [] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2"
               fn (event) (println |received-ProcessOutput event)
+              %none
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
