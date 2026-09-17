@@ -21,7 +21,7 @@
         'add-duration $ %{} 'CodeEntry
           :doc "|Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc). Example: (add-duration (get-time!) 7 :days)"
           :code $ quote $ defn add-duration (date n k)
-            %{} Date0 $ :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |add_duration (:date date) n k
+            Date0 :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |add_duration (:date date) n k
           :examples $ [] $ quote
             add-duration (get-time!) 7 :days
           :schema $ :: 'Fn $ {} (:return 'calcit.std.date/Date0)
@@ -44,14 +44,13 @@
           :examples $ [] $ quote
             format-time (get-time!) (%some |%Y-%m-%d)
           :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'calcit.std.date/Date0 $ :: 'Option 'String
+            :args $ [] 'calcit.std.date/Date0 $ :: 'calcit.core/Option 'String
         'from-ymd $ %{} 'CodeEntry
           :doc "|Create Date object from year, month, day. Args: year, month (1-12), day (1-31). Example: (from-ymd 2024 1 15)"
           :code $ quote $ defn from-ymd (y m d)
             match
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |from_ymd y m d
-              (:single d)
-                %{} Date0 $ :date d
+              (:single d) (Date0 :date d)
               (:ambiguous a b)
                 raise $ str "|ambiguous: " a "| " b
               (:none) (raise "|cannot construct")
@@ -65,8 +64,7 @@
           :code $ quote $ defn from-ywd (y w d)
             match
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |from_ywd y w d
-              (:single d)
-                %{} Date0 $ :date d
+              (:single d) (Date0 :date d)
               (:ambiguous a b)
                 raise $ str "|ambiguous: " a "| " b
               (:none) (raise "|cannot construct")
@@ -94,7 +92,7 @@
         'parse-time $ %{} 'CodeEntry
           :doc "|Parse time string to Date object. Args: time string, format string (e.g. %Y-%m-%d %H:%M:%S %z). Example: (parse-time \"|2024-01-01 12:00:00 +00:00\" \"|%Y-%m-%d %H:%M:%S %z\")"
           :code $ quote $ defn parse-time (time format)
-            %{} Date0 $ :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |parse_time time format
+            Date0 :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |parse_time time format
           :examples $ [] $ quote (parse-time "|2024-01-01 12:00:00 +00:00" "|%Y-%m-%d %H:%M:%S %z")
           :schema $ :: 'Fn $ {} (:return 'calcit.std.date/Date0)
             :args $ [] 'String 'String
@@ -270,7 +268,7 @@
           :examples $ [] $ quote
             execute! ([] |ls |-la) (%none)
           :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'List 'String) (:: 'Option 'String)
+            :args $ [] (:: 'List 'String) (:: 'calcit.core/Option 'String)
             :features $ #{} :js-ffi
             :return $ :: 'List 'String
         'on-ctrl-c $ %{} 'CodeEntry
@@ -281,7 +279,7 @@
             let
                 task $ on-ctrl-c $ fn () (println |Exiting...)
               task.cancel-with :example-complete
-          :schema $ :: 'Fn $ {} (:return 'FfiTask)
+          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
             :args $ [] $ :: 'Fn
               {} (:return 'Unit)
                 :args $ []
@@ -296,11 +294,11 @@
               [] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2"
               fn (event) (println |received-ProcessOutput event)
               %none
-          :schema $ :: 'Fn $ {} (:return 'FfiTask)
+          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
             :args $ [] (:: 'List 'String)
               :: 'Fn $ {} (:return 'Unit)
                 :args $ [] 'calcit.std.process/ProcessOutput
-              :: 'Option 'String
+              :: 'calcit.core/Option 'String
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.process
@@ -316,7 +314,7 @@
           :examples $ [] $ quote
             nanoid! (%some 10) (%none)
           :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] (:: 'Option 'Number) (:: 'Option 'String)
+            :args $ [] (:: 'calcit.core/Option 'Number) (:: 'calcit.core/Option 'String)
             :features $ #{} :js-ffi
         'rand $ %{} 'CodeEntry
           :doc "|Generate a random float. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand (%some 10) (%some 100))."
@@ -325,7 +323,7 @@
           :examples $ [] $ quote
             rand (%some 10) (%some 100)
           :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] (:: 'Option 'Number) (:: 'Option 'Number)
+            :args $ [] (:: 'calcit.core/Option 'Number) (:: 'calcit.core/Option 'Number)
             :features $ #{} :js-ffi
         'rand-between $ %{} 'CodeEntry (:doc "|Generate random float between from and to.")
           :code $ quote $ defn rand-between (x y)
@@ -350,7 +348,7 @@
           :examples $ [] $ quote
             rand-int (%some 100) (%none)
           :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] (:: 'Option 'Number) (:: 'Option 'Number)
+            :args $ [] (:: 'calcit.core/Option 'Number) (:: 'calcit.core/Option 'Number)
             :features $ #{} :js-ffi
         'rand-nth $ %{} 'CodeEntry
           :doc "|Randomly select one element from a list. Returns %none when the list is empty."
@@ -364,7 +362,7 @@
           :schema $ :: 'Fn $ {}
             :args $ [] $ :: 'List 'T
             :generics $ [] 'T
-            :return $ :: 'Option 'T
+            :return $ :: 'calcit.core/Option 'T
         'rand-shift $ %{} 'CodeEntry
           :doc "|Generate random float within center ± shift range."
           :code $ quote $ defn rand-shift (x y)
@@ -399,13 +397,12 @@
             :args $ []
         'test-path $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn test-path ()
-            do
-              assert= |a/b $ join-path |a |b
-              assert= |a $ join-path |a
-              assert= |a/b/c $ join-path |a |b |c
-              assert= |a/b $ path-dirname |a/b/c
-              assert= |c $ path-basename |a/b/c
-              , &unit
+            assert= |a/b $ join-path |a |b
+            assert= |a $ join-path |a
+            assert= |a/b/c $ join-path |a |b |c
+            assert= |a/b $ path-dirname |a/b/c
+            assert= |c $ path-basename |a/b/c
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
@@ -413,6 +410,7 @@
         'try-ctrlc! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn try-ctrlc! ()
             on-ctrl-c $ fn () $ println "|TODO handler..."
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
@@ -427,6 +425,7 @@
           :code $ quote $ defn try-time! ()
             set-timeout 4000 $ fn () $ println |doing
             set-interval 2000 $ fn () $ println "|DO Do Do"
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
@@ -563,7 +562,7 @@
             let
                 task $ set-interval 10 $ fn () (println |tick)
               task.cancel-with :example-complete
-          :schema $ :: 'Fn $ {} (:return 'FfiTask)
+          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
             :args $ [] 'Number $ :: 'Fn
               {} (:return 'Unit)
                 :args $ []
@@ -576,7 +575,7 @@
             let
                 task $ set-timeout 10 $ fn () (println |timeout)
               task.cancel-with :example-complete
-          :schema $ :: 'Fn $ {} (:return 'FfiTask)
+          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
             :args $ [] 'Number $ :: 'Fn
               {} (:return 'Unit)
                 :args $ []
