@@ -30,7 +30,7 @@ jobs:
 
       - name: Verify released tool versions
         run: |
-          test "$(calcit --version)" = "0.19.1"
+          test "$(calcit --version)" = "0.27.0"
           test "$(caps --version)" = "caps 0.1.1"
 
       - name: Install the production FFI generator
@@ -77,6 +77,6 @@ jobs:
           calcit --trace-ffi calcit.cirru eval --dep ./ -- 'ns app.main $ :require
             calcit.std.rand :refer $ rand rand-int rand-nth
 
-          println (rand-nth $ range 10) (rand (%none) (%none)) (rand-int (%some 10) (%none))'
+          println (rand-nth $ range 10) (rand (Option :none) (Option :none)) (rand-int (Option :some 10) (Option :none))'
 
       - run: calcit calcit.cirru

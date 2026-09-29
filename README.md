@@ -49,7 +49,7 @@ process output、timer 与 Ctrl+C 普通事件在等待 host queue 时会检查�
 状态，最长 10ms 响应一次；持续 `QUEUE_FULL` 默认 5 秒后失败。terminal
 `complete` / `fail` 不应用业务取消 predicate，确保任务可靠收尾。
 
-要求 Calcit `0.19.1`。项目在 `--strict-types` 下保持零类型债务，不使用
+要求 Calcit `0.27.0`。项目在默认严格模式下保持零类型债务，不使用
 `--compat-types`；可选参数使用 `Option`，集合 schema 均声明具体元素类型。
 
 Ordinary process-output, timer, and Ctrl+C events observe their own
@@ -58,7 +58,7 @@ between checks; persistent `QUEUE_FULL` fails after the default five-second
 deadline. Terminal `complete` / `fail` events do not use the business
 cancellation predicate, ensuring reliable task cleanup.
 
-Calcit `0.19.1` is required. The project passes the zero-debt `--strict-types`
+Calcit `0.27.0` is required. The project passes the zero-debt strict
 gate without `--compat-types`; optional parameters use `Option`, and collection
 schemas declare concrete element types.
 
@@ -107,12 +107,12 @@ calcit.std.fs/read-file-by-line! a $ fn (line) (println line)
 ```
 
 ```cirru.no-check
-calcit.std.process/execute! ([] |ls |-la) (%none)
+calcit.std.process/execute! ([] |ls |-la) (Option :none)
 
 def process-task $ calcit.std.process/stream!
   [] |sh |-c "|printf 'ready\\n'; exec sleep 5"
   fn (event) (println event)
-  , (%none)
+  , (Option :none)
 
 process-task.cancel-with :shutdown
 ```
@@ -136,7 +136,7 @@ calcit.std.date/get-time!
 
 calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
 
-calcit.std.date/format-time (calcit.std.date/get-time!) (%some "|%Y-%m-%d %H:%M:%S %z")
+calcit.std.date/format-time (calcit.std.date/get-time!) (Option :some "|%Y-%m-%d %H:%M:%S %z")
 
 calcit.std.date/extract-time $ calcit.std.date/get-time!
 ; {} (:minute 6) (:hour 16) (:month 11) (:second 48) (:day 10)
@@ -150,21 +150,21 @@ calcit.std.date/add-duration (calcit.std.date/get-time!) 4 :days
 ```
 
 ```cirru
-calcit.std.rand/rand (%none) (%none)
-calcit.std.rand/rand (%some 10) (%none)
-calcit.std.rand/rand (%some 10) (%some 100) (; "from 10 to 100")
+calcit.std.rand/rand (Option :none) (Option :none)
+calcit.std.rand/rand (Option :some 10) (Option :none)
+calcit.std.rand/rand (Option :some 10) (Option :some 100) (; "from 10 to 100")
 
-calcit.std.rand/rand-int (%none) (%none)
-calcit.std.rand/rand-int (%some 10) (%none)
-calcit.std.rand/rand-int (%some 10) (%some 100) (; "from 10 to 100")
+calcit.std.rand/rand-int (Option :none) (Option :none)
+calcit.std.rand/rand-int (Option :some 10) (Option :none)
+calcit.std.rand/rand-int (Option :some 10) (Option :some 100) (; "from 10 to 100")
 
 calcit.std.rand/rand-nth ([] 1 2 3)
 calcit.std.rand/rand-shift 10 4 (; "10+-4")
 calcit.std.rand/rand-between 10 20
 
-calcit.std.rand/nanoid! (%none) (%none)
-calcit.std.rand/nanoid! (%some 9) (%none)
-calcit.std.rand/nanoid! (%some 9) (%some |abcd) (; "charset")
+calcit.std.rand/nanoid! (Option :none) (Option :none)
+calcit.std.rand/nanoid! (Option :some 9) (Option :none)
+calcit.std.rand/nanoid! (Option :some 9) (Option :some |abcd) (; "charset")
 
 calcit.std.rand/rand-hex-color!
 ```
