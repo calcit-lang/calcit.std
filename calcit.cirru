@@ -38,11 +38,11 @@
             :features $ #{} :js-ffi
             :return $ :: 'Map 'Tag 'Number
         'format-time $ %{} 'CodeEntry
-          :doc "|Format Date object to string. The optional format is Option<String>; %none uses ISO format, for example (format-time (get-time!) (%some \"|%Y-%m-%d\"))."
+          :doc "||Format Date object to string. The optional format is Option<String>; (Option :none) uses ISO format, for example (format-time (get-time!) (Option :some \"|%Y-%m-%d\"))."
           :code $ quote $ defn format-time (time format)
             &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |format_time (:date time) format
           :examples $ [] $ quote
-            format-time (get-time!) (%some |%Y-%m-%d)
+            format-time (get-time!) (Option :some |%Y-%m-%d)
           :schema $ :: 'Fn $ {} (:return 'String)
             :args $ [] 'calcit.std.date/Date0 $ :: 'calcit.core/Option 'String
         'from-ymd $ %{} 'CodeEntry
@@ -261,12 +261,12 @@
           :examples $ []
           :schema $ :: 'Enum
         'execute! $ %{} 'CodeEntry
-          :doc "|Execute a command from a List<String>. The optional working directory defaults to ./; pass %some path to override it. Returns [stdout stderr]."
+          :doc "||Execute a command from a List<String>. The optional working directory defaults to ./; pass (Option :some path) to override it. Returns [stdout stderr]."
           :code $ quote $ defn execute! (command dir)
             assert "|command in list" $ and (list? command) (every? command string?)
             &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (option:unwrap-or dir |./) command
           :examples $ [] $ quote
-            execute! ([] |ls |-la) (%none)
+            execute! ([] |ls |-la) (Option :none)
           :schema $ :: 'Fn $ {}
             :args $ [] (:: 'List 'String) (:: 'calcit.core/Option 'String)
             :features $ #{} :js-ffi
@@ -293,7 +293,7 @@
             stream!
               [] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2"
               fn (event) (println |received-ProcessOutput event)
-              %none
+              Option :none
           :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
             :args $ [] (:: 'List 'String)
               :: 'Fn $ {} (:return 'Unit)
@@ -312,24 +312,24 @@
           :code $ quote $ defn nanoid! (size chars)
             &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |call_nanoid size chars
           :examples $ [] $ quote
-            nanoid! (%some 10) (%none)
+            nanoid! (Option :some 10) (Option :none)
           :schema $ :: 'Fn $ {} (:return 'String)
             :args $ [] (:: 'calcit.core/Option 'Number) (:: 'calcit.core/Option 'String)
             :features $ #{} :js-ffi
         'rand $ %{} 'CodeEntry
-          :doc "|Generate a random float. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand (%some 10) (%some 100))."
+          :doc "||Generate a random float. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand (Option :some 10) (Option :some 100))."
           :code $ quote $ defn rand (from to)
             &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand from to
           :examples $ [] $ quote
-            rand (%some 10) (%some 100)
+            rand (Option :some 10) (Option :some 100)
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] (:: 'calcit.core/Option 'Number) (:: 'calcit.core/Option 'Number)
             :features $ #{} :js-ffi
         'rand-between $ %{} 'CodeEntry (:doc "|Generate random float between from and to.")
           :code $ quote $ defn rand-between (x y)
             &+ x $ rand
-              %some $ &- y x
-              %none
+              Option :some $ &- y x
+              Option :none
           :examples $ [] $ quote (rand-between 10 20)
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number 'Number
@@ -342,21 +342,21 @@
             :args $ []
             :features $ #{} :js-ffi
         'rand-int $ %{} 'CodeEntry
-          :doc "|Generate a random integer. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand-int (%some 10) (%some 100))."
+          :doc "||Generate a random integer. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand-int (Option :some 10) (Option :some 100))."
           :code $ quote $ defn rand-int (from to)
             &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand_int from to
           :examples $ [] $ quote
-            rand-int (%some 100) (%none)
+            rand-int (Option :some 100) (Option :none)
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] (:: 'calcit.core/Option 'Number) (:: 'calcit.core/Option 'Number)
             :features $ #{} :js-ffi
         'rand-nth $ %{} 'CodeEntry
-          :doc "|Randomly select one element from a list. Returns %none when the list is empty."
+          :doc "||Randomly select one element from a list. Returns (Option :none) when the list is empty."
           :code $ quote $ defn rand-nth (xs)
-            if (&list:empty? xs) (%none)
+            if (&list:empty? xs) (Option :none)
               get xs $ rand-int
-                %some $ &list:count xs
-                %none
+                Option :some $ &list:count xs
+                Option :none
           :examples $ [] $ quote
             rand-nth $ [] 1 2 3 4 5
           :schema $ :: 'Fn $ {}
@@ -368,8 +368,8 @@
           :code $ quote $ defn rand-shift (x y)
             &+ (&- x y)
               rand
-                %some $ &* 2 y
-                %none
+                Option :some $ &* 2 y
+                Option :none
           :examples $ [] $ quote (rand-shift 10 2)
           :schema $ :: 'Fn $ {} (:return 'Number)
             :args $ [] 'Number 'Number
@@ -441,17 +441,17 @@
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (println &newline "|%%%% test date")
             println "|GET TIME" $ get-time!
-            echo |time: $ format-time (get-time!) (%some "|%Y-%m-%d %H:%M:%S %z")
+            echo |time: $ format-time (get-time!) (Option :some "|%Y-%m-%d %H:%M:%S %z")
             assert= 1417176009000 $ get-timestamp $ parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
             w-log $ extract-time $ get-time!
             w-log $ from-ymd 2021 11 11
             w-log $ from-ywd 2021 45 6
-            w-log $ format-time (from-ywd 2022 1 2) (%some "|%Y-%m-%d %H-%M")
+            w-log $ format-time (from-ywd 2022 1 2) (Option :some "|%Y-%m-%d %H-%M")
             println $ format-time
               add-duration
                 add-duration (get-time!) 1 :hours
                 , 2 :minutes
-              %some "|%Y-%m-%d %H-%M"
+              Option :some "|%Y-%m-%d %H-%M"
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
@@ -477,7 +477,7 @@
               println |lines @*c
             println (path-exists? |README.md) (path-exists? |build.js)
             println $ read-dir! |./
-            println |dirs: $ execute! ([] |ls) (%none)
+            println |dirs: $ execute! ([] |ls) (Option :none)
             println "|all paths size:" $ count $ walk-dir! |target
             println "|rs files:" $ glob! |src/*.rs
             create-dir! |target/dir1
@@ -502,7 +502,7 @@
             stream!
               [] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2"
               fn (event) (println |received-ProcessOutput event)
-              %none
+              Option :none
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -515,16 +515,16 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (println "|%%%%%% test random")
             assert-detect identity $ option:some? $ rand-nth (range 10)
-            assert= (%none)
+            assert= (Option :none)
               rand-nth $ take (range 1) 0
             assert-detect identity $ <= 0
-              rand (%none) (%none)
+              rand (Option :none) (Option :none)
               , 100
             assert-detect identity $ <= 0
-              rand (%some 10) (%none)
+              rand (Option :some 10) (Option :none)
               , 10
             assert-detect identity $ <= 20
-              rand (%some 20) (%some 30)
+              rand (Option :some 20) (Option :some 30)
               , 30
             assert "|try .rand-shift" $ &let
               x $ rand-shift 10 5
@@ -533,17 +533,17 @@
               x $ rand-between 10 5
               and (>= x 5) (<= x 10)
             assert-detect identity $ <= 0
-              rand-int (%none) (%none)
+              rand-int (Option :none) (Option :none)
               , 100
             assert-detect identity $ <= 0
-              rand-int (%some 10) (%none)
+              rand-int (Option :some 10) (Option :none)
               , 10
             assert-detect identity $ <= 20
-              rand-int (%some 20) (%some 30)
+              rand-int (Option :some 20) (Option :some 30)
               , 30
             println "|%%%% test id"
-            assert= 9 $ count $ nanoid! (%some 9) (%none)
-            assert= |aaaaa $ nanoid! (%some 5) (%some |a)
+            assert= 9 $ count $ nanoid! (Option :some 9) (Option :none)
+            assert= |aaaaa $ nanoid! (Option :some 5) (Option :some |a)
             println $ rand-hex-color!
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)

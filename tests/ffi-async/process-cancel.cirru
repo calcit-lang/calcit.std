@@ -8,7 +8,7 @@ let
       fn (event)
         println event
         , &unit
-      , (%none)
+      , (Option :none)
   set-timeout 100 $ fn ()
     .cancel-with task :smoke-complete
     , &unit
