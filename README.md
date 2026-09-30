@@ -49,7 +49,7 @@ process output、timer 与 Ctrl+C 普通事件在等待 host queue 时会检查�
 状态，最长 10ms 响应一次；持续 `QUEUE_FULL` 默认 5 秒后失败。terminal
 `complete` / `fail` 不应用业务取消 predicate，确保任务可靠收尾。
 
-要求 Calcit `0.27.0`。项目在默认严格模式下保持零类型债务，不使用
+当前迁移候选固定使用 Calcit `0.28.0-alpha.2`（预发布）。项目在默认严格模式下保持零类型债务，不使用
 `--compat-types`；可选参数使用 `Option`，集合 schema 均声明具体元素类型。
 
 Ordinary process-output, timer, and Ctrl+C events observe their own
@@ -58,7 +58,7 @@ between checks; persistent `QUEUE_FULL` fails after the default five-second
 deadline. Terminal `complete` / `fail` events do not use the business
 cancellation predicate, ensuring reliable task cleanup.
 
-Calcit `0.27.0` is required. The project passes the zero-debt strict
+This migration candidate pins prereleased Calcit `0.28.0-alpha.2`. The project passes the zero-debt strict
 gate without `--compat-types`; optional parameters use `Option`, and collection
 schemas declare concrete element types.
 
@@ -89,13 +89,13 @@ module copy.
 Providing:
 
 ```cirru.no-check
-calcit.std.fs/read-file! a
+calcit.std.fs/read-file a
 calcit.std.fs/write-file! a b
 calcit.std.fs/append-file! a b
 calcit.std.fs/check-write-file! a b
 calcit.std.fs/path-exists? a
-calcit.std.fs/read-dir! a
-calcit.std.fs/walk-dir! a
+calcit.std.fs/read-dir a
+calcit.std.fs/walk-dir a
 calcit.std.fs/glob! |src/*.rs
 
 calcit.std.fs/create-dir! path
@@ -105,6 +105,22 @@ calcit.std.fs/rename! from to
 
 calcit.std.fs/read-file-by-line! a $ fn (line) (println line)
 ```
+
+同步读取首选 `read-file/read-dir/walk-dir`，不是因为可能失败就加 `!`。
+它们仍经由相同 native C-safe ABI，返回 `String/List<String>`，失败抛错，
+不是 core `FsPath` 的 Result 接口。旧 `read-file!/read-dir!/walk-dir!` 标记
+弃用并保留为实现引用，迁移窗口与真实消费者门禁完成前不删除。
+`read-file-by-line!` 逐行执行调用方 callback，是单独的 blocking 协议；本批不改名
+或改变它的取消、错误和内存行为。目录读取不承诺顺序。
+
+现有 CLI 可查询具体模块入口并执行附带语义测试：
+
+```bash
+calcit calcit.cirru query context calcit.std.fs/read-file --format edn
+calcit calcit.cirru test --tag filesystem --require-match
+```
+
+部署前固定匹配的已发布 CLI，不把本地 unreleased 编译产物当正式兼容证据。
 
 ```cirru.no-check
 calcit.std.process/execute! ([] |ls |-la) (Option :none)

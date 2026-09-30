@@ -24,13 +24,13 @@ jobs:
           toolchain: stable
           components: clippy
 
-      - uses: calcit-lang/setup-calcit@ca701be5a471759e442aa053cd100720bbe1f09f # v1
+      - uses: calcit-lang/setup-calcit@ca701be5a471759e442aa053cd100720bbe1f09f # v1.5.0; immutable action revision
         with:
           tools: calcit,caps
 
       - name: Verify released tool versions
         run: |
-          test "$(calcit --version)" = "0.27.0"
+          test "$(calcit --version)" = "0.28.0-alpha.2"
           test "$(caps --version)" = "caps 0.1.1"
 
       - name: Install the production FFI generator
@@ -44,6 +44,7 @@ jobs:
           calcit calcit.cirru --check-only --strict-types
           calcit calcit.cirru analyze quality --format json
           calcit calcit.cirru analyze check-types --summary-only --format json
+          calcit calcit.cirru analyze check-public --ns calcit.std.fs --format json
           mkdir -p target/ffi-interface
           calcit calcit.cirru ffi export --json --ns calcit.std.hash > target/ffi-interface/calcit-std-hash.json
           calcit-bindgen check target/ffi-interface/calcit-std-hash.json --out generated/ffi --backend rust
@@ -69,6 +70,21 @@ jobs:
       - run: caps --strict --ci
 
       - run: bash scripts/check-c-safe-ffi.sh
+
+      - name: Validate definition-attached filesystem contracts
+        run: calcit calcit.cirru test --tag filesystem --require-match
+
+      - name: Reject invalid read parameters before FFI
+        run: |
+          for reader in read-file read-dir walk-dir 'read-file!' 'read-dir!' 'walk-dir!'; do
+            if calcit calcit.cirru eval --dep ./ -- "ns app.main \$ :require \$ calcit.std.fs :as fs
+          fs/$reader 3" >target/read-type-negative.log 2>&1; then
+              echo "Invalid Number argument unexpectedly accepted by $reader" >&2
+              exit 1
+            fi
+            grep -F '[W_FN_ARG_TYPE_MISMATCH]' target/read-type-negative.log
+            grep -F "calcit.std.fs/$reader" target/read-type-negative.log
+          done
 
       - run: bash scripts/check-c-safe-async.sh
 
