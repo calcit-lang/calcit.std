@@ -17,7 +17,6 @@ entry_for:
   - "calcit.std.process"
   - "calcit.std.time"
   - "calcit.std.date"
-  - "calcit.std.json"
   - "calcit.std.path"
 ---
 
@@ -31,7 +30,7 @@ entry_for:
 - `calcit.std.process`: synchronous execution and cancellable streamed output.
 - `calcit.std.time`: cancellable timeout and interval tasks.
 - `calcit.std.date`: typed Date values, parsing, formatting, extraction, and arithmetic.
-- `calcit.std.json`: JSON parsing and formatting at external boundaries.
+- JSON 解析/序列化使用 core 的受审阅边界，不再引用已删除的 `calcit.std.json`；开放解析结果仍须在进入业务层前 decode 到具体类型。
 - `calcit.std.path`: platform-aware path composition and inspection.
 - `calcit.std.rand` and `calcit.std.hash`: random identifiers and hashing helpers.
 
@@ -72,5 +71,11 @@ task.cancel-with :reload
 Cancellation stops ordinary events while preserving exactly one terminal completion or failure event. Queue backpressure is bounded; do not treat a pending callback as durable application state.
 
 ## Storage boundary
+
+同步读取使用 `calcit.std.fs/read-file/read-dir/walk-dir`，返回具体 `String`
+或 `List<String>`，失败沿 native FFI 抛错。`!` 不表示任何可能失败的读取；
+旧读取名只是带弃用提示的过渡引用。新旧入口不改宿主 symbol，也不把 native
+接口改成 core `FsPath` 的 Result 模型。callback 流式 `read-file-by-line!`
+继续保持独立 blocking 契约。
 
 Use filesystem APIs to persist a fully validated serialized value. Write to a snapshot copy during migrations, verify decode/encode equivalence, then replace the live file atomically. Persistent schema evolution belongs to the application, not `calcit.std.fs`.

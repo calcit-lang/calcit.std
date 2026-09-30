@@ -3,11 +3,11 @@
   :about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --contract` before mutations; use `--full` for first orientation or changed contract digest. Manual edits must follow format and schema conventions, then run `calcit edit format`."
   :package |calcit.std
   :entries $ {}
-    :default $ {} (:description |) (:init-fn 'calcit.std.test/main!) (:mode :native) (:reload-fn 'calcit.std.test/reload!)
+    :default $ {} (:description |) (:init-fn 'calcit.std.test/main!) (:mode :native) (:reload-fn 'calcit.std.test/reload!) (:target :native)
       :feature-policy $ {}
       :modules $ []
       :type-slots $ {}
-    :stream-process $ {} (:description |) (:init-fn 'calcit.std.test.process/main!) (:mode :native) (:reload-fn 'calcit.std.test.process/main!)
+    :stream-process $ {} (:description |) (:init-fn 'calcit.std.test.process/main!) (:mode :native) (:reload-fn 'calcit.std.test.process/main!) (:target :native)
       :feature-policy $ {}
       :modules $ []
       :type-slots $ {}
@@ -153,23 +153,93 @@
           :schema $ :: 'Fn $ {} (:return 'Bool)
             :args $ [] 'String
             :features $ #{} :js-ffi
-        'read-dir! $ %{} 'CodeEntry
-          :doc "|Read directory contents and return a list of file/directory names. Example: (read-dir! \"src\")"
-          :code $ quote $ defn read-dir! (name)
+        'read-dir $ %{} 'CodeEntry
+          :doc "|通过 native 模块列出直接子路径，返回 List<String>，顺序不保证，失败抛错；不执行写入。"
+          :code $ quote $ defn read-dir (name)
             &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |read_dir name
-          :examples $ [] $ quote (read-dir! |src)
+          :examples $ [] $ quote (calcit.std.fs/read-dir |src)
           :schema $ :: 'Fn $ {}
             :args $ [] 'String
             :features $ #{} :js-ffi
             :return $ :: 'List 'String
-        'read-file! $ %{} 'CodeEntry
-          :doc "|Read entire file content as a string. Args: file path. Example: (read-file! \"README.md\")"
-          :code $ quote $ defn read-file! (name)
+          :tests $ []
+            %{} 'TestEntry (:name |lists-direct-children)
+              :code $ quote $ let
+                  items $ calcit.std.fs/read-dir |tests/fixtures/read-contracts
+                assert= 2 $ items.len
+                assert= true $ items.includes? |tests/fixtures/read-contracts/hello.txt
+                assert= true $ items.includes? |tests/fixtures/read-contracts/nested
+              :tags $ #{} :filesystem :unit
+            %{} 'TestEntry (:name |missing-path-throws)
+              :code $ quote $ let
+                  failed $ atom false
+                try (calcit.std.fs/read-dir |tests/fixtures/read-contracts/missing.txt)
+                  fn (message)
+                    hint-fn $ {}
+                      :args $ [] 'String
+                      :return $ :: 'List 'String
+                    assert= true $ message.includes? |read_dir_calcit_ffi_v1
+                    reset! failed true
+                    []
+                assert= true @failed
+              :tags $ #{} :filesystem :unit
+        'read-dir! $ %{} 'CodeEntry
+          :doc "|兼容入口，请改用 read-dir；读取失败仍抛错，结果顺序不保证。只在发布版消费者迁移及相关门禁完成后退场，不作为新代码首选。"
+          :code $ quote $ def read-dir! calcit.std.fs/read-dir
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'String
+            :features $ #{} :js-ffi
+            :return $ :: 'List 'String
+          :tags $ #{} :deprecated
+          :tests $ [] $ %{} 'TestEntry (:name |legacy-directory-read)
+            :code $ quote $ let
+                items $ calcit.std.fs/read-dir! |tests/fixtures/read-contracts
+              assert= 2 $ items.len
+              assert= true $ items.includes? |tests/fixtures/read-contracts/hello.txt
+              assert= true $ items.includes? |tests/fixtures/read-contracts/nested
+            :tags $ #{} :filesystem :unit
+        'read-file $ %{} 'CodeEntry
+          :doc "|通过 native 模块同步读取 UTF-8 文件，返回 String，失败抛错；不返回 Result，不执行写入。示例见 attached examples。"
+          :code $ quote $ defn read-file (name)
             &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |read_file name
-          :examples $ [] $ quote (read-file! |README.md)
+          :examples $ [] $ quote (calcit.std.fs/read-file |README.md)
           :schema $ :: 'Fn $ {} (:return 'String)
             :args $ [] 'String
             :features $ #{} :js-ffi
+          :tests $ []
+            %{} 'TestEntry (:name |reads-utf8-text)
+              :code $ quote $ assert= "|Calcit 😀 native read\n" (calcit.std.fs/read-file |tests/fixtures/read-contracts/hello.txt)
+              :tags $ #{} :filesystem :unit
+            %{} 'TestEntry (:name |missing-path-throws)
+              :code $ quote $ let
+                  failed $ atom false
+                try (calcit.std.fs/read-file |tests/fixtures/read-contracts/missing.txt)
+                  fn (message)
+                    hint-fn $ {}
+                      :args $ [] 'String
+                      :return 'String
+                    assert= true $ message.includes? |read_file_calcit_ffi_v1
+                    reset! failed true
+                    , |ignored
+                assert= true @failed
+              :tags $ #{} :filesystem :unit
+        'read-file! $ %{} 'CodeEntry
+          :doc "|兼容入口，请改用 read-file；读取失败仍抛错。只在发布版消费者迁移及相关门禁完成后退场，不作为新代码首选。"
+          :code $ quote $ def read-file! calcit.std.fs/read-file
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'String)
+            :args $ [] 'String
+            :features $ #{} :js-ffi
+          :tags $ #{} :deprecated
+          :tests $ [] $ %{} 'TestEntry (:name |legacy-call-and-callback)
+            :code $ quote $ let
+                path |tests/fixtures/read-contracts/hello.txt
+                expected $ calcit.std.fs/read-file path
+              assert= expected $ calcit.std.fs/read-file! path
+              assert= ([] expected)
+                map ([] path) calcit.std.fs/read-file!
+            :tags $ #{} :filesystem :unit
         'read-file-by-line! $ %{} 'CodeEntry
           :doc "|Streams a file lazily through the blocking C-safe FFI and calls the callback once per line. The callback receives String and returns Unit. Line terminators are removed like BufRead::lines; callback failure or host closing stops reading immediately. Peak native memory is bounded by the reader buffer plus the longest line."
           :code $ quote $ defn read-file-by-line! (name cb)
@@ -188,15 +258,52 @@
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'String 'String
             :features $ #{} :js-ffi
-        'walk-dir! $ %{} 'CodeEntry
-          :doc "|Recursively walk through directory and return all file paths. Example: (walk-dir! \"target\")"
-          :code $ quote $ defn walk-dir! (name)
+        'walk-dir $ %{} 'CodeEntry
+          :doc "|通过 native 模块递归列出文件路径，返回 List<String>，顺序不保证，失败抛错；不执行写入。"
+          :code $ quote $ defn walk-dir (name)
             &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |walk_dir name
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] 'String
             :features $ #{} :js-ffi
             :return $ :: 'List 'String
+          :tests $ []
+            %{} 'TestEntry (:name |lists-recursive-files)
+              :code $ quote $ let
+                  items $ calcit.std.fs/walk-dir |tests/fixtures/read-contracts
+                assert= 2 $ items.len
+                assert= true $ items.includes? |tests/fixtures/read-contracts/hello.txt
+                assert= true $ items.includes? |tests/fixtures/read-contracts/nested/second.txt
+              :tags $ #{} :filesystem :unit
+            %{} 'TestEntry (:name |missing-path-throws)
+              :code $ quote $ let
+                  failed $ atom false
+                try (calcit.std.fs/walk-dir |tests/fixtures/read-contracts/missing.txt)
+                  fn (message)
+                    hint-fn $ {}
+                      :args $ [] 'String
+                      :return $ :: 'List 'String
+                    assert= true $ message.includes? |walk_dir_calcit_ffi_v1
+                    reset! failed true
+                    []
+                assert= true @failed
+              :tags $ #{} :filesystem :unit
+        'walk-dir! $ %{} 'CodeEntry
+          :doc "|兼容入口，请改用 walk-dir；遍历失败仍抛错，结果顺序不保证。只在发布版消费者迁移及相关门禁完成后退场，不作为新代码首选。"
+          :code $ quote $ def walk-dir! calcit.std.fs/walk-dir
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'String
+            :features $ #{} :js-ffi
+            :return $ :: 'List 'String
+          :tags $ #{} :deprecated
+          :tests $ [] $ %{} 'TestEntry (:name |legacy-recursive-read)
+            :code $ quote $ let
+                items $ calcit.std.fs/walk-dir! |tests/fixtures/read-contracts
+              assert= 2 $ items.len
+              assert= true $ items.includes? |tests/fixtures/read-contracts/hello.txt
+              assert= true $ items.includes? |tests/fixtures/read-contracts/nested/second.txt
+            :tags $ #{} :filesystem :unit
         'write-file! $ %{} 'CodeEntry
           :doc "|Write content to file (overwrite). Args: file path, content string. Example: (write-file! \"output.txt\" \"Hello, World!\")"
           :code $ quote $ defn write-file! (name content)
@@ -469,16 +576,16 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (println "|%%%% test for fs") (println calcit-filename calcit-dirname)
             println $ >
-              count $ read-file! |README.md
+              count $ calcit.std.fs/read-file |README.md
               , 1000
             let
                 *c $ atom 0
               read-file-by-line! |README.md $ fn (line) (; println "|readling line:" line) (swap! *c inc)
               println |lines @*c
             println (path-exists? |README.md) (path-exists? |build.js)
-            println $ read-dir! |./
+            println $ calcit.std.fs/read-dir |./
             println |dirs: $ execute! ([] |ls) (Option :none)
-            println "|all paths size:" $ count $ walk-dir! |target
+            println "|all paths size:" $ count $ calcit.std.fs/walk-dir |target
             println "|rs files:" $ glob! |src/*.rs
             create-dir! |target/dir1
             rename! |target/dir1 |target/dir4
@@ -492,7 +599,7 @@
         :code $ quote $ ns calcit.std.test.fs
           :require
             calcit.std.$meta :refer $ calcit-filename calcit-dirname
-            calcit.std.fs :refer $ read-file! append-file! write-file! path-exists? read-dir! create-dir! create-dir-all! rename! check-write-file! walk-dir! glob! read-file-by-line!
+            calcit.std.fs :refer $ append-file! write-file! path-exists? create-dir! create-dir-all! rename! check-write-file! glob! read-file-by-line!
             calcit.std.process :refer $ execute!
     'calcit.std.test.process $ %{} 'FileEntry
       :defs $ {} $ 'main!
