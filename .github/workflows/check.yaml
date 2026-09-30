@@ -24,7 +24,7 @@ jobs:
           toolchain: stable
           components: clippy
 
-      - uses: calcit-lang/setup-calcit@v1.5.0
+      - uses: calcit-lang/setup-calcit@ca701be5a471759e442aa053cd100720bbe1f09f # v1.5.0; immutable action revision
         with:
           tools: calcit,caps
 
