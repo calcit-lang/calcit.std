@@ -13,43 +13,40 @@ permissions:
 jobs:
   build_and_test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - uses: actions/checkout@v7.0.1
         with:
           persist-credentials: false
 
-      - uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87 # stable
+      - uses: dtolnay/rust-toolchain@v1
         with:
           toolchain: stable
           components: clippy
 
-      - uses: calcit-lang/setup-calcit@ca701be5a471759e442aa053cd100720bbe1f09f # v1.5.0; immutable action revision
+      - uses: calcit-lang/setup-calcit@v1.5.0
         with:
           tools: calcit,caps
-
-      - name: Verify released tool versions
-        run: |
-          test "$(calcit --version)" = "0.28.0-alpha.3"
-          test "$(caps --version)" = "caps 0.1.1"
+          version: "0.28.0"
+          caps-version: "0.1.1"
 
       - name: Install the production FFI generator
         run: cargo install calcit-bindgen --version 0.1.1 --locked
 
       - name: Validate Calcit snapshot and type baseline
         run: |
-          caps --ci
+          caps --strict --ci
           calcit calcit.cirru edit format
           git diff --exit-code -- calcit.cirru
           calcit calcit.cirru --check-only --strict-types
           calcit calcit.cirru analyze quality --format json
-          calcit calcit.cirru analyze check-types --summary-only --format json
-          calcit calcit.cirru analyze check-public --ns calcit.std.fs --format json
+          calcit calcit.cirru analyze check-public --ns calcit.std.fs --ns calcit.std.date --ns calcit.std.hash --ns calcit.std.path --ns calcit.std.process --ns calcit.std.rand --ns calcit.std.time --ns calcit.std.util --summary-only --format json
           mkdir -p target/ffi-interface
           calcit calcit.cirru ffi export --json --ns calcit.std.hash > target/ffi-interface/calcit-std-hash.json
           calcit-bindgen check target/ffi-interface/calcit-std-hash.json --out generated/ffi --backend rust
 
-      - run: cargo build --release
+      - run: cargo fmt --check && cargo build --release
 
       - run: cargo test
 
@@ -66,8 +63,6 @@ jobs:
           calcit calcit.cirru analyze check-examples --ns calcit.std.process --def on-ctrl-c
           calcit calcit.cirru analyze check-examples --ns calcit.std.time --def set-timeout
           calcit calcit.cirru analyze check-examples --ns calcit.std.time --def set-interval
-
-      - run: caps --strict --ci
 
       - run: bash scripts/check-c-safe-ffi.sh
 

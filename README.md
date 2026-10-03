@@ -6,7 +6,7 @@
 
 ### 0.2.36 发布准备
 
-本模块版本固定使用已发布 Calcit `0.28.0-alpha.3`，包含同步读取首选名称 `read-file/read-dir/walk-dir` 及九项附带文件系统测试，保留旧 `!` helper 的迁移窗口；native ABI、宿主符号、失败及取消语义不变。Rust crate 版本和 `deps.cirru` 模块版本同步为 `0.2.36`。只有发布准备 PR 通过审查、精确 main CI 成功及同名 annotated tag/Release 发布后，下游才应升级；旧 `0.2.35` tag 不改写。core 的 alpha 不代表 Calcit 0.28 milestone 已完成。
+本模块使用正式 Calcit `0.28.0`，包含同步读取首选名称 `read-file/read-dir/walk-dir` 及九项附带文件系统测试，保留旧 `!` helper 的迁移窗口；native ABI、宿主符号、失败及取消语义不变。Rust crate 版本和 `deps.cirru` 模块版本同步为 `0.2.36`。下游依赖应使用实际发布的模块版本，不把 main 当作已发布版本，也不改写旧 `0.2.35` tag。
 
 ### Usages
 
@@ -53,7 +53,7 @@ process output、timer 与 Ctrl+C 普通事件在等待 host queue 时会检查�
 状态，最长 10ms 响应一次；持续 `QUEUE_FULL` 默认 5 秒后失败。terminal
 `complete` / `fail` 不应用业务取消 predicate，确保任务可靠收尾。
 
-当前迁移候选固定使用 Calcit `0.28.0-alpha.3`（预发布）。项目在默认严格模式下保持零类型债务，不使用
+当前工具链固定使用正式 Calcit `0.28.0`。项目在默认严格模式下保持零类型债务，不使用
 `--compat-types`；可选参数使用 `Option`，集合 schema 均声明具体元素类型。
 
 Ordinary process-output, timer, and Ctrl+C events observe their own
@@ -62,7 +62,7 @@ between checks; persistent `QUEUE_FULL` fails after the default five-second
 deadline. Terminal `complete` / `fail` events do not use the business
 cancellation predicate, ensuring reliable task cleanup.
 
-This migration candidate pins prereleased Calcit `0.28.0-alpha.3`. The project passes the zero-debt strict
+The toolchain pins released Calcit `0.28.0`. The project passes the zero-debt strict
 gate without `--compat-types`; optional parameters use `Option`, and collection
 schemas declare concrete element types.
 
