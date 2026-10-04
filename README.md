@@ -4,9 +4,11 @@
 >
 > Standard native module for Calcit on the Rust runtime.
 
-### 0.2.36 发布准备
+### 0.2.37 发布准备
 
-本模块使用正式 Calcit `0.28.0`，包含同步读取首选名称 `read-file/read-dir/walk-dir` 及九项附带文件系统测试，保留旧 `!` helper 的迁移窗口；native ABI、宿主符号、失败及取消语义不变。Rust crate 版本和 `deps.cirru` 模块版本同步为 `0.2.36`。下游依赖应使用实际发布的模块版本，不把 main 当作已发布版本，也不改写旧 `0.2.35` tag。
+本模块使用正式 Calcit `0.28.0`，包含同步读取首选名称 `read-file/read-dir/walk-dir` 及九项附带文件系统测试，并在异步示例中使用资源生命周期方法 `.cancel-with!`。旧读取 helper 和取消方法保留原有迁移窗口；native ABI、宿主符号、失败及取消语义不变。Rust crate 版本和 `deps.cirru` 模块版本同步为 `0.2.37`。
+
+下游依赖使用精确 tag `0.2.37` 与匹配的 Calcit `0.28.0`，在目标机器构建 native dylib。旧 `0.2.36` tag 对应 Calcit `0.28.0-alpha.3` 的预发布验证，保持原内容；不要用新 main 的检查结果代替该 tag 的契约。
 
 ### Usages
 
