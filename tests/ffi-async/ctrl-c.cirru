@@ -7,6 +7,6 @@ let
       println |ctrl-c-received
       , &unit
   set-timeout 2000 $ fn ()
-    .cancel-with task :smoke-complete
+    .cancel-with! task :smoke-complete
     , &unit
   println |ctrl-c-ready

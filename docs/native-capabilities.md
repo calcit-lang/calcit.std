@@ -65,10 +65,14 @@ Process streams, timers, and Ctrl-C subscriptions return typed `FfiTask` capabil
 def task $ calcit.std.time/set-interval 1000 $ fn ()
   println |tick
 
-task.cancel-with :reload
+task.cancel-with! :reload
 ```
 
 Cancellation stops ordinary events while preserving exactly one terminal completion or failure event. Queue backpressure is bounded; do not treat a pending callback as durable application state.
+
+取消任务使用 `.cancel!` 或携带原因的 `.cancel-with!`，`!` 表示显式资源生命周期操作，
+不是失败标记。它们与旧 `.cancel` / `.cancel-with` 指向同一 core 实现，
+不改变取消次数、事件顺序或 terminal completion/failure 语义；旧名仅用于迁移兼容。
 
 ## Storage boundary
 

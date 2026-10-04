@@ -134,7 +134,7 @@ def process-task $ calcit.std.process/stream!
   fn (event) (println event)
   , (Option :none)
 
-process-task.cancel-with :shutdown
+process-task.cancel-with! :shutdown
 ```
 
 JSON parsing and serialization now use the Calcit core APIs directly:
@@ -196,7 +196,7 @@ def timeout-task $ calcit.std.time/set-timeout 1000 $ fn ()
 def interval-task $ calcit.std.time/set-interval 1000 $ fn ()
   println |repeated
 
-interval-task.cancel-with :shutdown
+interval-task.cancel-with! :shutdown
 ```
 
 ```cirru
