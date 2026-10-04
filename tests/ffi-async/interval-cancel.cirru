@@ -6,6 +6,6 @@ let
       println |interval-fired
       , &unit
   set-timeout 30 $ fn ()
-    .cancel-with task :smoke-complete
+    .cancel-with! task :smoke-complete
     , &unit
   println |interval-started

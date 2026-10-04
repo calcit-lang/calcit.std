@@ -385,7 +385,7 @@
           :examples $ [] $ quote
             let
                 task $ on-ctrl-c $ fn () (println |Exiting...)
-              task.cancel-with :example-complete
+              task.cancel-with! :example-complete
           :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
             :args $ [] $ :: 'Fn
               {} (:return 'Unit)
@@ -668,7 +668,7 @@
           :examples $ [] $ quote
             let
                 task $ set-interval 10 $ fn () (println |tick)
-              task.cancel-with :example-complete
+              task.cancel-with! :example-complete
           :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
             :args $ [] 'Number $ :: 'Fn
               {} (:return 'Unit)
@@ -681,7 +681,7 @@
           :examples $ [] $ quote
             let
                 task $ set-timeout 10 $ fn () (println |timeout)
-              task.cancel-with :example-complete
+              task.cancel-with! :example-complete
           :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
             :args $ [] 'Number $ :: 'Fn
               {} (:return 'Unit)

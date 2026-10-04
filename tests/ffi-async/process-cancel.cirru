@@ -10,6 +10,6 @@ let
         , &unit
       , (Option :none)
   set-timeout 100 $ fn ()
-    .cancel-with task :smoke-complete
+    .cancel-with! task :smoke-complete
     , &unit
   println |process-stream-started
