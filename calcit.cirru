@@ -21,7 +21,7 @@
         'add-duration $ %{} 'CodeEntry
           :doc "|Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc). Example: (add-duration (get-time!) 7 :days)"
           :code $ quote $ defn add-duration (date n k)
-            Date0 :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |add_duration (:date date) n k
+            Date0 :date $ expect-number |calcit.std.date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |add_duration (:date date) n k
           :examples $ [] $ quote
             add-duration (get-time!) 7 :days
           :schema $ :: 'Fn $ {} (:return 'calcit.std.date/Date0)
@@ -50,7 +50,8 @@
           :code $ quote $ defn from-ymd (y m d)
             match
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |from_ymd y m d
-              (:single d) (Date0 :date d)
+              (:single d)
+                Date0 :date $ expect-number |calcit.std.date d
               (:ambiguous a b)
                 raise $ str "|ambiguous: " a "| " b
               (:none) (raise "|cannot construct")
@@ -64,7 +65,8 @@
           :code $ quote $ defn from-ywd (y w d)
             match
               &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |from_ywd y w d
-              (:single d) (Date0 :date d)
+              (:single d)
+                Date0 :date $ expect-number |calcit.std.date d
               (:ambiguous a b)
                 raise $ str "|ambiguous: " a "| " b
               (:none) (raise "|cannot construct")
@@ -76,7 +78,7 @@
         'get-time! $ %{} 'CodeEntry
           :doc "|Get current system time as a Date object. Example: (get-time!)"
           :code $ quote $ defn get-time! ()
-            Date0 :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |now_bang
+            Date0 :date $ expect-number |calcit.std.date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |now_bang
           :examples $ [] $ quote (get-time!)
           :schema $ :: 'Fn $ {} (:return 'calcit.std.date/Date0)
             :args $ []
@@ -92,7 +94,7 @@
         'parse-time $ %{} 'CodeEntry
           :doc "|Parse time string to Date object. Args: time string, format string (e.g. %Y-%m-%d %H:%M:%S %z). Example: (parse-time \"|2024-01-01 12:00:00 +00:00\" \"|%Y-%m-%d %H:%M:%S %z\")"
           :code $ quote $ defn parse-time (time format)
-            Date0 :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |parse_time time format
+            Date0 :date $ expect-number |calcit.std.date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |parse_time time format
           :examples $ [] $ quote (parse-time "|2024-01-01 12:00:00 +00:00" "|%Y-%m-%d %H:%M:%S %z")
           :schema $ :: 'Fn $ {} (:return 'calcit.std.date/Date0)
             :args $ [] 'String 'String
@@ -592,7 +594,7 @@
               , 1000
             let
                 *c $ atom 0
-              read-file-by-line! |README.md $ fn (line) (; println "|readling line:" line) (swap! *c inc)
+              read-file-by-line! |README.md $ fn (line) (; println "|readling line:" line) (swap! *c inc) &unit
               println |lines @*c
             println (path-exists? |README.md) (path-exists? |build.js)
             println $ calcit.std.fs/read-dir |./
@@ -711,19 +713,22 @@
             if (bool? value) value $ raise $ str label "| expected a Bool result, got: " value
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'String 'Dynamic
+            :args $ [] 'String 'T
+            :generics $ [] 'T
         'expect-number $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn expect-number (label value)
             if (number? value) value $ raise $ str label "| expected a Number result, got: " value
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'String 'Dynamic
+            :args $ [] 'String 'T
+            :generics $ [] 'T
         'expect-string $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn expect-string (label value)
             if (string? value) value $ raise $ str label "| expected a String result, got: " value
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String 'Dynamic
+            :args $ [] 'String 'T
+            :generics $ [] 'T
         'expect-string-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn expect-string-list (label value)
             if (list? value)
@@ -739,7 +744,8 @@
               raise $ str label "| expected a List result, got: " value
           :examples $ []
           :schema $ :: 'Fn $ {}
-            :args $ [] 'String 'Dynamic
+            :args $ [] 'String 'T
+            :generics $ [] 'T
             :return $ :: 'List 'String
         'expect-tag-number-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn expect-tag-number-map (label value)
@@ -762,11 +768,12 @@
               raise $ str label "| expected a Map result, got: " value
           :examples $ []
           :schema $ :: 'Fn $ {}
-            :args $ [] 'String 'Dynamic
+            :args $ [] 'String 'T
+            :generics $ [] 'T
             :return $ :: 'Map 'Tag 'Number
         'get-dylib-ext $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro get-dylib-ext ()
-            case-default (&get-os) |.so (:macos |.dylib) (:windows |.dll)
+            match (&get-os) (:macos |.dylib) (:windows |.dll) (_ |.so)
           :examples $ []
           :schema $ :: 'Macro $ {}
             :capabilities $ #{} :platform-read
