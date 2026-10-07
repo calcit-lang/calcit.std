@@ -107,7 +107,9 @@
         'append-file! $ %{} 'CodeEntry
           :doc "|Append content to end of file. Args: file path, content string. Example: (append-file! \"log.txt\" \"New log entry\")"
           :code $ quote $ defn append-file! (name content)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |append_file name content
+            &let
+              _result $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |append_file name content
+              , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'String 'String
@@ -115,7 +117,9 @@
         'check-write-file! $ %{} 'CodeEntry
           :doc "|Check if file exists, write content if not exists. Args: file path, content string."
           :code $ quote $ defn check-write-file! (name content)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |check_write_file name content
+            &let
+              _result $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |check_write_file name content
+              , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'String 'String
@@ -123,7 +127,9 @@
         'create-dir! $ %{} 'CodeEntry
           :doc "|Create a directory at the given path. Fails if parent directory does not exist. Example: (create-dir! \"new-folder\")"
           :code $ quote $ defn create-dir! (name)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |create_dir name
+            &let
+              _result $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |create_dir name
+              , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'String
@@ -131,7 +137,9 @@
         'create-dir-all! $ %{} 'CodeEntry
           :doc "|Create a directory and all necessary parent directories. Example: (create-dir-all! \"path/to/nested/dir\")"
           :code $ quote $ defn create-dir-all! (name)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |create_dir_all name
+            &let
+              _result $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |create_dir_all name
+              , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'String
@@ -253,7 +261,9 @@
         'rename! $ %{} 'CodeEntry
           :doc "|Rename or move a file/directory. Args: source path, destination path. Example: (rename! \"old.txt\" \"new.txt\")"
           :code $ quote $ defn rename! (from to)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rename_path from to
+            &let
+              _result $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rename_path from to
+              , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'String 'String
@@ -307,7 +317,9 @@
         'write-file! $ %{} 'CodeEntry
           :doc "|Write content to file (overwrite). Args: file path, content string. Example: (write-file! \"output.txt\" \"Hello, World!\")"
           :code $ quote $ defn write-file! (name content)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |write_file name content
+            &let
+              _result $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |write_file name content
+              , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'String 'String
@@ -322,7 +334,7 @@
         %{} 'CodeEntry
           :doc "|Calculate MD5 hash of a string. Returns 32-character hexadecimal string. Example: (md5 \"hello\")"
           :code $ quote $ defn md5 (s)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |md5 s
+            expect-string |calcit.std.hash/md5 $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |md5 s
           :examples $ [] $ quote (md5 |hello)
           :ffi $ {} (:backend :native) (:invoke :sync) (:kind :pure-function) (:symbol |md5) (:transport :edn-buffer-v1)
           :schema $ :: 'Fn $ {} (:return 'String)
