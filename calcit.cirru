@@ -30,7 +30,7 @@
         'extract-time $ %{} 'CodeEntry
           :doc "|Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields. Example: (extract-time (get-time!))"
           :code $ quote $ defn extract-time (x)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |extract_time $ :date x
+            expect-tag-number-map |calcit.std.date/extract-time $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |extract_time $ :date x
           :examples $ [] $ quote
             extract-time $ get-time!
           :schema $ :: 'Fn $ {}
@@ -40,7 +40,7 @@
         'format-time $ %{} 'CodeEntry
           :doc "||Format Date object to string. The optional format is Option<String>; (Option :none) uses ISO format, for example (format-time (get-time!) (Option :some \"|%Y-%m-%d\"))."
           :code $ quote $ defn format-time (time format)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |format_time (:date time) format
+            expect-string |calcit.std.date/format-time $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |format_time (:date time) format
           :examples $ [] $ quote
             format-time (get-time!) (Option :some |%Y-%m-%d)
           :schema $ :: 'Fn $ {} (:return 'String)
@@ -84,7 +84,7 @@
         'get-timestamp $ %{} 'CodeEntry
           :doc "|Get timestamp (milliseconds) from Date object. Example: (get-timestamp (get-time!))"
           :code $ quote $ defn get-timestamp (date)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |get_timestamp $ :date date
+            expect-number |calcit.std.date/get-timestamp $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |get_timestamp $ :date date
           :examples $ [] $ quote
             get-timestamp $ get-time!
           :schema $ :: 'Fn $ {} (:return 'Number)
@@ -101,7 +101,7 @@
         :code $ quote $ ns calcit.std.date
           :require
             calcit.std.$meta :refer $ calcit-dirname
-            calcit.std.util :refer $ get-dylib-path
+            calcit.std.util :refer $ get-dylib-path expect-string expect-number expect-bool expect-string-list expect-tag-number-map
     'calcit.std.fs $ %{} 'FileEntry
       :defs $ {}
         'append-file! $ %{} 'CodeEntry
@@ -139,7 +139,7 @@
         'glob! $ %{} 'CodeEntry
           :doc "|Find files matching the glob pattern. Returns a list of matching file paths. Example: (glob! \"src/*.rs\")"
           :code $ quote $ defn glob! (name)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |glob_call name
+            expect-string-list |calcit.std.fs/glob! $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |glob_call name
           :examples $ [] $ quote (glob! |src/**/*.rs)
           :schema $ :: 'Fn $ {}
             :args $ [] 'String
@@ -148,7 +148,7 @@
         'path-exists? $ %{} 'CodeEntry
           :doc "|Check if a file or directory exists at the given path. Returns boolean. Example: (path-exists? \"README.md\")"
           :code $ quote $ defn path-exists? (name)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |path_exists name
+            expect-bool |calcit.std.fs/path-exists? $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |path_exists name
           :examples $ [] $ quote (path-exists? |file.txt)
           :schema $ :: 'Fn $ {} (:return 'Bool)
             :args $ [] 'String
@@ -156,7 +156,7 @@
         'read-dir $ %{} 'CodeEntry
           :doc "|通过 native 模块列出直接子路径，返回 List<String>，顺序不保证，失败抛错；不执行写入。"
           :code $ quote $ defn read-dir (name)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |read_dir name
+            expect-string-list |calcit.std.fs/read-dir $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |read_dir name
           :examples $ [] $ quote (calcit.std.fs/read-dir |src)
           :schema $ :: 'Fn $ {}
             :args $ [] 'String
@@ -202,7 +202,7 @@
         'read-file $ %{} 'CodeEntry
           :doc "|通过 native 模块同步读取 UTF-8 文件，返回 String，失败抛错；不返回 Result，不执行写入。示例见 attached examples。"
           :code $ quote $ defn read-file (name)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |read_file name
+            expect-string |calcit.std.fs/read-file $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |read_file name
           :examples $ [] $ quote (calcit.std.fs/read-file |README.md)
           :schema $ :: 'Fn $ {} (:return 'String)
             :args $ [] 'String
@@ -261,7 +261,7 @@
         'walk-dir $ %{} 'CodeEntry
           :doc "|通过 native 模块递归列出文件路径，返回 List<String>，顺序不保证，失败抛错；不执行写入。"
           :code $ quote $ defn walk-dir (name)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |walk_dir name
+            expect-string-list |calcit.std.fs/walk-dir $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |walk_dir name
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] 'String
@@ -316,7 +316,7 @@
         :code $ quote $ ns calcit.std.fs
           :require
             calcit.std.$meta :refer $ calcit-dirname
-            calcit.std.util :refer $ get-dylib-path
+            calcit.std.util :refer $ get-dylib-path expect-string expect-number expect-bool expect-string-list expect-tag-number-map
     'calcit.std.hash $ %{} 'FileEntry
       :defs $ {} $ 'md5
         %{} 'CodeEntry
@@ -332,27 +332,27 @@
         :code $ quote $ ns calcit.std.hash
           :require
             calcit.std.$meta :refer $ calcit-dirname
-            calcit.std.util :refer $ get-dylib-path
+            calcit.std.util :refer $ get-dylib-path expect-string expect-number expect-bool expect-string-list expect-tag-number-map
     'calcit.std.path $ %{} 'FileEntry
       :defs $ {}
         'join-path $ %{} 'CodeEntry
           :doc "|Join multiple path segments into a complete path, handling separators automatically. Example: (join-path \"/home\" \"user\" \"documents\" \"file.txt\")"
           :code $ quote $ defn join-path (& xs)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |join_path & xs
+            expect-string |calcit.std.path/join-path $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |join_path & xs
           :examples $ [] $ quote (join-path |/home |user |documents |file.txt)
           :schema $ :: 'Fn $ {} (:rest 'String) (:return 'String)
             :args $ []
         'path-basename $ %{} 'CodeEntry
           :doc "|Get the filename part of a path (the last path component). Example: (path-basename \"/home/user/file.txt\")"
           :code $ quote $ defn path-basename (x)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |path_basename x
+            expect-string |calcit.std.path/path-basename $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |path_basename x
           :examples $ [] $ quote (path-basename |/home/user/file.txt)
           :schema $ :: 'Fn $ {} (:return 'String)
             :args $ [] 'String
         'path-dirname $ %{} 'CodeEntry
           :doc "|Get the directory part of a path (excluding the last component). Example: (path-dirname \"/home/user/file.txt\")"
           :code $ quote $ defn path-dirname (x)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |path_dirname x
+            expect-string |calcit.std.path/path-dirname $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |path_dirname x
           :examples $ [] $ quote (path-dirname |/home/user/file.txt)
           :schema $ :: 'Fn $ {} (:return 'String)
             :args $ [] 'String
@@ -360,7 +360,7 @@
         :code $ quote $ ns calcit.std.path
           :require
             calcit.std.$meta :refer $ calcit-dirname
-            calcit.std.util :refer $ get-dylib-path
+            calcit.std.util :refer $ get-dylib-path expect-string expect-number expect-bool expect-string-list expect-tag-number-map
     'calcit.std.process $ %{} 'FileEntry
       :defs $ {}
         'ProcessOutput $ %{} 'CodeEntry (:doc "|A streamed process output event.")
@@ -371,7 +371,7 @@
           :doc "||Execute a command from a List<String>. The optional working directory defaults to ./; pass (Option :some path) to override it. Returns [stdout stderr]."
           :code $ quote $ defn execute! (command dir)
             assert "|command in list" $ and (list? command) (every? command string?)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (option:unwrap-or dir |./) command
+            expect-string-list |calcit.std.process/execute! $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (option:unwrap-or dir |./) command
           :examples $ [] $ quote
             execute! ([] |ls |-la) (Option :none)
           :schema $ :: 'Fn $ {}
@@ -411,13 +411,13 @@
         :code $ quote $ ns calcit.std.process
           :require
             calcit.std.$meta :refer $ calcit-dirname
-            calcit.std.util :refer $ get-dylib-path
+            calcit.std.util :refer $ get-dylib-path expect-string expect-number expect-bool expect-string-list expect-tag-number-map
     'calcit.std.rand $ %{} 'FileEntry
       :defs $ {}
         'nanoid! $ %{} 'CodeEntry
           :doc "|Generate a nanoid string. Size and character set are Option values; omitted values use nanoid defaults."
           :code $ quote $ defn nanoid! (size chars)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |call_nanoid size chars
+            expect-string |calcit.std.rand/nanoid! $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |call_nanoid size chars
           :examples $ [] $ quote
             nanoid! (Option :some 10) (Option :none)
           :schema $ :: 'Fn $ {} (:return 'String)
@@ -426,7 +426,7 @@
         'rand $ %{} 'CodeEntry
           :doc "||Generate a random float. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand (Option :some 10) (Option :some 100))."
           :code $ quote $ defn rand (from to)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand from to
+            expect-number |calcit.std.rand/rand $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand from to
           :examples $ [] $ quote
             rand (Option :some 10) (Option :some 100)
           :schema $ :: 'Fn $ {} (:return 'Number)
@@ -443,7 +443,7 @@
         'rand-hex-color! $ %{} 'CodeEntry
           :doc "|Generate random hexadecimal color string in format #rrggbb. Example: (rand-hex-color!)"
           :code $ quote $ defn rand-hex-color! ()
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand_hex_color
+            expect-string |calcit.std.rand/rand-hex-color! $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand_hex_color
           :examples $ [] $ quote (rand-hex-color!)
           :schema $ :: 'Fn $ {} (:return 'String)
             :args $ []
@@ -451,7 +451,7 @@
         'rand-int $ %{} 'CodeEntry
           :doc "||Generate a random integer. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand-int (Option :some 10) (Option :some 100))."
           :code $ quote $ defn rand-int (from to)
-            &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand_int from to
+            expect-number |calcit.std.rand/rand-int $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand_int from to
           :examples $ [] $ quote
             rand-int (Option :some 100) (Option :none)
           :schema $ :: 'Fn $ {} (:return 'Number)
@@ -484,7 +484,7 @@
         :code $ quote $ ns calcit.std.rand
           :require
             calcit.std.$meta :refer $ calcit-dirname
-            calcit.std.util :refer $ get-dylib-path
+            calcit.std.util :refer $ get-dylib-path expect-string expect-number expect-bool expect-string-list expect-tag-number-map
     'calcit.std.test $ %{} 'FileEntry
       :defs $ {}
         'main! $ %{} 'CodeEntry (:doc |)
@@ -691,9 +691,67 @@
         :code $ quote $ ns calcit.std.time
           :require
             calcit.std.$meta :refer $ calcit-dirname
-            calcit.std.util :refer $ get-dylib-path
+            calcit.std.util :refer $ get-dylib-path expect-string expect-number expect-bool expect-string-list expect-tag-number-map
     'calcit.std.util $ %{} 'FileEntry
       :defs $ {}
+        'expect-bool $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn expect-bool (label value)
+            if (bool? value) value $ raise $ str label "| expected a Bool result, got: " value
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'Bool)
+            :args $ [] 'String 'Dynamic
+        'expect-number $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn expect-number (label value)
+            if (number? value) value $ raise $ str label "| expected a Number result, got: " value
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'Number)
+            :args $ [] 'String 'Dynamic
+        'expect-string $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn expect-string (label value)
+            if (string? value) value $ raise $ str label "| expected a String result, got: " value
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'String)
+            :args $ [] 'String 'Dynamic
+        'expect-string-list $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn expect-string-list (label value)
+            if (list? value)
+              foldl value ([])
+                defn %expect-string-item (acc item)
+                  hint-fn $ {}
+                    :args $ []
+                      :: (quote List) (quote String)
+                      quote Dynamic
+                    :return $ :: (quote List) (quote String)
+                  if (string? item) (append acc item)
+                    raise $ str label "| expected String items, got: " item
+              raise $ str label "| expected a List result, got: " value
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'String 'Dynamic
+            :return $ :: 'List 'String
+        'expect-tag-number-map $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn expect-tag-number-map (label value)
+            if (map? value)
+              foldl value ({})
+                defn %expect-tag-number-entry (acc pair)
+                  hint-fn $ {}
+                    :args $ []
+                      :: (quote Map) (quote Tag) (quote Number)
+                      :: (quote List) (quote Dynamic)
+                    :return $ :: (quote Map) (quote Tag) (quote Number)
+                  &let
+                    k $ &list:nth pair 0
+                    &let
+                      v $ &list:nth pair 1
+                      if (tag? k)
+                        if (number? v) (&map:assoc acc k v)
+                          raise $ str label "| expected Number values, got: " v
+                        raise $ str label "| expected Tag keys, got: " k
+              raise $ str label "| expected a Map result, got: " value
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'String 'Dynamic
+            :return $ :: 'Map 'Tag 'Number
         'get-dylib-ext $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro get-dylib-ext ()
             case-default (&get-os) |.so (:macos |.dylib) (:windows |.dll)
