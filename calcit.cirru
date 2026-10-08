@@ -601,7 +601,7 @@
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
         'reload! $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn reload! () (run-tests) (println "|reload not handled yet")
+          :code $ quote $ defn reload! () (run-tests) (println "|reload not handled yet") &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
@@ -762,6 +762,7 @@
             assert= 9 $ count $ nanoid! (Option :some 9) (Option :none)
             assert= |aaaaa $ nanoid! (Option :some 5) (Option :some |a)
             println $ rand-hex-color!
+            , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
