@@ -220,7 +220,7 @@
               :tags $ #{} :filesystem :unit
             %{} 'TestEntry (:name |missing-path-throws)
               :code $ quote $ let
-                  failed $ atom false
+                  failed $ ref false
                 try (calcit.std.fs/read-dir |tests/fixtures/read-contracts/missing.txt)
                   fn (message)
                     hint-fn $ {}
@@ -261,7 +261,7 @@
               :tags $ #{} :filesystem :unit
             %{} 'TestEntry (:name |missing-path-throws)
               :code $ quote $ let
-                  failed $ atom false
+                  failed $ ref false
                 try (calcit.std.fs/read-file |tests/fixtures/read-contracts/missing.txt)
                   fn (message)
                     hint-fn $ {}
@@ -300,7 +300,7 @@
                 :args $ [] 'String
           :tests $ [] $ %{} 'TestEntry (:name |checked-unit-callback-result)
             :code $ quote $ let
-                *count $ atom 0
+                *count $ ref 0
               assert= true $ identical? &unit $ calcit.std.fs/read-file-by-line! |tests/fixtures/read-contracts/hello.txt
                 fn (line) (swap! *count inc) &unit
               assert= 1 @*count
@@ -342,7 +342,7 @@
               :tags $ #{} :filesystem :unit
             %{} 'TestEntry (:name |missing-path-throws)
               :code $ quote $ let
-                  failed $ atom false
+                  failed $ ref false
                 try (calcit.std.fs/walk-dir |tests/fixtures/read-contracts/missing.txt)
                   fn (message)
                     hint-fn $ {}
@@ -514,7 +514,7 @@
           :tests $ [] $ %{} 'TestEntry (:name |checked-length)
             :code $ quote $ assert= 8
               (calcit.std.rand/nanoid! (Option :some 8) (Option :none))
-                , .count
+                , .len
             :tags $ #{} :unit
         'rand $ %{} 'CodeEntry
           :doc "||Generate a random float. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand (Option :some 10) (Option :some 100))."
@@ -689,7 +689,7 @@
               count $ calcit.std.fs/read-file |README.md
               , 1000
             let
-                *c $ atom 0
+                *c $ ref 0
               read-file-by-line! |README.md $ fn (line) (; println "|readling line:" line) (swap! *c inc) &unit
               println |lines @*c
             println (path-exists? |README.md) (path-exists? |build.js)
@@ -822,7 +822,7 @@
               :tags $ #{} :unit
             %{} 'TestEntry (:name |rejects-string)
               :code $ quote $ let
-                  failed $ atom false
+                  failed $ ref false
                 try (decode-bool |true)
                   fn (message)
                     hint-fn $ {}
@@ -850,7 +850,7 @@
               :tags $ #{} :unit
             %{} 'TestEntry (:name |rejects-string)
               :code $ quote $ let
-                  failed $ atom false
+                  failed $ ref false
                 try (decode-number |3)
                   fn (message)
                     hint-fn $ {}
@@ -878,7 +878,7 @@
               :tags $ #{} :unit
             %{} 'TestEntry (:name |rejects-number)
               :code $ quote $ let
-                  failed $ atom false
+                  failed $ ref false
                 try (decode-string 1)
                   fn (message)
                     hint-fn $ {}
@@ -908,7 +908,7 @@
               :tags $ #{} :unit
             %{} 'TestEntry (:name |rejects-mixed-list)
               :code $ quote $ let
-                  failed $ atom false
+                  failed $ ref false
                 try
                   decode-string-list $ [] |a 1
                   fn (message)
@@ -940,7 +940,7 @@
               :tags $ #{} :unit
             %{} 'TestEntry (:name |rejects-string-value)
               :code $ quote $ let
-                  failed $ atom false
+                  failed $ ref false
                 try
                   decode-tag-number-map $ {} $ :a |one
                   fn (message)
@@ -969,7 +969,7 @@
               :tags $ #{} :unit
             %{} 'TestEntry (:name |rejects-string)
               :code $ quote $ let
-                  failed $ atom false
+                  failed $ ref false
                 try (decode-unit |done)
                   fn (message)
                     hint-fn $ {}
