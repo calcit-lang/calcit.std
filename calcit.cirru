@@ -549,7 +549,7 @@
           :tests $ [] $ %{} 'TestEntry (:name |checked-hex-color)
             :code $ quote $ let
                 color $ calcit.std.rand/rand-hex-color!
-              assert= 7 $ color.count
+              assert= 7 $ color.len
               assert= true $ color.starts-with? |#
             :tags $ #{} :unit
         'rand-int $ %{} 'CodeEntry
