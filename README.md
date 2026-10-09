@@ -4,11 +4,13 @@
 >
 > Standard native module for Calcit on the Rust runtime.
 
-### 0.2.37 发布准备
+### 版本与工具链
 
-本模块使用正式 Calcit `0.28.0`，包含同步读取首选名称 `read-file/read-dir/walk-dir` 及九项附带文件系统测试，并在异步示例中使用资源生命周期方法 `.cancel-with!`。旧读取 helper 和取消方法保留原有迁移窗口；native ABI、宿主符号、失败及取消语义不变。Rust crate 版本和 `deps.cirru` 模块版本同步为 `0.2.37`。
+当前源码要求的 Calcit 版本与模块版本以 `deps.cirru` 为准，CI 使用同一 Calcit 版本。下游固定已发布的精确模块 tag，并在目标机器构建 native dylib；main 上已合并的改动不代表旧 tag 也包含这些改动。
 
-下游依赖使用精确 tag `0.2.37` 与匹配的 Calcit `0.28.0`，在目标机器构建 native dylib。旧 `0.2.36` tag 对应 Calcit `0.28.0-alpha.3` 的预发布验证，保持原内容；不要用新 main 的检查结果代替该 tag 的契约。
+同步读取首选 `read-file/read-dir/walk-dir`；旧 `read-file!/read-dir!/walk-dir!` 保留原有迁移窗口。异步示例使用资源生命周期方法 `.cancel-with!`，具体取消合同见 [native capabilities](docs/native-capabilities.md#blocking-and-asynchronous-work)。发布前仍需运行附带文件系统测试及实际 dylib/异步回归。
+
+历史版本 `0.2.37` 对应 Calcit `0.28.0`，`0.2.36` 对应 `0.28.0-alpha.3`；这些 tag 保持原内容。升级时阅读目标 tag 的说明，不把当前 main 的验证结果当作旧版本的契约。
 
 ### Usages
 
@@ -55,7 +57,7 @@ process output、timer 与 Ctrl+C 普通事件在等待 host queue 时会检查�
 状态，最长 10ms 响应一次；持续 `QUEUE_FULL` 默认 5 秒后失败。terminal
 `complete` / `fail` 不应用业务取消 predicate，确保任务可靠收尾。
 
-当前工具链固定使用正式 Calcit `0.28.0`。项目在默认严格模式下保持零类型债务，不使用
+工具链使用 `deps.cirru` 声明的精确已发布 Calcit 版本。项目在默认严格模式下保持零类型债务，不使用
 `--compat-types`；可选参数使用 `Option`，集合 schema 均声明具体元素类型。
 
 Ordinary process-output, timer, and Ctrl+C events observe their own
@@ -63,10 +65,6 @@ cancellation state while waiting for host queue capacity, with at most 10ms
 between checks; persistent `QUEUE_FULL` fails after the default five-second
 deadline. Terminal `complete` / `fail` events do not use the business
 cancellation predicate, ensuring reliable task cleanup.
-
-The toolchain pins released Calcit `0.28.0`. The project passes the zero-debt strict
-gate without `--compat-types`; optional parameters use `Option`, and collection
-schemas declare concrete element types.
 
 `calcit.std.hash/md5` 已使用 `calcit-bindgen 0.1.1` 的 managed Rust adapter，
 不再手写 symbol、arity、EDN codec 或 buffer export。维护者可只读导出类型化
