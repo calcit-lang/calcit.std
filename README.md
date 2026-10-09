@@ -8,7 +8,7 @@
 
 当前源码要求的 Calcit 版本与模块版本以 `deps.cirru` 为准，CI 使用同一 Calcit 版本。下游固定已发布的精确模块 tag，并在目标机器构建 native dylib；main 上已合并的改动不代表旧 tag 也包含这些改动。
 
-同步读取首选 `read-file/read-dir/walk-dir`，异步示例使用资源生命周期方法 `.cancel-with!`。旧读取 helper 和取消方法保留原有迁移窗口；改名不改变 native ABI、宿主符号、失败及取消语义。发布前仍需运行附带文件系统测试及实际 dylib/异步回归。
+同步读取首选 `read-file/read-dir/walk-dir`；旧 `read-file!/read-dir!/walk-dir!` 保留原有迁移窗口。异步示例使用资源生命周期方法 `.cancel-with!`，具体取消合同见 [native capabilities](docs/native-capabilities.md#blocking-and-asynchronous-work)。发布前仍需运行附带文件系统测试及实际 dylib/异步回归。
 
 历史版本 `0.2.37` 对应 Calcit `0.28.0`，`0.2.36` 对应 `0.28.0-alpha.3`；这些 tag 保持原内容。升级时阅读目标 tag 的说明，不把当前 main 的验证结果当作旧版本的契约。
 
