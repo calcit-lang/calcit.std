@@ -10,6 +10,11 @@
 
 同步读取首选 `read-file/read-dir/walk-dir`；旧 `read-file!/read-dir!/walk-dir!` 保留原有迁移窗口。异步示例使用资源生命周期方法 `.cancel-with!`，具体取消合同见 [native capabilities](docs/native-capabilities.md#blocking-and-asynchronous-work)。发布前仍需运行附带文件系统测试及实际 dylib/异步回归。
 
+启动定时任务和注册 Ctrl+C 订阅首选 `set-timeout!`、`set-interval!`、`on-ctrl-c!`。
+旧无 `!` 名称保留为带弃用提示的同一函数引用；参数、返回的 `FfiTask`、callback、
+取消和退出策略不变。可在人工审阅后改名，再运行原异步回归；不需要修改 native symbol，
+也不能把 `!` 理解为新的错误处理或自动取消策略。
+
 历史版本 `0.2.37` 对应 Calcit `0.28.0`，`0.2.36` 对应 `0.28.0-alpha.3`；这些 tag 保持原内容。升级时阅读目标 tag 的说明，不把当前 main 的验证结果当作旧版本的契约。
 
 ### Usages
@@ -190,10 +195,10 @@ calcit.std.rand/rand-hex-color!
 ```
 
 ```cirru.no-check
-def timeout-task $ calcit.std.time/set-timeout 1000 $ fn ()
+def timeout-task $ calcit.std.time/set-timeout! 1000 $ fn ()
   println |timeout
 
-def interval-task $ calcit.std.time/set-interval 1000 $ fn ()
+def interval-task $ calcit.std.time/set-interval! 1000 $ fn ()
   println |repeated
 
 interval-task.cancel-with! :shutdown
