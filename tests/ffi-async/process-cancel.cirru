@@ -1,6 +1,6 @@
 ns app.main $ :require
   calcit.std.process :refer $ stream!
-  calcit.std.time :refer $ set-timeout
+  calcit.std.time :refer $ set-timeout!
 
 let
     task $ stream!
@@ -9,7 +9,7 @@ let
         println event
         , &unit
       , (Option :none)
-  set-timeout 100 $ fn ()
+  set-timeout! 100 $ fn ()
     .cancel-with! task :smoke-complete
     , &unit
   println |process-stream-started

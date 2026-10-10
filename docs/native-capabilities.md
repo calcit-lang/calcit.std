@@ -62,13 +62,18 @@ stream 生成提供最小确定性基线。
 Process streams, timers, and Ctrl-C subscriptions return typed `FfiTask` capabilities. Retain the task when lifecycle control matters and cancel it explicitly during shutdown or reload.
 
 ```cirru.no-check
-def task $ calcit.std.time/set-interval 1000 $ fn ()
+def task $ calcit.std.time/set-interval! 1000 $ fn ()
   println |tick
 
 task.cancel-with! :reload
 ```
 
 Cancellation stops ordinary events while preserving exactly one terminal completion or failure event. Queue backpressure is bounded; do not treat a pending callback as durable application state.
+
+启动或注册宿主工作使用 `set-timeout!`、`set-interval!` 和 `on-ctrl-c!`。
+旧 `set-timeout`、`set-interval`、`on-ctrl-c` 仅保留为同一函数的弃用引用，
+不是第二套 scheduler；两种拼写共享具体 callback 签名、`FfiTask` 返回值和宿主 symbol。
+保留原任务并在适当的生命周期取消；改名不会增加 callback 次数或改变终止策略。
 
 取消任务使用 `.cancel!` 或携带原因的 `.cancel-with!`，`!` 表示显式资源生命周期操作，
 不是失败标记。它们与旧 `.cancel` / `.cancel-with` 指向同一 core 实现，

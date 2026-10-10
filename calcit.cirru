@@ -467,12 +467,28 @@
               calcit.std.process/execute! ([] |echo |hi) (Option :none)
             :tags $ #{} :unit
         'on-ctrl-c $ %{} 'CodeEntry
-          :doc "|Register a callback function to handle Ctrl+C signal."
-          :code $ quote $ defn on-ctrl-c (f)
-            ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |on_ctrl_c f
+          :doc "|兼容入口，请改用 on-ctrl-c!；保留同一函数引用、callback 和取消语义。发布版消费者迁移完成前不删除。"
+          :code $ quote $ def on-ctrl-c calcit.std.process/on-ctrl-c!
           :examples $ [] $ quote
             let
                 task $ on-ctrl-c $ fn () (println |Exiting...)
+              task.cancel-with! :example-complete
+          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
+            :args $ [] $ :: 'Fn
+              {} (:return 'Unit)
+                :args $ []
+            :features $ #{} :js-ffi
+          :tags $ #{} :deprecated
+          :tests $ [] $ %{} 'TestEntry (:name |same-callable)
+            :code $ quote $ assert= on-ctrl-c calcit.std.process/on-ctrl-c!
+            :tags $ #{} :lifecycle :unit
+        'on-ctrl-c! $ %{} 'CodeEntry
+          :doc "|注册处理 Ctrl+C 的零参数 callback，返回可取消的 FfiTask。callback 返回 Unit；! 表示注册宿主订阅，不改变退出或取消策略。"
+          :code $ quote $ defn on-ctrl-c! (f)
+            ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |on_ctrl_c f
+          :examples $ [] $ quote
+            let
+                task $ on-ctrl-c! $ fn () (println |Exiting...)
               task.cancel-with! :example-complete
           :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
             :args $ [] $ :: 'Fn
@@ -624,7 +640,7 @@
             :features $ #{} :js-ffi
         'try-ctrlc! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn try-ctrlc! ()
-            on-ctrl-c $ fn () (println "|TODO handler...") &unit
+            on-ctrl-c! $ fn () (println "|TODO handler...") &unit
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -639,8 +655,8 @@
             :args $ []
         'try-time! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn try-time! ()
-            set-timeout 4000 $ fn () (println |doing) &unit
-            set-interval 2000 $ fn () (println "|DO Do Do") &unit
+            set-timeout! 4000 $ fn () (println |doing) &unit
+            set-interval! 2000 $ fn () (println "|DO Do Do") &unit
             , &unit
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Unit)
@@ -648,8 +664,8 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test
           :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.rand :as random)
-            calcit.std.process :refer $ on-ctrl-c
-            calcit.std.time :refer $ set-timeout set-interval
+            calcit.std.process :refer $ on-ctrl-c!
+            calcit.std.time :refer $ set-timeout! set-interval!
             calcit.std.hash :refer $ md5
             calcit.std.path :refer $ join-path path-dirname path-basename
     'calcit.std.test.date $ %{} 'FileEntry
@@ -659,10 +675,10 @@
             println "|GET TIME" $ get-time!
             echo |time: $ format-time (get-time!) (Option :some "|%Y-%m-%d %H:%M:%S %z")
             assert= 1417176009000 $ get-timestamp $ parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
-            w-log $ extract-time $ get-time!
-            w-log $ from-ymd 2021 11 11
-            w-log $ from-ywd 2021 45 6
-            w-log $ format-time (from-ywd 2022 1 2) (Option :some "|%Y-%m-%d %H-%M")
+            dbg $ extract-time $ get-time!
+            dbg $ from-ymd 2021 11 11
+            dbg $ from-ywd 2021 45 6
+            dbg $ format-time (from-ywd 2022 1 2) (Option :some "|%Y-%m-%d %H-%M")
             println $ format-time
               add-duration
                 add-duration (get-time!) 1 :hours
@@ -773,9 +789,8 @@
     'calcit.std.time $ %{} 'FileEntry
       :defs $ {}
         'set-interval $ %{} 'CodeEntry
-          :doc "|Execute function repeatedly at intervals. Args: interval in milliseconds, function to repeat. Example: (set-interval 1000 (fn () (println \"tick\")))"
-          :code $ quote $ defn set-interval (t cb)
-            ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |set_interval t cb
+          :doc "|兼容入口，请改用 set-interval!；保留同一函数引用、callback 和取消语义。发布版消费者迁移完成前不删除。"
+          :code $ quote $ def set-interval calcit.std.time/set-interval!
           :examples $ [] $ quote
             let
                 task $ set-interval 10 $ fn () (println |tick)
@@ -785,13 +800,46 @@
               {} (:return 'Unit)
                 :args $ []
             :features $ #{} :js-ffi
+          :tags $ #{} :deprecated
+          :tests $ [] $ %{} 'TestEntry (:name |same-callable)
+            :code $ quote $ assert= set-interval calcit.std.time/set-interval!
+            :tags $ #{} :lifecycle :unit
+        'set-interval! $ %{} 'CodeEntry
+          :doc "|按毫秒间隔重复执行返回 Unit 的零参数 callback，返回可取消的 FfiTask。调用方应在卸载或重载时显式取消；! 表示启动宿主任务。"
+          :code $ quote $ defn set-interval! (t cb)
+            ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |set_interval t cb
+          :examples $ [] $ quote
+            let
+                task $ set-interval! 10 $ fn () (println |tick)
+              task.cancel-with! :example-complete
+          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
+            :args $ [] 'Number $ :: 'Fn
+              {} (:return 'Unit)
+                :args $ []
+            :features $ #{} :js-ffi
         'set-timeout $ %{} 'CodeEntry
-          :doc "|Execute function after delay. Args: delay in milliseconds, function to execute. Example: (set-timeout 1000 (fn () (println \"timeout\")))"
-          :code $ quote $ defn set-timeout (t cb)
-            ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |set_timeout t cb
+          :doc "|兼容入口，请改用 set-timeout!；保留同一函数引用、callback 和取消语义。发布版消费者迁移完成前不删除。"
+          :code $ quote $ def set-timeout calcit.std.time/set-timeout!
           :examples $ [] $ quote
             let
                 task $ set-timeout 10 $ fn () (println |timeout)
+              task.cancel-with! :example-complete
+          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
+            :args $ [] 'Number $ :: 'Fn
+              {} (:return 'Unit)
+                :args $ []
+            :features $ #{} :js-ffi
+          :tags $ #{} :deprecated
+          :tests $ [] $ %{} 'TestEntry (:name |same-callable)
+            :code $ quote $ assert= set-timeout calcit.std.time/set-timeout!
+            :tags $ #{} :lifecycle :unit
+        'set-timeout! $ %{} 'CodeEntry
+          :doc "|延时执行一次 callback，返回可取消的 FfiTask。参数依次为毫秒数和返回 Unit 的零参数函数；使用 ! 表示启动宿主任务，不表示改变失败处理。"
+          :code $ quote $ defn set-timeout! (t cb)
+            ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |set_timeout t cb
+          :examples $ [] $ quote
+            let
+                task $ set-timeout! 10 $ fn () (println |timeout)
               task.cancel-with! :example-complete
           :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
             :args $ [] 'Number $ :: 'Fn
