@@ -455,7 +455,7 @@
           :doc "||Execute a command from a List<String>. The optional working directory defaults to ./; pass (Option :some path) to override it. Returns [stdout stderr]."
           :code $ quote $ defn execute! (command dir)
             assert "|command in list" $ and (list? command) (every? command string?)
-            decode-string-list $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (option:unwrap-or dir |./) command
+            decode-string-list $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (.unwrap-or dir |./) command
           :examples $ [] $ quote
             execute! ([] |ls |-la) (Option :none)
           :schema $ :: 'Fn $ {}
@@ -499,7 +499,7 @@
           :doc "|Start a process and stream tagged stdout/stderr events to callback. Runs asynchronously."
           :code $ quote $ defn stream! (command f dir)
             assert "|command in list" $ and (list? command) (every? command string?)
-            ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |stream_command (option:unwrap-or dir |./) command f
+            ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |stream_command (.unwrap-or dir |./) command f
           :examples $ [] $ quote
             stream!
               [] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2"
@@ -747,7 +747,7 @@
       :defs $ {} $ 'main!
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (println "|%%%%%% test random")
-            assert-detect identity $ option:some? $ rand-nth (range 10)
+            assert-detect identity $ .some? $ rand-nth (range 10)
             assert= (Option :none)
               rand-nth $ take (range 1) 0
             assert-detect identity $ <= 0
