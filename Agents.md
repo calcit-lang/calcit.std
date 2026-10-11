@@ -12,7 +12,7 @@ Calcit 0.13.57 已删除 legacy Rust ABI fallback。
 
 提交前运行 `cargo fmt --check`、`cargo test`、
 `cargo clippy --all-targets -- -D warnings`、`caps --strict --ci`、Calcit
-check/quality gate，并用 release dylib 执行 `calcit calcit.cirru` 的真实回归。
+严格 check/weak-types 门禁，并用 release dylib 执行 `calcit calcit.cirru` 的真实回归。
 
 FFI 公共协议、descriptor 校验、buffer ownership、Cirru EDN transport 和
 adapter 由 `calcit_native_ffi` 维护。本仓库只实现 std 的业务行为；若协议能力
@@ -35,7 +35,7 @@ legacy Rust ABI fallback.
 
 Before committing, run `cargo fmt --check`, `cargo test`,
 `cargo clippy --all-targets -- -D warnings`, `caps --strict --ci`, the Calcit
-check/quality gate, and a real `calcit calcit.cirru` regression with the
+strict check/weak-types gates, and a real `calcit calcit.cirru` regression with the
 release dylib.
 
 `calcit_native_ffi` owns the shared protocol, descriptor validation, buffer

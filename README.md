@@ -8,6 +8,12 @@
 
 当前源码要求的 Calcit 版本与模块版本以 `deps.cirru` 为准，CI 使用同一 Calcit 版本。下游固定已发布的精确模块 tag，并在目标机器构建 native dylib；main 上已合并的改动不代表旧 tag 也包含这些改动。
 
+当前源码配对正式 Calcit `0.29.0` 和 std `0.2.41`。进程目录默认值使用
+公开 Option 方法 `.unwrap-or`，随机测试使用 `.some?`，不再直接调用
+内部 `option:*` 兼容 helper；原有默认值、错误和生命周期合同不变。
+CI 使用严格入口/完整公开命名空间检查和当前 weak-types 视图，
+不再调用已弃用的 `analyze quality`；保留原 Rust、文件系统、dylib 和异步回归。
+
 同步读取首选 `read-file/read-dir/walk-dir`；旧 `read-file!/read-dir!/walk-dir!` 保留原有迁移窗口。异步示例使用资源生命周期方法 `.cancel-with!`，具体取消合同见 [native capabilities](docs/native-capabilities.md#blocking-and-asynchronous-work)。发布前仍需运行附带文件系统测试及实际 dylib/异步回归。
 
 启动定时任务和注册 Ctrl+C 订阅首选 `set-timeout!`、`set-interval!`、`on-ctrl-c!`。
