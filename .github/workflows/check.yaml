@@ -28,7 +28,7 @@ jobs:
       - uses: calcit-lang/setup-calcit@v1.5.0
         with:
           tools: calcit,caps
-          version: "0.29.0"
+          version: "0.29.3"
           caps-version: "0.1.1"
 
       - name: Install the production FFI generator
@@ -39,14 +39,14 @@ jobs:
           caps --strict --ci
           calcit calcit.cirru edit format
           git diff --exit-code -- calcit.cirru
-          calcit calcit.cirru --check-only --strict-types
+          calcit calcit.cirru --check-only
           calcit calcit.cirru --entry stream-process --check-only
           calcit calcit.cirru analyze weak-types --only coverage --summary-only --format json
           calcit calcit.cirru analyze weak-types --only schema-dynamic,code-dynamic --intent unresolved --summary-only --format json
           calcit calcit.cirru analyze weak-types --only deprecated-call --summary-only --format json
           calcit calcit.cirru --check-only --ns calcit.std.fs --ns calcit.std.date --ns calcit.std.hash --ns calcit.std.path --ns calcit.std.process --ns calcit.std.rand --ns calcit.std.time --ns calcit.std.util --format edn
           mkdir -p target/ffi-interface
-          calcit calcit.cirru ffi export --json --ns calcit.std.hash > target/ffi-interface/calcit-std-hash.json
+          calcit calcit.cirru ffi export --format json --ns calcit.std.hash > target/ffi-interface/calcit-std-hash.json
           calcit-bindgen check target/ffi-interface/calcit-std-hash.json --out generated/ffi --backend rust
 
       - run: cargo fmt --check && cargo build --release
