@@ -42,7 +42,7 @@ generation. Its `(String) -> String` logical schema is lowered as a synchronous
 lifecycle.
 
 ```bash
-calcit calcit.cirru ffi export --json --ns calcit.std.hash
+calcit calcit.cirru ffi export --format json --ns calcit.std.hash
 ```
 
 This read-only export gives bindgen a minimal deterministic baseline before it
