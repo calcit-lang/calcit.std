@@ -8,13 +8,17 @@
 
 当前源码要求的 Calcit 版本与模块版本以 `deps.cirru` 为准，CI 使用同一 Calcit 版本。下游固定已发布的精确模块 tag，并在目标机器构建 native dylib；main 上已合并的改动不代表旧 tag 也包含这些改动。
 
-使用者影响：本轮源码声明 Calcit `0.30.1-alpha.5`，不改公开 API、返回类型、文件系统/进程/定时器行为、native ABI 或 Rust 依赖；消费者应固定正式模块 tag，并在目标机器构建匹配的 dylib。旧名称的弃用迁移窗口仍保留，不因工具链更新删除兼容入口。模块 `0.2.43` 已发布 tag 的内容和工具链声明保持不变；本轮工具链迁移不代表已发布新的模块版本。
+使用者影响：本轮源码声明正式 Calcit `0.30.1`，不改公开 API、返回类型、文件系统/进程/定时器行为、native ABI 或 Rust 依赖；消费者应固定正式模块 tag，并在目标机器构建匹配的 dylib。旧名称的弃用迁移窗口仍保留，不因工具链更新删除兼容入口。模块 `0.2.43` 已发布 tag 的内容和工具链声明保持不变；当前 `0.2.44` 为迁移候选，尚未发布。
 
-当前源码使用已发布的 Calcit `0.30.1-alpha.5`；这不是正式 `0.30.1` 的完整跨平台兼容声明。std 是 native 模块，不依赖 `@calcit/procs`。进程目录默认值使用
+当前源码使用正式 Calcit `0.30.1`，不再依赖 alpha CLI；std 是 native 模块，不依赖 `@calcit/procs`，不为版本配对额外添加 npm 工具链。正式版本兼容性以目标平台实际 dylib/异步验收为准，Linux CI 通过不等于全部平台已验收。进程目录默认值使用
 公开 Option 方法 `.unwrap-or`，随机测试使用 `.some?`，不再直接调用
 内部 `option:*` 兼容 helper；原有默认值、错误和生命周期合同不变。
 CI 使用严格入口/完整公开命名空间检查和当前 weak-types 视图，
 不再调用已弃用的 `analyze quality`；保留原 Rust、文件系统、dylib 和异步回归。
+
+安装脚本与 CI 的 release 构建均使用 `--locked`，不在安装时隐式调整 Cargo.lock。
+若发布锁文件需要更新，构建会失败，维护者应在源码中审阅更新后重新发布；
+不改 dylib 文件名、复制目标或平台逻辑。下游现有原生构建验收暂不因此删除。
 
 同步读取首选 `read-file/read-dir/walk-dir`；旧 `read-file!/read-dir!/walk-dir!` 保留原有迁移窗口。异步示例使用资源生命周期方法 `.cancel-with!`，具体取消合同见 [native capabilities](docs/native-capabilities.md#blocking-and-asynchronous-work)。发布前仍需运行附带文件系统测试及实际 dylib/异步回归。
 

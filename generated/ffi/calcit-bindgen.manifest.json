@@ -4,9 +4,9 @@
   "generatorVersion": "0.1.1",
   "interfaceVersion": 3,
   "package": "calcit.std",
-  "packageVersion": "0.2.43",
+  "packageVersion": "0.2.44",
   "digestAlgorithm": "fnv1a-128",
-  "contractDigest": "f579c3194f61e6d1ae481e9f387983ae",
+  "contractDigest": "2cd1742acee82e4f3a77a784d0d74a5d",
   "contractKind": "native",
   "backends": [
     "rust"
@@ -14,11 +14,11 @@
   "files": [
     {
       "path": "interface.json",
-      "digest": "f579c3194f61e6d1ae481e9f387983ae"
+      "digest": "2cd1742acee82e4f3a77a784d0d74a5d"
     },
     {
       "path": "rust/bindings.rs",
-      "digest": "9e1922dc5ee1877ff985bd8cd5441cb6"
+      "digest": "4825d1d18dbf3b6e6fe4ae380eb81253"
     }
   ]
 }
