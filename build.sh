@@ -1,4 +1,4 @@
-cargo build --release && \
+cargo build --release --locked && \
 rm -rfv dylibs && \
 mkdir -p dylibs/ && \
 ls target/release/ && \

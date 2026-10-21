@@ -16,6 +16,10 @@
 CI 使用严格入口/完整公开命名空间检查和当前 weak-types 视图，
 不再调用已弃用的 `analyze quality`；保留原 Rust、文件系统、dylib 和异步回归。
 
+安装脚本与 CI 的 release 构建均使用 `--locked`，不在安装时隐式调整 Cargo.lock。
+若发布锁文件需要更新，构建会失败，维护者应在源码中审阅更新后重新发布；
+不改 dylib 文件名、复制目标或平台逻辑。下游现有原生构建验收暂不因此删除。
+
 同步读取首选 `read-file/read-dir/walk-dir`；旧 `read-file!/read-dir!/walk-dir!` 保留原有迁移窗口。异步示例使用资源生命周期方法 `.cancel-with!`，具体取消合同见 [native capabilities](docs/native-capabilities.md#blocking-and-asynchronous-work)。发布前仍需运行附带文件系统测试及实际 dylib/异步回归。
 
 启动定时任务和注册 Ctrl+C 订阅首选 `set-timeout!`、`set-interval!`、`on-ctrl-c!`。
