@@ -1,0 +1,6475 @@
+[
+  {
+    "code": [
+      "def",
+      "calcit-dirname",
+      "|"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.$meta/calcit-dirname",
+    "js_ffi": null,
+    "schema": null,
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "calcit-filename",
+      "|calcit.cirru"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.$meta/calcit-filename",
+    "js_ffi": null,
+    "schema": null,
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defstruct",
+      "Date0",
+      [
+        ":date",
+        "'Number"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.date/Date0",
+    "js_ffi": null,
+    "schema": "'Enum",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "add-duration",
+      [
+        "date",
+        "n",
+        "k"
+      ],
+      [
+        "Date0",
+        ":date",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|add_duration",
+          [
+            ":date",
+            "date"
+          ],
+          "n",
+          "k"
+        ]
+      ]
+    ],
+    "doc": "Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc). Example: (add-duration (get-time!) 7 :days)",
+    "examples": [
+      [
+        "add-duration",
+        [
+          "get-time!"
+        ],
+        "7",
+        ":days"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.date/add-duration",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.std.date/Date0"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'calcit.std.date/Date0",
+          "'Number",
+          "'Tag"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "extract-time",
+      [
+        "x"
+      ],
+      [
+        "decode-tag-number-map",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|extract_time",
+          [
+            ":date",
+            "x"
+          ]
+        ]
+      ]
+    ],
+    "doc": "Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields. Example: (extract-time (get-time!))",
+    "examples": [
+      [
+        "extract-time",
+        [
+          "get-time!"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.date/extract-time",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'calcit.std.date/Date0"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'Map",
+          "'Tag",
+          "'Number"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "parts",
+              [
+                "calcit.std.date/extract-time",
+                [
+                  "calcit.std.date/parse-time",
+                  "|2014-11-28 21:00:09 +09:00",
+                  "|%Y-%m-%d %H:%M:%S %z"
+                ]
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            [
+              "Option",
+              ":some",
+              "2014"
+            ],
+            [
+              "get",
+              "parts",
+              ":year"
+            ]
+          ],
+          [
+            "assert=",
+            [
+              "Option",
+              ":some",
+              "11"
+            ],
+            [
+              "get",
+              "parts",
+              ":month"
+            ]
+          ],
+          [
+            "assert=",
+            [
+              "Option",
+              ":some",
+              "28"
+            ],
+            [
+              "get",
+              "parts",
+              ":day"
+            ]
+          ]
+        ],
+        "name": "checked-tag-number-map",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "format-time",
+      [
+        "time",
+        "format"
+      ],
+      [
+        "decode-string",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|format_time",
+          [
+            ":date",
+            "time"
+          ],
+          "format"
+        ]
+      ]
+    ],
+    "doc": "|Format Date object to string. The optional format is Option<String>; (Option :none) uses ISO format, for example (format-time (get-time!) (Option :some \"|%Y-%m-%d\")).",
+    "examples": [
+      [
+        "format-time",
+        [
+          "get-time!"
+        ],
+        [
+          "Option",
+          ":some",
+          "|%Y-%m-%d"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.date/format-time",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'calcit.std.date/Date0",
+          [
+            "::",
+            "'calcit.core/Option",
+            "'String"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "|2014-11-28",
+          [
+            "calcit.std.date/format-time",
+            [
+              "calcit.std.date/parse-time",
+              "|2014-11-28 21:00:09 +09:00",
+              "|%Y-%m-%d %H:%M:%S %z"
+            ],
+            [
+              "Option",
+              ":some",
+              "|%Y-%m-%d"
+            ]
+          ]
+        ],
+        "name": "checked-string-format",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "from-ymd",
+      [
+        "y",
+        "m",
+        "d"
+      ],
+      [
+        "match",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|from_ymd",
+          "y",
+          "m",
+          "d"
+        ],
+        [
+          [
+            ":single",
+            "d"
+          ],
+          [
+            "Date0",
+            ":date",
+            [
+              "decode-number",
+              "d"
+            ]
+          ]
+        ],
+        [
+          [
+            ":ambiguous",
+            "a",
+            "b"
+          ],
+          [
+            "raise",
+            [
+              "str",
+              "|ambiguous: ",
+              "a",
+              "| ",
+              "b"
+            ]
+          ]
+        ],
+        [
+          [
+            ":none"
+          ],
+          [
+            "raise",
+            "|cannot construct"
+          ]
+        ],
+        [
+          "_",
+          [
+            "raise",
+            "|unreachable!"
+          ]
+        ]
+      ]
+    ],
+    "doc": "Create Date object from year, month, day. Args: year, month (1-12), day (1-31). Example: (from-ymd 2024 1 15)",
+    "examples": [
+      [
+        "from-ymd",
+        "2024",
+        "1",
+        "15"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.date/from-ymd",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.std.date/Date0"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          "'Number",
+          "'Number"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "from-ywd",
+      [
+        "y",
+        "w",
+        "d"
+      ],
+      [
+        "match",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|from_ywd",
+          "y",
+          "w",
+          "d"
+        ],
+        [
+          [
+            ":single",
+            "d"
+          ],
+          [
+            "Date0",
+            ":date",
+            [
+              "decode-number",
+              "d"
+            ]
+          ]
+        ],
+        [
+          [
+            ":ambiguous",
+            "a",
+            "b"
+          ],
+          [
+            "raise",
+            [
+              "str",
+              "|ambiguous: ",
+              "a",
+              "| ",
+              "b"
+            ]
+          ]
+        ],
+        [
+          [
+            ":none"
+          ],
+          [
+            "raise",
+            "|cannot construct"
+          ]
+        ],
+        [
+          "_",
+          [
+            "raise",
+            "|unreachable!"
+          ]
+        ]
+      ]
+    ],
+    "doc": "Create Date object from year, week, day. Args: year, week (1-53), day (1-7, 1=Monday). Example: (from-ywd 2024 1 1)",
+    "examples": [
+      [
+        "from-ywd",
+        "2024",
+        "1",
+        "1"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.date/from-ywd",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.std.date/Date0"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          "'Number",
+          "'Number"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "get-time!",
+      [],
+      [
+        "Date0",
+        ":date",
+        [
+          "decode-number",
+          [
+            "&call-dylib-edn",
+            [
+              "get-dylib-path",
+              "|/dylibs/libcalcit_std"
+            ],
+            "|now_bang"
+          ]
+        ]
+      ]
+    ],
+    "doc": "Get current system time as a Date object. Example: (get-time!)",
+    "examples": [
+      [
+        "get-time!"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.date/get-time!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.std.date/Date0"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "get-timestamp",
+      [
+        "date"
+      ],
+      [
+        "decode-number",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|get_timestamp",
+          [
+            ":date",
+            "date"
+          ]
+        ]
+      ]
+    ],
+    "doc": "Get timestamp (milliseconds) from Date object. Example: (get-timestamp (get-time!))",
+    "examples": [
+      [
+        "get-timestamp",
+        [
+          "get-time!"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.date/get-timestamp",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Number"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'calcit.std.date/Date0"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "1417176009000",
+          [
+            "calcit.std.date/get-timestamp",
+            [
+              "calcit.std.date/parse-time",
+              "|2014-11-28 21:00:09 +09:00",
+              "|%Y-%m-%d %H:%M:%S %z"
+            ]
+          ]
+        ],
+        "name": "checked-number-timestamp",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "parse-time",
+      [
+        "time",
+        "format"
+      ],
+      [
+        "Date0",
+        ":date",
+        [
+          "decode-number",
+          [
+            "&call-dylib-edn",
+            [
+              "get-dylib-path",
+              "|/dylibs/libcalcit_std"
+            ],
+            "|parse_time",
+            "time",
+            "format"
+          ]
+        ]
+      ]
+    ],
+    "doc": "Parse time string to Date object. Args: time string, format string (e.g. %Y-%m-%d %H:%M:%S %z). Example: (parse-time \"|2024-01-01 12:00:00 +00:00\" \"|%Y-%m-%d %H:%M:%S %z\")",
+    "examples": [
+      [
+        "parse-time",
+        "|2024-01-01 12:00:00 +00:00",
+        "|%Y-%m-%d %H:%M:%S %z"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.date/parse-time",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.std.date/Date0"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "append-file!",
+      [
+        "name",
+        "content"
+      ],
+      [
+        "decode-unit",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|append_file",
+          "name",
+          "content"
+        ]
+      ]
+    ],
+    "doc": "Append content to end of file. Args: file path, content string. Example: (append-file! \"log.txt\" \"New log entry\")",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/append-file!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "path",
+              "|target/std-proofs/append-file.txt"
+            ]
+          ],
+          [
+            "calcit.std.fs/create-dir-all!",
+            "|target/std-proofs"
+          ],
+          [
+            "calcit.std.fs/write-file!",
+            "path",
+            "|a"
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "identical?",
+              "&unit",
+              [
+                "calcit.std.fs/append-file!",
+                "path",
+                "|b"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "|ab\n",
+            [
+              "calcit.std.fs/read-file",
+              "path"
+            ]
+          ]
+        ],
+        "name": "checked-unit-append",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "check-write-file!",
+      [
+        "name",
+        "content"
+      ],
+      [
+        "decode-bool",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|check_write_file",
+          "name",
+          "content"
+        ]
+      ]
+    ],
+    "doc": "Check if file exists, write content if not exists or if the content differs. Args: file path, content string. Returns true when the file was written, false when the existing content was identical.",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/check-write-file!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Bool"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "path",
+              "|target/std-proofs/check-write.txt"
+            ]
+          ],
+          [
+            "calcit.std.fs/create-dir-all!",
+            "|target/std-proofs"
+          ],
+          [
+            "calcit.std.fs/write-file!",
+            "path",
+            "|old"
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "calcit.std.fs/check-write-file!",
+              "path",
+              "|new"
+            ]
+          ],
+          [
+            "assert=",
+            "false",
+            [
+              "calcit.std.fs/check-write-file!",
+              "path",
+              "|new"
+            ]
+          ],
+          [
+            "assert=",
+            "|new",
+            [
+              "calcit.std.fs/read-file",
+              "path"
+            ]
+          ]
+        ],
+        "name": "checked-bool-result",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "create-dir!",
+      [
+        "name"
+      ],
+      [
+        "decode-unit",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|create_dir",
+          "name"
+        ]
+      ]
+    ],
+    "doc": "Create a directory at the given path. Fails if parent directory does not exist. Example: (create-dir! \"new-folder\")",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/create-dir!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "path",
+              "|target/std-proofs/create-dir-once"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "identical?",
+              "&unit",
+              [
+                "calcit.std.fs/create-dir-all!",
+                "path"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "calcit.std.fs/path-exists?",
+              "path"
+            ]
+          ]
+        ],
+        "name": "checked-unit-create-dir",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "create-dir-all!",
+      [
+        "name"
+      ],
+      [
+        "decode-unit",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|create_dir_all",
+          "name"
+        ]
+      ]
+    ],
+    "doc": "Create a directory and all necessary parent directories. Example: (create-dir-all! \"path/to/nested/dir\")",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/create-dir-all!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "glob!",
+      [
+        "name"
+      ],
+      [
+        "decode-string-list",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|glob_call",
+          "name"
+        ]
+      ]
+    ],
+    "doc": "Find files matching the glob pattern. Returns a list of matching file paths. Example: (glob! \"src/*.rs\")",
+    "examples": [
+      [
+        "glob!",
+        "|src/**/*.rs"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/glob!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          "'String"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          [
+            "[]",
+            "|tests/fixtures/read-contracts/hello.txt"
+          ],
+          [
+            "calcit.std.fs/glob!",
+            "|tests/fixtures/read-contracts/*.txt"
+          ]
+        ],
+        "name": "checked-string-list",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "path-exists?",
+      [
+        "name"
+      ],
+      [
+        "decode-bool",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|path_exists",
+          "name"
+        ]
+      ]
+    ],
+    "doc": "Check if a file or directory exists at the given path. Returns boolean. Example: (path-exists? \"README.md\")",
+    "examples": [
+      [
+        "path-exists?",
+        "|file.txt"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/path-exists?",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Bool"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "do",
+          [
+            "assert=",
+            "true",
+            [
+              "calcit.std.fs/path-exists?",
+              "|tests/fixtures/read-contracts/hello.txt"
+            ]
+          ],
+          [
+            "assert=",
+            "false",
+            [
+              "calcit.std.fs/path-exists?",
+              "|tests/fixtures/read-contracts/missing.txt"
+            ]
+          ]
+        ],
+        "name": "checked-bool-result",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "read-dir",
+      [
+        "name"
+      ],
+      [
+        "decode-string-list",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|read_dir",
+          "name"
+        ]
+      ]
+    ],
+    "doc": "通过 native 模块列出直接子路径，返回 List<String>，顺序不保证，失败抛错；不执行写入。",
+    "examples": [
+      [
+        "calcit.std.fs/read-dir",
+        "|src"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/read-dir",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          "'String"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "items",
+              [
+                "calcit.std.fs/read-dir",
+                "|tests/fixtures/read-contracts"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "2",
+            [
+              "items.len"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "items.includes?",
+              "|tests/fixtures/read-contracts/hello.txt"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "items.includes?",
+              "|tests/fixtures/read-contracts/nested"
+            ]
+          ]
+        ],
+        "name": "lists-direct-children",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      },
+      {
+        "code": [
+          "let",
+          [
+            [
+              "failed",
+              [
+                "ref",
+                "false"
+              ]
+            ]
+          ],
+          [
+            "try",
+            [
+              "calcit.std.fs/read-dir",
+              "|tests/fixtures/read-contracts/missing.txt"
+            ],
+            [
+              "fn",
+              [
+                "message"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'String"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    [
+                      "::",
+                      "'List",
+                      "'String"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "assert=",
+                "true",
+                [
+                  "message.includes?",
+                  "|read_dir_calcit_ffi_v1"
+                ]
+              ],
+              [
+                "reset!",
+                "failed",
+                "true"
+              ],
+              [
+                "[]"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            "@failed"
+          ]
+        ],
+        "name": "missing-path-throws",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "def",
+      "read-dir!",
+      "calcit.std.fs/read-dir"
+    ],
+    "doc": "兼容入口，请改用 read-dir；读取失败仍抛错，结果顺序不保证。只在发布版消费者迁移及相关门禁完成后退场，不作为新代码首选。",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/read-dir!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          "'String"
+        ]
+      ]
+    ],
+    "tags": [
+      "deprecated"
+    ],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "items",
+              [
+                "calcit.std.fs/read-dir!",
+                "|tests/fixtures/read-contracts"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "2",
+            [
+              "items.len"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "items.includes?",
+              "|tests/fixtures/read-contracts/hello.txt"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "items.includes?",
+              "|tests/fixtures/read-contracts/nested"
+            ]
+          ]
+        ],
+        "name": "legacy-directory-read",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "read-file",
+      [
+        "name"
+      ],
+      [
+        "decode-string",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|read_file",
+          "name"
+        ]
+      ]
+    ],
+    "doc": "通过 native 模块同步读取 UTF-8 文件，返回 String，失败抛错；不返回 Result，不执行写入。示例见 attached examples。",
+    "examples": [
+      [
+        "calcit.std.fs/read-file",
+        "|README.md"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/read-file",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "|Calcit 😀 native read\n",
+          [
+            "calcit.std.fs/read-file",
+            "|tests/fixtures/read-contracts/hello.txt"
+          ]
+        ],
+        "name": "reads-utf8-text",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      },
+      {
+        "code": [
+          "let",
+          [
+            [
+              "failed",
+              [
+                "ref",
+                "false"
+              ]
+            ]
+          ],
+          [
+            "try",
+            [
+              "calcit.std.fs/read-file",
+              "|tests/fixtures/read-contracts/missing.txt"
+            ],
+            [
+              "fn",
+              [
+                "message"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'String"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    "'String"
+                  ]
+                ]
+              ],
+              [
+                "assert=",
+                "true",
+                [
+                  "message.includes?",
+                  "|read_file_calcit_ffi_v1"
+                ]
+              ],
+              [
+                "reset!",
+                "failed",
+                "true"
+              ],
+              "|ignored"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            "@failed"
+          ]
+        ],
+        "name": "missing-path-throws",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "def",
+      "read-file!",
+      "calcit.std.fs/read-file"
+    ],
+    "doc": "兼容入口，请改用 read-file；读取失败仍抛错。只在发布版消费者迁移及相关门禁完成后退场，不作为新代码首选。",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/read-file!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [
+      "deprecated"
+    ],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "path",
+              "|tests/fixtures/read-contracts/hello.txt"
+            ],
+            [
+              "expected",
+              [
+                "calcit.std.fs/read-file",
+                "path"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "expected",
+            [
+              "calcit.std.fs/read-file!",
+              "path"
+            ]
+          ],
+          [
+            "assert=",
+            [
+              "[]",
+              "expected"
+            ],
+            [
+              "map",
+              [
+                "[]",
+                "path"
+              ],
+              "calcit.std.fs/read-file!"
+            ]
+          ]
+        ],
+        "name": "legacy-call-and-callback",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "read-file-by-line!",
+      [
+        "name",
+        "cb"
+      ],
+      [
+        "decode-unit",
+        [
+          "&blocking-dylib-edn-fn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|read_file_by_line",
+          "name",
+          "cb"
+        ]
+      ]
+    ],
+    "doc": "Streams a file lazily through the blocking C-safe FFI and calls the callback once per line. The callback receives String and returns Unit. Line terminators are removed like BufRead::lines; callback failure or host closing stops reading immediately. Peak native memory is bounded by the reader buffer plus the longest line.",
+    "examples": [
+      [
+        "read-file-by-line!",
+        "|Cargo.toml",
+        [
+          "fn",
+          [
+            "line"
+          ],
+          "&unit"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/read-file-by-line!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String",
+          [
+            "::",
+            "'Fn",
+            [
+              "{}",
+              [
+                ":return",
+                "'Unit"
+              ],
+              [
+                ":args",
+                [
+                  "[]",
+                  "'String"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "*count",
+              [
+                "ref",
+                "0"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "identical?",
+              "&unit",
+              [
+                "calcit.std.fs/read-file-by-line!",
+                "|tests/fixtures/read-contracts/hello.txt",
+                [
+                  "fn",
+                  [
+                    "line"
+                  ],
+                  [
+                    "swap!",
+                    "*count",
+                    "inc"
+                  ],
+                  "&unit"
+                ]
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "1",
+            "@*count"
+          ]
+        ],
+        "name": "checked-unit-callback-result",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "rename!",
+      [
+        "from",
+        "to"
+      ],
+      [
+        "decode-unit",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|rename_path",
+          "from",
+          "to"
+        ]
+      ]
+    ],
+    "doc": "Rename or move a file/directory. Args: source path, destination path. Example: (rename! \"old.txt\" \"new.txt\")",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/rename!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "from",
+              "|target/std-proofs/rename-from.txt"
+            ],
+            [
+              "to",
+              "|target/std-proofs/rename-to.txt"
+            ]
+          ],
+          [
+            "calcit.std.fs/create-dir-all!",
+            "|target/std-proofs"
+          ],
+          [
+            "calcit.std.fs/write-file!",
+            "from",
+            "|moved"
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "identical?",
+              "&unit",
+              [
+                "calcit.std.fs/rename!",
+                "from",
+                "to"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "false",
+            [
+              "calcit.std.fs/path-exists?",
+              "from"
+            ]
+          ],
+          [
+            "assert=",
+            "|moved",
+            [
+              "calcit.std.fs/read-file",
+              "to"
+            ]
+          ]
+        ],
+        "name": "checked-unit-rename",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "walk-dir",
+      [
+        "name"
+      ],
+      [
+        "decode-string-list",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|walk_dir",
+          "name"
+        ]
+      ]
+    ],
+    "doc": "通过 native 模块递归列出文件路径，返回 List<String>，顺序不保证，失败抛错；不执行写入。",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/walk-dir",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          "'String"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "items",
+              [
+                "calcit.std.fs/walk-dir",
+                "|tests/fixtures/read-contracts"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "2",
+            [
+              "items.len"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "items.includes?",
+              "|tests/fixtures/read-contracts/hello.txt"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "items.includes?",
+              "|tests/fixtures/read-contracts/nested/second.txt"
+            ]
+          ]
+        ],
+        "name": "lists-recursive-files",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      },
+      {
+        "code": [
+          "let",
+          [
+            [
+              "failed",
+              [
+                "ref",
+                "false"
+              ]
+            ]
+          ],
+          [
+            "try",
+            [
+              "calcit.std.fs/walk-dir",
+              "|tests/fixtures/read-contracts/missing.txt"
+            ],
+            [
+              "fn",
+              [
+                "message"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'String"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    [
+                      "::",
+                      "'List",
+                      "'String"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "assert=",
+                "true",
+                [
+                  "message.includes?",
+                  "|walk_dir_calcit_ffi_v1"
+                ]
+              ],
+              [
+                "reset!",
+                "failed",
+                "true"
+              ],
+              [
+                "[]"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            "@failed"
+          ]
+        ],
+        "name": "missing-path-throws",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "def",
+      "walk-dir!",
+      "calcit.std.fs/walk-dir"
+    ],
+    "doc": "兼容入口，请改用 walk-dir；遍历失败仍抛错，结果顺序不保证。只在发布版消费者迁移及相关门禁完成后退场，不作为新代码首选。",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/walk-dir!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          "'String"
+        ]
+      ]
+    ],
+    "tags": [
+      "deprecated"
+    ],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "items",
+              [
+                "calcit.std.fs/walk-dir!",
+                "|tests/fixtures/read-contracts"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "2",
+            [
+              "items.len"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "items.includes?",
+              "|tests/fixtures/read-contracts/hello.txt"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "items.includes?",
+              "|tests/fixtures/read-contracts/nested/second.txt"
+            ]
+          ]
+        ],
+        "name": "legacy-recursive-read",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "write-file!",
+      [
+        "name",
+        "content"
+      ],
+      [
+        "decode-unit",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|write_file",
+          "name",
+          "content"
+        ]
+      ]
+    ],
+    "doc": "Write content to file (overwrite). Args: file path, content string. Example: (write-file! \"output.txt\" \"Hello, World!\")",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.fs/write-file!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "path",
+              "|target/std-proofs/write-file.txt"
+            ]
+          ],
+          [
+            "calcit.std.fs/create-dir-all!",
+            "|target/std-proofs"
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "identical?",
+              "&unit",
+              [
+                "calcit.std.fs/write-file!",
+                "path",
+                "|written"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "|written",
+            [
+              "calcit.std.fs/read-file",
+              "path"
+            ]
+          ]
+        ],
+        "name": "checked-unit-write",
+        "tags": [
+          "filesystem",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "md5",
+      [
+        "s"
+      ],
+      [
+        "decode-string",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|md5",
+          "s"
+        ]
+      ]
+    ],
+    "doc": "Calculate MD5 hash of a string. Returns 32-character hexadecimal string. Example: (md5 \"hello\")",
+    "examples": [
+      [
+        "md5",
+        "|hello"
+      ]
+    ],
+    "ffi": {
+      ":backend": {
+        "__edn_tag": "native"
+      },
+      ":invoke": {
+        "__edn_tag": "sync"
+      },
+      ":kind": {
+        "__edn_tag": "pure-function"
+      },
+      ":symbol": "md5",
+      ":transport": {
+        "__edn_tag": "edn-buffer-v1"
+      }
+    },
+    "ffi_edn": "{} (:backend :native) (:invoke :sync) (:kind :pure-function) (:symbol |md5) (:transport :edn-buffer-v1)",
+    "id": "calcit.std.hash/md5",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "|d41d8cd98f00b204e9800998ecf8427e",
+          [
+            "calcit.std.hash/md5",
+            "|"
+          ]
+        ],
+        "name": "checked-empty-digest",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "join-path",
+      [
+        "&",
+        "xs"
+      ],
+      [
+        "decode-string",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|join_path",
+          "&",
+          "xs"
+        ]
+      ]
+    ],
+    "doc": "Join multiple path segments into a complete path, handling separators automatically. Example: (join-path \"/home\" \"user\" \"documents\" \"file.txt\")",
+    "examples": [
+      [
+        "join-path",
+        "|/home",
+        "|user",
+        "|documents",
+        "|file.txt"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.path/join-path",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":rest",
+        "'String"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "|a/b/c.txt",
+          [
+            "calcit.std.path/join-path",
+            "|a",
+            "|b",
+            "|c.txt"
+          ]
+        ],
+        "name": "checked-join",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "path-basename",
+      [
+        "x"
+      ],
+      [
+        "decode-string",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|path_basename",
+          "x"
+        ]
+      ]
+    ],
+    "doc": "Get the filename part of a path (the last path component). Example: (path-basename \"/home/user/file.txt\")",
+    "examples": [
+      [
+        "path-basename",
+        "|/home/user/file.txt"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.path/path-basename",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "|c.txt",
+          [
+            "calcit.std.path/path-basename",
+            "|a/b/c.txt"
+          ]
+        ],
+        "name": "checked-basename",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "path-dirname",
+      [
+        "x"
+      ],
+      [
+        "decode-string",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|path_dirname",
+          "x"
+        ]
+      ]
+    ],
+    "doc": "Get the directory part of a path (excluding the last component). Example: (path-dirname \"/home/user/file.txt\")",
+    "examples": [
+      [
+        "path-dirname",
+        "|/home/user/file.txt"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.path/path-dirname",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "|a/b",
+          [
+            "calcit.std.path/path-dirname",
+            "|a/b/c.txt"
+          ]
+        ],
+        "name": "checked-dirname",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defenum",
+      "ProcessOutput",
+      [
+        ":stdout",
+        "'String"
+      ],
+      [
+        ":stderr",
+        "'String"
+      ]
+    ],
+    "doc": "A streamed process output event.",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.process/ProcessOutput",
+    "js_ffi": null,
+    "schema": "'Enum",
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "execute!",
+      [
+        "command",
+        "dir"
+      ],
+      [
+        "assert",
+        "|command in list",
+        [
+          "and",
+          [
+            "list?",
+            "command"
+          ],
+          [
+            "every?",
+            "command",
+            "string?"
+          ]
+        ]
+      ],
+      [
+        "decode-string-list",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|execute_command",
+          [
+            ".unwrap-or",
+            "dir",
+            "|./"
+          ],
+          "command"
+        ]
+      ]
+    ],
+    "doc": "|Execute a command from a List<String>. The optional working directory defaults to ./; pass (Option :some path) to override it. Returns [stdout stderr].",
+    "examples": [
+      [
+        "execute!",
+        [
+          "[]",
+          "|ls",
+          "|-la"
+        ],
+        [
+          "Option",
+          ":none"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.process/execute!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'List",
+            "'String"
+          ],
+          [
+            "::",
+            "'calcit.core/Option",
+            "'String"
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'List",
+          "'String"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          [
+            "[]",
+            "|hi\n",
+            "|"
+          ],
+          [
+            "calcit.std.process/execute!",
+            [
+              "[]",
+              "|echo",
+              "|hi"
+            ],
+            [
+              "Option",
+              ":none"
+            ]
+          ]
+        ],
+        "name": "checked-string-list",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "def",
+      "on-ctrl-c",
+      "calcit.std.process/on-ctrl-c!"
+    ],
+    "doc": "兼容入口，请改用 on-ctrl-c!；保留同一函数引用、callback 和取消语义。发布版消费者迁移完成前不删除。",
+    "examples": [
+      [
+        "let",
+        [
+          [
+            "task",
+            [
+              "on-ctrl-c",
+              [
+                "fn",
+                [],
+                [
+                  "println",
+                  "|Exiting..."
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "task.cancel-with!",
+          ":example-complete"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.process/on-ctrl-c",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.core/FfiTask"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'Fn",
+            [
+              "{}",
+              [
+                ":return",
+                "'Unit"
+              ],
+              [
+                ":args",
+                [
+                  "[]"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [
+      "deprecated"
+    ],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "on-ctrl-c",
+          "calcit.std.process/on-ctrl-c!"
+        ],
+        "name": "same-callable",
+        "tags": [
+          "lifecycle",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "on-ctrl-c!",
+      [
+        "f"
+      ],
+      [
+        "ffi:task",
+        [
+          "&call-dylib-edn-fn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|on_ctrl_c",
+          "f"
+        ]
+      ]
+    ],
+    "doc": "注册处理 Ctrl+C 的零参数 callback，返回可取消的 FfiTask。callback 返回 Unit；! 表示注册宿主订阅，不改变退出或取消策略。",
+    "examples": [
+      [
+        "let",
+        [
+          [
+            "task",
+            [
+              "on-ctrl-c!",
+              [
+                "fn",
+                [],
+                [
+                  "println",
+                  "|Exiting..."
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "task.cancel-with!",
+          ":example-complete"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.process/on-ctrl-c!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.core/FfiTask"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'Fn",
+            [
+              "{}",
+              [
+                ":return",
+                "'Unit"
+              ],
+              [
+                ":args",
+                [
+                  "[]"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "stream!",
+      [
+        "command",
+        "f",
+        "dir"
+      ],
+      [
+        "assert",
+        "|command in list",
+        [
+          "and",
+          [
+            "list?",
+            "command"
+          ],
+          [
+            "every?",
+            "command",
+            "string?"
+          ]
+        ]
+      ],
+      [
+        "ffi:task",
+        [
+          "&call-dylib-edn-fn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|stream_command",
+          [
+            ".unwrap-or",
+            "dir",
+            "|./"
+          ],
+          "command",
+          "f"
+        ]
+      ]
+    ],
+    "doc": "Start a process and stream tagged stdout/stderr events to callback. Runs asynchronously.",
+    "examples": [
+      [
+        "stream!",
+        [
+          "[]",
+          "|sh",
+          "|-c",
+          "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2"
+        ],
+        [
+          "fn",
+          [
+            "event"
+          ],
+          [
+            "println",
+            "|received-ProcessOutput",
+            "event"
+          ]
+        ],
+        [
+          "Option",
+          ":none"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.process/stream!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.core/FfiTask"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'List",
+            "'String"
+          ],
+          [
+            "::",
+            "'Fn",
+            [
+              "{}",
+              [
+                ":return",
+                "'Unit"
+              ],
+              [
+                ":args",
+                [
+                  "[]",
+                  "'calcit.std.process/ProcessOutput"
+                ]
+              ]
+            ]
+          ],
+          [
+            "::",
+            "'calcit.core/Option",
+            "'String"
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "nanoid!",
+      [
+        "size",
+        "chars"
+      ],
+      [
+        "decode-string",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|call_nanoid",
+          "size",
+          "chars"
+        ]
+      ]
+    ],
+    "doc": "Generate a nanoid string. Size and character set are Option values; omitted values use nanoid defaults.",
+    "examples": [
+      [
+        "nanoid!",
+        [
+          "Option",
+          ":some",
+          "10"
+        ],
+        [
+          "Option",
+          ":none"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.rand/nanoid!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'calcit.core/Option",
+            "'Number"
+          ],
+          [
+            "::",
+            "'calcit.core/Option",
+            "'String"
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "8",
+          [
+            [
+              "calcit.std.rand/nanoid!",
+              [
+                "Option",
+                ":some",
+                "8"
+              ],
+              [
+                "Option",
+                ":none"
+              ]
+            ],
+            ".len"
+          ]
+        ],
+        "name": "checked-length",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "rand",
+      [
+        "from",
+        "to"
+      ],
+      [
+        "decode-number",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|rand",
+          "from",
+          "to"
+        ]
+      ]
+    ],
+    "doc": "|Generate a random float. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand (Option :some 10) (Option :some 100)).",
+    "examples": [
+      [
+        "rand",
+        [
+          "Option",
+          ":some",
+          "10"
+        ],
+        [
+          "Option",
+          ":some",
+          "100"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.rand/rand",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Number"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'calcit.core/Option",
+            "'Number"
+          ],
+          [
+            "::",
+            "'calcit.core/Option",
+            "'Number"
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "value",
+              [
+                "calcit.std.rand/rand",
+                [
+                  "Option",
+                  ":some",
+                  "1"
+                ],
+                [
+                  "Option",
+                  ":some",
+                  "2"
+                ]
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "and",
+              [
+                ">=",
+                "value",
+                "1"
+              ],
+              [
+                "<",
+                "value",
+                "2"
+              ]
+            ]
+          ]
+        ],
+        "name": "checked-number-range",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "rand-between",
+      [
+        "x",
+        "y"
+      ],
+      [
+        "&+",
+        "x",
+        [
+          "rand",
+          [
+            "Option",
+            ":some",
+            [
+              "&-",
+              "y",
+              "x"
+            ]
+          ],
+          [
+            "Option",
+            ":none"
+          ]
+        ]
+      ]
+    ],
+    "doc": "Generate random float between from and to.",
+    "examples": [
+      [
+        "rand-between",
+        "10",
+        "20"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.rand/rand-between",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Number"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          "'Number"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "rand-hex-color!",
+      [],
+      [
+        "decode-string",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|rand_hex_color"
+        ]
+      ]
+    ],
+    "doc": "Generate random hexadecimal color string in format #rrggbb. Example: (rand-hex-color!)",
+    "examples": [
+      [
+        "rand-hex-color!"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.rand/rand-hex-color!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "let",
+          [
+            [
+              "color",
+              [
+                "calcit.std.rand/rand-hex-color!"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "7",
+            [
+              "color.len"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            [
+              "color.starts-with?",
+              "|#"
+            ]
+          ]
+        ],
+        "name": "checked-hex-color",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "rand-int",
+      [
+        "from",
+        "to"
+      ],
+      [
+        "decode-number",
+        [
+          "&call-dylib-edn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|rand_int",
+          "from",
+          "to"
+        ]
+      ]
+    ],
+    "doc": "|Generate a random integer. Omitted bounds use the default range; present bounds use Option<Number>, for example (rand-int (Option :some 10) (Option :some 100)).",
+    "examples": [
+      [
+        "rand-int",
+        [
+          "Option",
+          ":some",
+          "100"
+        ],
+        [
+          "Option",
+          ":none"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.rand/rand-int",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Number"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'calcit.core/Option",
+            "'Number"
+          ],
+          [
+            "::",
+            "'calcit.core/Option",
+            "'Number"
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "5",
+          [
+            "calcit.std.rand/rand-int",
+            [
+              "Option",
+              ":some",
+              "5"
+            ],
+            [
+              "Option",
+              ":some",
+              "6"
+            ]
+          ]
+        ],
+        "name": "checked-number-range",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "rand-nth",
+      [
+        "xs"
+      ],
+      [
+        "if",
+        [
+          "&list:empty?",
+          "xs"
+        ],
+        [
+          "Option",
+          ":none"
+        ],
+        [
+          "get",
+          "xs",
+          [
+            "rand-int",
+            [
+              "Option",
+              ":some",
+              [
+                "&list:count",
+                "xs"
+              ]
+            ],
+            [
+              "Option",
+              ":none"
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "|Randomly select one element from a list. Returns (Option :none) when the list is empty.",
+    "examples": [
+      [
+        "rand-nth",
+        [
+          "[]",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.rand/rand-nth",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          [
+            "::",
+            "'List",
+            "'T"
+          ]
+        ]
+      ],
+      [
+        ":generics",
+        [
+          "[]",
+          "'T"
+        ]
+      ],
+      [
+        ":return",
+        [
+          "::",
+          "'calcit.core/Option",
+          "'T"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "rand-shift",
+      [
+        "x",
+        "y"
+      ],
+      [
+        "&+",
+        [
+          "&-",
+          "x",
+          "y"
+        ],
+        [
+          "rand",
+          [
+            "Option",
+            ":some",
+            [
+              "&*",
+              "2",
+              "y"
+            ]
+          ],
+          [
+            "Option",
+            ":none"
+          ]
+        ]
+      ]
+    ],
+    "doc": "Generate random float within center ± shift range.",
+    "examples": [
+      [
+        "rand-shift",
+        "10",
+        "2"
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.rand/rand-shift",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Number"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          "'Number"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "main!",
+      [],
+      [
+        "run-tests"
+      ],
+      [
+        "try-demos"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test/main!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "reload!",
+      [],
+      [
+        "run-tests"
+      ],
+      [
+        "println",
+        "|reload not handled yet"
+      ],
+      "&unit"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test/reload!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "run-tests",
+      [],
+      [
+        "fs/main!"
+      ],
+      [
+        "date/main!"
+      ],
+      [
+        "random/main!"
+      ],
+      [
+        "test-path"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test/run-tests",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "test-path",
+      [],
+      [
+        "assert=",
+        "|a/b",
+        [
+          "join-path",
+          "|a",
+          "|b"
+        ]
+      ],
+      [
+        "assert=",
+        "|a",
+        [
+          "join-path",
+          "|a"
+        ]
+      ],
+      [
+        "assert=",
+        "|a/b/c",
+        [
+          "join-path",
+          "|a",
+          "|b",
+          "|c"
+        ]
+      ],
+      [
+        "assert=",
+        "|a/b",
+        [
+          "path-dirname",
+          "|a/b/c"
+        ]
+      ],
+      [
+        "assert=",
+        "|c",
+        [
+          "path-basename",
+          "|a/b/c"
+        ]
+      ],
+      "&unit"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test/test-path",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "try-ctrlc!",
+      [],
+      [
+        "on-ctrl-c!",
+        [
+          "fn",
+          [],
+          [
+            "println",
+            "|TODO handler..."
+          ],
+          "&unit"
+        ]
+      ],
+      "&unit"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test/try-ctrlc!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "try-demos",
+      [],
+      [
+        "println",
+        [
+          "md5",
+          "|"
+        ]
+      ],
+      [
+        "println",
+        [
+          "md5",
+          "|5"
+        ]
+      ],
+      "&unit"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test/try-demos",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "try-time!",
+      [],
+      [
+        "set-timeout!",
+        "4000",
+        [
+          "fn",
+          [],
+          [
+            "println",
+            "|doing"
+          ],
+          "&unit"
+        ]
+      ],
+      [
+        "set-interval!",
+        "2000",
+        [
+          "fn",
+          [],
+          [
+            "println",
+            "|DO Do Do"
+          ],
+          "&unit"
+        ]
+      ],
+      "&unit"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test/try-time!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "main!",
+      [],
+      [
+        "println",
+        "&newline",
+        "|%%%% test date"
+      ],
+      [
+        "println",
+        "|GET TIME",
+        [
+          "get-time!"
+        ]
+      ],
+      [
+        "echo",
+        "|time:",
+        [
+          "format-time",
+          [
+            "get-time!"
+          ],
+          [
+            "Option",
+            ":some",
+            "|%Y-%m-%d %H:%M:%S %z"
+          ]
+        ]
+      ],
+      [
+        "assert=",
+        "1417176009000",
+        [
+          "get-timestamp",
+          [
+            "parse-time",
+            "|2014-11-28 21:00:09 +09:00",
+            "|%Y-%m-%d %H:%M:%S %z"
+          ]
+        ]
+      ],
+      [
+        "dbg",
+        [
+          "extract-time",
+          [
+            "get-time!"
+          ]
+        ]
+      ],
+      [
+        "dbg",
+        [
+          "from-ymd",
+          "2021",
+          "11",
+          "11"
+        ]
+      ],
+      [
+        "dbg",
+        [
+          "from-ywd",
+          "2021",
+          "45",
+          "6"
+        ]
+      ],
+      [
+        "dbg",
+        [
+          "format-time",
+          [
+            "from-ywd",
+            "2022",
+            "1",
+            "2"
+          ],
+          [
+            "Option",
+            ":some",
+            "|%Y-%m-%d %H-%M"
+          ]
+        ]
+      ],
+      [
+        "println",
+        [
+          "format-time",
+          [
+            "add-duration",
+            [
+              "add-duration",
+              [
+                "get-time!"
+              ],
+              "1",
+              ":hours"
+            ],
+            "2",
+            ":minutes"
+          ],
+          [
+            "Option",
+            ":some",
+            "|%Y-%m-%d %H-%M"
+          ]
+        ]
+      ],
+      "&unit"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test.date/main!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "reload!",
+      [],
+      [
+        "main!"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test.date/reload!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "main!",
+      [],
+      [
+        "println",
+        "|%%%% test for fs"
+      ],
+      [
+        "println",
+        "calcit-filename",
+        "calcit-dirname"
+      ],
+      [
+        "println",
+        [
+          ">",
+          [
+            "count",
+            [
+              "calcit.std.fs/read-file",
+              "|README.md"
+            ]
+          ],
+          "1000"
+        ]
+      ],
+      [
+        "let",
+        [
+          [
+            "*c",
+            [
+              "ref",
+              "0"
+            ]
+          ]
+        ],
+        [
+          "read-file-by-line!",
+          "|README.md",
+          [
+            "fn",
+            [
+              "line"
+            ],
+            [
+              ";",
+              "println",
+              "|readling line:",
+              "line"
+            ],
+            [
+              "swap!",
+              "*c",
+              "inc"
+            ],
+            "&unit"
+          ]
+        ],
+        [
+          "println",
+          "|lines",
+          "@*c"
+        ]
+      ],
+      [
+        "println",
+        [
+          "path-exists?",
+          "|README.md"
+        ],
+        [
+          "path-exists?",
+          "|build.js"
+        ]
+      ],
+      [
+        "println",
+        [
+          "calcit.std.fs/read-dir",
+          "|./"
+        ]
+      ],
+      [
+        "println",
+        "|dirs:",
+        [
+          "execute!",
+          [
+            "[]",
+            "|ls"
+          ],
+          [
+            "Option",
+            ":none"
+          ]
+        ]
+      ],
+      [
+        "println",
+        "|all paths size:",
+        [
+          "count",
+          [
+            "calcit.std.fs/walk-dir",
+            "|target"
+          ]
+        ]
+      ],
+      [
+        "println",
+        "|rs files:",
+        [
+          "glob!",
+          "|src/*.rs"
+        ]
+      ],
+      [
+        "create-dir!",
+        "|target/dir1"
+      ],
+      [
+        "rename!",
+        "|target/dir1",
+        "|target/dir4"
+      ],
+      [
+        "create-dir-all!",
+        "|target/dir2/dir3"
+      ],
+      [
+        "check-write-file!",
+        "|target/dir8/dir9/file.text",
+        "|TODO"
+      ],
+      [
+        "append-file!",
+        "|target/dir8/dir9/file.text",
+        [
+          "str",
+          "&newline",
+          "|NEWLINE TODO"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test.fs/main!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "main!",
+      [],
+      [
+        "println",
+        "|starting-streamed-process"
+      ],
+      [
+        "stream!",
+        [
+          "[]",
+          "|sh",
+          "|-c",
+          "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2"
+        ],
+        [
+          "fn",
+          [
+            "event"
+          ],
+          [
+            "println",
+            "|received-ProcessOutput",
+            "event"
+          ],
+          "&unit"
+        ],
+        [
+          "Option",
+          ":none"
+        ]
+      ],
+      "&unit"
+    ],
+    "doc": "Verify streamed stdout/stderr events from a child process.",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test.process/main!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "main!",
+      [],
+      [
+        "println",
+        "|%%%%%% test random"
+      ],
+      [
+        "assert-detect",
+        "identity",
+        [
+          ".some?",
+          [
+            "rand-nth",
+            [
+              "range",
+              "10"
+            ]
+          ]
+        ]
+      ],
+      [
+        "assert=",
+        [
+          "Option",
+          ":none"
+        ],
+        [
+          "rand-nth",
+          [
+            "take",
+            [
+              "range",
+              "1"
+            ],
+            "0"
+          ]
+        ]
+      ],
+      [
+        "assert-detect",
+        "identity",
+        [
+          "<=",
+          "0",
+          [
+            "rand",
+            [
+              "Option",
+              ":none"
+            ],
+            [
+              "Option",
+              ":none"
+            ]
+          ],
+          "100"
+        ]
+      ],
+      [
+        "assert-detect",
+        "identity",
+        [
+          "<=",
+          "0",
+          [
+            "rand",
+            [
+              "Option",
+              ":some",
+              "10"
+            ],
+            [
+              "Option",
+              ":none"
+            ]
+          ],
+          "10"
+        ]
+      ],
+      [
+        "assert-detect",
+        "identity",
+        [
+          "<=",
+          "20",
+          [
+            "rand",
+            [
+              "Option",
+              ":some",
+              "20"
+            ],
+            [
+              "Option",
+              ":some",
+              "30"
+            ]
+          ],
+          "30"
+        ]
+      ],
+      [
+        "assert",
+        "|try .rand-shift",
+        [
+          "&let",
+          [
+            "x",
+            [
+              "rand-shift",
+              "10",
+              "5"
+            ]
+          ],
+          [
+            "and",
+            [
+              ">=",
+              "x",
+              "5"
+            ],
+            [
+              "<=",
+              "x",
+              "15"
+            ]
+          ]
+        ]
+      ],
+      [
+        "assert",
+        "|try .rand-between",
+        [
+          "&let",
+          [
+            "x",
+            [
+              "rand-between",
+              "10",
+              "5"
+            ]
+          ],
+          [
+            "and",
+            [
+              ">=",
+              "x",
+              "5"
+            ],
+            [
+              "<=",
+              "x",
+              "10"
+            ]
+          ]
+        ]
+      ],
+      [
+        "assert-detect",
+        "identity",
+        [
+          "<=",
+          "0",
+          [
+            "rand-int",
+            [
+              "Option",
+              ":none"
+            ],
+            [
+              "Option",
+              ":none"
+            ]
+          ],
+          "100"
+        ]
+      ],
+      [
+        "assert-detect",
+        "identity",
+        [
+          "<=",
+          "0",
+          [
+            "rand-int",
+            [
+              "Option",
+              ":some",
+              "10"
+            ],
+            [
+              "Option",
+              ":none"
+            ]
+          ],
+          "10"
+        ]
+      ],
+      [
+        "assert-detect",
+        "identity",
+        [
+          "<=",
+          "20",
+          [
+            "rand-int",
+            [
+              "Option",
+              ":some",
+              "20"
+            ],
+            [
+              "Option",
+              ":some",
+              "30"
+            ]
+          ],
+          "30"
+        ]
+      ],
+      [
+        "println",
+        "|%%%% test id"
+      ],
+      [
+        "assert=",
+        "9",
+        [
+          "count",
+          [
+            "nanoid!",
+            [
+              "Option",
+              ":some",
+              "9"
+            ],
+            [
+              "Option",
+              ":none"
+            ]
+          ]
+        ]
+      ],
+      [
+        "assert=",
+        "|aaaaa",
+        [
+          "nanoid!",
+          [
+            "Option",
+            ":some",
+            "5"
+          ],
+          [
+            "Option",
+            ":some",
+            "|a"
+          ]
+        ]
+      ],
+      [
+        "println",
+        [
+          "rand-hex-color!"
+        ]
+      ],
+      "&unit"
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.test.rand/main!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'Unit"
+      ],
+      [
+        ":args",
+        [
+          "[]"
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "set-interval",
+      "calcit.std.time/set-interval!"
+    ],
+    "doc": "兼容入口，请改用 set-interval!；保留同一函数引用、callback 和取消语义。发布版消费者迁移完成前不删除。",
+    "examples": [
+      [
+        "let",
+        [
+          [
+            "task",
+            [
+              "set-interval",
+              "10",
+              [
+                "fn",
+                [],
+                [
+                  "println",
+                  "|tick"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "task.cancel-with!",
+          ":example-complete"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.time/set-interval",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.core/FfiTask"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          [
+            "::",
+            "'Fn",
+            [
+              "{}",
+              [
+                ":return",
+                "'Unit"
+              ],
+              [
+                ":args",
+                [
+                  "[]"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [
+      "deprecated"
+    ],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "set-interval",
+          "calcit.std.time/set-interval!"
+        ],
+        "name": "same-callable",
+        "tags": [
+          "lifecycle",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "set-interval!",
+      [
+        "t",
+        "cb"
+      ],
+      [
+        "ffi:task",
+        [
+          "&call-dylib-edn-fn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|set_interval",
+          "t",
+          "cb"
+        ]
+      ]
+    ],
+    "doc": "按毫秒间隔重复执行返回 Unit 的零参数 callback，返回可取消的 FfiTask。调用方应在卸载或重载时显式取消；! 表示启动宿主任务。",
+    "examples": [
+      [
+        "let",
+        [
+          [
+            "task",
+            [
+              "set-interval!",
+              "10",
+              [
+                "fn",
+                [],
+                [
+                  "println",
+                  "|tick"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "task.cancel-with!",
+          ":example-complete"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.time/set-interval!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.core/FfiTask"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          [
+            "::",
+            "'Fn",
+            [
+              "{}",
+              [
+                ":return",
+                "'Unit"
+              ],
+              [
+                ":args",
+                [
+                  "[]"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "def",
+      "set-timeout",
+      "calcit.std.time/set-timeout!"
+    ],
+    "doc": "兼容入口，请改用 set-timeout!；保留同一函数引用、callback 和取消语义。发布版消费者迁移完成前不删除。",
+    "examples": [
+      [
+        "let",
+        [
+          [
+            "task",
+            [
+              "set-timeout",
+              "10",
+              [
+                "fn",
+                [],
+                [
+                  "println",
+                  "|timeout"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "task.cancel-with!",
+          ":example-complete"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.time/set-timeout",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.core/FfiTask"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          [
+            "::",
+            "'Fn",
+            [
+              "{}",
+              [
+                ":return",
+                "'Unit"
+              ],
+              [
+                ":args",
+                [
+                  "[]"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [
+      "deprecated"
+    ],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "set-timeout",
+          "calcit.std.time/set-timeout!"
+        ],
+        "name": "same-callable",
+        "tags": [
+          "lifecycle",
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defn",
+      "set-timeout!",
+      [
+        "t",
+        "cb"
+      ],
+      [
+        "ffi:task",
+        [
+          "&call-dylib-edn-fn",
+          [
+            "get-dylib-path",
+            "|/dylibs/libcalcit_std"
+          ],
+          "|set_timeout",
+          "t",
+          "cb"
+        ]
+      ]
+    ],
+    "doc": "延时执行一次 callback，返回可取消的 FfiTask。参数依次为毫秒数和返回 Unit 的零参数函数；使用 ! 表示启动宿主任务，不表示改变失败处理。",
+    "examples": [
+      [
+        "let",
+        [
+          [
+            "task",
+            [
+              "set-timeout!",
+              "10",
+              [
+                "fn",
+                [],
+                [
+                  "println",
+                  "|timeout"
+                ]
+              ]
+            ]
+          ]
+        ],
+        [
+          "task.cancel-with!",
+          ":example-complete"
+        ]
+      ]
+    ],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.time/set-timeout!",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'calcit.core/FfiTask"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'Number",
+          [
+            "::",
+            "'Fn",
+            [
+              "{}",
+              [
+                ":return",
+                "'Unit"
+              ],
+              [
+                ":args",
+                [
+                  "[]"
+                ]
+              ]
+            ]
+          ]
+        ]
+      ],
+      [
+        ":features",
+        [
+          "#{}",
+          ":js-ffi"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defmacro",
+      "decode-bool",
+      [
+        "raw"
+      ],
+      [
+        "quasiquote",
+        [
+          "match",
+          [
+            "try-decode-map-as",
+            "~raw",
+            "'Bool"
+          ],
+          [
+            [
+              ":ok",
+              "value"
+            ],
+            "value"
+          ],
+          [
+            [
+              ":err",
+              "message"
+            ],
+            [
+              "raise",
+              [
+                "str",
+                "|FFI result decode failed: ",
+                "message"
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.util/decode-bool",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Macro",
+      [
+        "{}",
+        [
+          ":capabilities",
+          [
+            "#{}"
+          ]
+        ],
+        [
+          ":expansion",
+          [
+            "::",
+            "'Expr",
+            "'Bool"
+          ]
+        ],
+        [
+          ":required",
+          [
+            "[]",
+            "'Syntax"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "true",
+          [
+            "decode-bool",
+            "true"
+          ]
+        ],
+        "name": "accepts-bool",
+        "tags": [
+          "unit"
+        ]
+      },
+      {
+        "code": [
+          "let",
+          [
+            [
+              "failed",
+              [
+                "ref",
+                "false"
+              ]
+            ]
+          ],
+          [
+            "try",
+            [
+              "decode-bool",
+              "|true"
+            ],
+            [
+              "fn",
+              [
+                "message"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'String"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    "'Bool"
+                  ]
+                ]
+              ],
+              [
+                "assert=",
+                "true",
+                [
+                  "message.includes?",
+                  "|FFI result decode failed"
+                ]
+              ],
+              [
+                "reset!",
+                "failed",
+                "true"
+              ],
+              "false"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            "@failed"
+          ]
+        ],
+        "name": "rejects-string",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defmacro",
+      "decode-number",
+      [
+        "raw"
+      ],
+      [
+        "quasiquote",
+        [
+          "match",
+          [
+            "try-decode-map-as",
+            "~raw",
+            "'Number"
+          ],
+          [
+            [
+              ":ok",
+              "value"
+            ],
+            "value"
+          ],
+          [
+            [
+              ":err",
+              "message"
+            ],
+            [
+              "raise",
+              [
+                "str",
+                "|FFI result decode failed: ",
+                "message"
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.util/decode-number",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Macro",
+      [
+        "{}",
+        [
+          ":capabilities",
+          [
+            "#{}"
+          ]
+        ],
+        [
+          ":expansion",
+          [
+            "::",
+            "'Expr",
+            "'Number"
+          ]
+        ],
+        [
+          ":required",
+          [
+            "[]",
+            "'Syntax"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "3",
+          [
+            "decode-number",
+            "3"
+          ]
+        ],
+        "name": "accepts-number",
+        "tags": [
+          "unit"
+        ]
+      },
+      {
+        "code": [
+          "let",
+          [
+            [
+              "failed",
+              [
+                "ref",
+                "false"
+              ]
+            ]
+          ],
+          [
+            "try",
+            [
+              "decode-number",
+              "|3"
+            ],
+            [
+              "fn",
+              [
+                "message"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'String"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    "'Number"
+                  ]
+                ]
+              ],
+              [
+                "assert=",
+                "true",
+                [
+                  "message.includes?",
+                  "|FFI result decode failed"
+                ]
+              ],
+              [
+                "reset!",
+                "failed",
+                "true"
+              ],
+              "0"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            "@failed"
+          ]
+        ],
+        "name": "rejects-string",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defmacro",
+      "decode-string",
+      [
+        "raw"
+      ],
+      [
+        "quasiquote",
+        [
+          "match",
+          [
+            "try-decode-map-as",
+            "~raw",
+            "'String"
+          ],
+          [
+            [
+              ":ok",
+              "value"
+            ],
+            "value"
+          ],
+          [
+            [
+              ":err",
+              "message"
+            ],
+            [
+              "raise",
+              [
+                "str",
+                "|FFI result decode failed: ",
+                "message"
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.util/decode-string",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Macro",
+      [
+        "{}",
+        [
+          ":capabilities",
+          [
+            "#{}"
+          ]
+        ],
+        [
+          ":expansion",
+          [
+            "::",
+            "'Expr",
+            "'String"
+          ]
+        ],
+        [
+          ":required",
+          [
+            "[]",
+            "'Syntax"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "|abc",
+          [
+            "decode-string",
+            "|abc"
+          ]
+        ],
+        "name": "accepts-string",
+        "tags": [
+          "unit"
+        ]
+      },
+      {
+        "code": [
+          "let",
+          [
+            [
+              "failed",
+              [
+                "ref",
+                "false"
+              ]
+            ]
+          ],
+          [
+            "try",
+            [
+              "decode-string",
+              "1"
+            ],
+            [
+              "fn",
+              [
+                "message"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'String"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    "'String"
+                  ]
+                ]
+              ],
+              [
+                "assert=",
+                "true",
+                [
+                  "message.includes?",
+                  "|FFI result decode failed"
+                ]
+              ],
+              [
+                "reset!",
+                "failed",
+                "true"
+              ],
+              "|"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            "@failed"
+          ]
+        ],
+        "name": "rejects-number",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defmacro",
+      "decode-string-list",
+      [
+        "raw"
+      ],
+      [
+        "quasiquote",
+        [
+          "match",
+          [
+            "try-decode-map-as",
+            "~raw",
+            [
+              "::",
+              "'List",
+              "'String"
+            ]
+          ],
+          [
+            [
+              ":ok",
+              "value"
+            ],
+            "value"
+          ],
+          [
+            [
+              ":err",
+              "message"
+            ],
+            [
+              "raise",
+              [
+                "str",
+                "|FFI result decode failed: ",
+                "message"
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.util/decode-string-list",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Macro",
+      [
+        "{}",
+        [
+          ":capabilities",
+          [
+            "#{}"
+          ]
+        ],
+        [
+          ":expansion",
+          [
+            "::",
+            "'Expr",
+            [
+              "::",
+              "'List",
+              "'String"
+            ]
+          ]
+        ],
+        [
+          ":required",
+          [
+            "[]",
+            "'Syntax"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          [
+            "[]",
+            "|a",
+            "|b"
+          ],
+          [
+            "decode-string-list",
+            [
+              "[]",
+              "|a",
+              "|b"
+            ]
+          ]
+        ],
+        "name": "accepts-string-list",
+        "tags": [
+          "unit"
+        ]
+      },
+      {
+        "code": [
+          "let",
+          [
+            [
+              "failed",
+              [
+                "ref",
+                "false"
+              ]
+            ]
+          ],
+          [
+            "try",
+            [
+              "decode-string-list",
+              [
+                "[]",
+                "|a",
+                "1"
+              ]
+            ],
+            [
+              "fn",
+              [
+                "message"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'String"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    [
+                      "::",
+                      "'List",
+                      "'String"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "assert=",
+                "true",
+                [
+                  "message.includes?",
+                  "|FFI result decode failed"
+                ]
+              ],
+              [
+                "reset!",
+                "failed",
+                "true"
+              ],
+              [
+                "[]"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            "@failed"
+          ]
+        ],
+        "name": "rejects-mixed-list",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defmacro",
+      "decode-tag-number-map",
+      [
+        "raw"
+      ],
+      [
+        "quasiquote",
+        [
+          "match",
+          [
+            "try-decode-map-as",
+            "~raw",
+            [
+              "::",
+              "'Map",
+              "'Tag",
+              "'Number"
+            ]
+          ],
+          [
+            [
+              ":ok",
+              "value"
+            ],
+            "value"
+          ],
+          [
+            [
+              ":err",
+              "message"
+            ],
+            [
+              "raise",
+              [
+                "str",
+                "|FFI result decode failed: ",
+                "message"
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.util/decode-tag-number-map",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Macro",
+      [
+        "{}",
+        [
+          ":capabilities",
+          [
+            "#{}"
+          ]
+        ],
+        [
+          ":expansion",
+          [
+            "::",
+            "'Expr",
+            [
+              "::",
+              "'Map",
+              "'Tag",
+              "'Number"
+            ]
+          ]
+        ],
+        [
+          ":required",
+          [
+            "[]",
+            "'Syntax"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          [
+            "{}",
+            [
+              ":a",
+              "1"
+            ],
+            [
+              ":b",
+              "2"
+            ]
+          ],
+          [
+            "decode-tag-number-map",
+            [
+              "{}",
+              [
+                ":a",
+                "1"
+              ],
+              [
+                ":b",
+                "2"
+              ]
+            ]
+          ]
+        ],
+        "name": "accepts-tag-number-map",
+        "tags": [
+          "unit"
+        ]
+      },
+      {
+        "code": [
+          "let",
+          [
+            [
+              "failed",
+              [
+                "ref",
+                "false"
+              ]
+            ]
+          ],
+          [
+            "try",
+            [
+              "decode-tag-number-map",
+              [
+                "{}",
+                [
+                  ":a",
+                  "|one"
+                ]
+              ]
+            ],
+            [
+              "fn",
+              [
+                "message"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'String"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    [
+                      "::",
+                      "'Map",
+                      "'Tag",
+                      "'Number"
+                    ]
+                  ]
+                ]
+              ],
+              [
+                "assert=",
+                "true",
+                [
+                  "message.includes?",
+                  "|FFI result decode failed"
+                ]
+              ],
+              [
+                "reset!",
+                "failed",
+                "true"
+              ],
+              [
+                "{}"
+              ]
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            "@failed"
+          ]
+        ],
+        "name": "rejects-string-value",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defmacro",
+      "decode-unit",
+      [
+        "raw"
+      ],
+      [
+        "quasiquote",
+        [
+          "let",
+          [
+            [
+              "unit-raw%",
+              "~raw"
+            ]
+          ],
+          [
+            "if",
+            [
+              "nil?",
+              "unit-raw%"
+            ],
+            "&unit",
+            [
+              "raise",
+              [
+                "str",
+                "|FFI result decode failed: expected nil for Unit, got ",
+                "unit-raw%"
+              ]
+            ]
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.util/decode-unit",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Macro",
+      [
+        "{}",
+        [
+          ":capabilities",
+          [
+            "#{}"
+          ]
+        ],
+        [
+          ":expansion",
+          [
+            "::",
+            "'Expr",
+            "'Unit"
+          ]
+        ],
+        [
+          ":required",
+          [
+            "[]",
+            "'Syntax"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": [
+      {
+        "code": [
+          "assert=",
+          "true",
+          [
+            "identical?",
+            "&unit",
+            [
+              "decode-unit",
+              "nil"
+            ]
+          ]
+        ],
+        "name": "accepts-nil",
+        "tags": [
+          "unit"
+        ]
+      },
+      {
+        "code": [
+          "let",
+          [
+            [
+              "failed",
+              [
+                "ref",
+                "false"
+              ]
+            ]
+          ],
+          [
+            "try",
+            [
+              "decode-unit",
+              "|done"
+            ],
+            [
+              "fn",
+              [
+                "message"
+              ],
+              [
+                "hint-fn",
+                [
+                  "{}",
+                  [
+                    ":args",
+                    [
+                      "[]",
+                      "'String"
+                    ]
+                  ],
+                  [
+                    ":return",
+                    "'Unit"
+                  ]
+                ]
+              ],
+              [
+                "assert=",
+                "true",
+                [
+                  "message.includes?",
+                  "|FFI result decode failed"
+                ]
+              ],
+              [
+                "reset!",
+                "failed",
+                "true"
+              ],
+              "&unit"
+            ]
+          ],
+          [
+            "assert=",
+            "true",
+            "@failed"
+          ]
+        ],
+        "name": "rejects-string",
+        "tags": [
+          "unit"
+        ]
+      }
+    ]
+  },
+  {
+    "code": [
+      "defmacro",
+      "get-dylib-ext",
+      [],
+      [
+        "let",
+        [
+          [
+            "os",
+            [
+              "&get-os"
+            ]
+          ]
+        ],
+        [
+          "if",
+          [
+            "=",
+            "os",
+            ":macos"
+          ],
+          "|.dylib",
+          [
+            "if",
+            [
+              "=",
+              "os",
+              ":windows"
+            ],
+            "|.dll",
+            "|.so"
+          ]
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.util/get-dylib-ext",
+    "js_ffi": null,
+    "schema": [
+      "::",
+      "'Macro",
+      [
+        "{}",
+        [
+          ":capabilities",
+          [
+            "#{}",
+            ":platform-read"
+          ]
+        ],
+        [
+          ":expansion",
+          [
+            "::",
+            "'Expr",
+            "'String"
+          ]
+        ],
+        [
+          ":required",
+          [
+            "[]"
+          ]
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "get-dylib-path",
+      [
+        "p"
+      ],
+      [
+        "str",
+        [
+          "or-current-path",
+          "calcit-dirname"
+        ],
+        "p",
+        [
+          "get-dylib-ext"
+        ]
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.util/get-dylib-path",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  },
+  {
+    "code": [
+      "defn",
+      "or-current-path",
+      [
+        "p"
+      ],
+      [
+        "if",
+        [
+          "blank?",
+          "p"
+        ],
+        "|.",
+        "p"
+      ]
+    ],
+    "doc": "",
+    "examples": [],
+    "ffi": null,
+    "ffi_edn": null,
+    "id": "calcit.std.util/or-current-path",
+    "js_ffi": null,
+    "schema": [
+      "{}",
+      [
+        ":kind",
+        ":fn"
+      ],
+      [
+        ":return",
+        "'String"
+      ],
+      [
+        ":args",
+        [
+          "[]",
+          "'String"
+        ]
+      ]
+    ],
+    "tags": [],
+    "tests": []
+  }
+]

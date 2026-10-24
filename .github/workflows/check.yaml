@@ -3,6 +3,7 @@ on:
     branches:
       - master
       - main
+      - prepare/std-source031
   pull_request: {}
 
 name: Test
@@ -36,11 +37,13 @@ jobs:
 
       - name: Validate Calcit snapshot and type baseline
         run: |
+          set -euo pipefail
           caps --strict --ci
+          node prepare-source.mjs
           calcit calcit.cirru edit format
-          git diff --exit-code -- calcit.cirru
+          test "$(git hash-object calcit.cirru)" = "$(cat acceptance/snapshot-blob.txt)"
           calcit calcit.cirru --check-only --all-defs
-          calcit calcit.cirru fix --workflow strict --verify --format json
+          calcit calcit.cirru fix --workflow strict --verify --format json | jq -e 'if .data.workflow.status? == "passed" and .diagnostics? == [] then true else ., false end'
           calcit calcit.cirru analyze weak-types --only coverage --summary-only --format json
           calcit calcit.cirru analyze weak-types --only schema-dynamic,code-dynamic --intent unresolved --summary-only --format json
           calcit calcit.cirru analyze weak-types --only deprecated-call --summary-only --format json
@@ -97,3 +100,12 @@ jobs:
           println (rand-nth $ range 10) (rand (Option :none) (Option :none)) (rand-int (Option :some 10) (Option :none))'
 
       - run: calcit calcit.cirru
+
+      - name: Preserve official source migration evidence
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: std-source-prepared
+          path: |
+            calcit.cirru
+            acceptance
+          retention-days: 3
