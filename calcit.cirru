@@ -702,7 +702,7 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (println "|%%%% test for fs") (println calcit-filename calcit-dirname)
             println $ >
-              count $ calcit.std.fs/read-file |README.md
+              .len $ calcit.std.fs/read-file |README.md
               , 1000
             let
                 *c $ ref 0
@@ -711,7 +711,7 @@
             println (path-exists? |README.md) (path-exists? |build.js)
             println $ calcit.std.fs/read-dir |./
             println |dirs: $ execute! ([] |ls) (Option :none)
-            println "|all paths size:" $ count $ calcit.std.fs/walk-dir |target
+            println "|all paths size:" $ .len $ calcit.std.fs/walk-dir |target
             println "|rs files:" $ glob! |src/*.rs
             create-dir! |target/dir1
             rename! |target/dir1 |target/dir4
@@ -775,7 +775,7 @@
               rand-int (Option :some 20) (Option :some 30)
               , 30
             println "|%%%% test id"
-            assert= 9 $ count $ nanoid! (Option :some 9) (Option :none)
+            assert= 9 $ .len $ nanoid! (Option :some 9) (Option :none)
             assert= |aaaaa $ nanoid! (Option :some 5) (Option :some |a)
             println $ rand-hex-color!
             , &unit

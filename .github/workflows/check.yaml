@@ -36,11 +36,15 @@ jobs:
 
       - name: Validate Calcit snapshot and type baseline
         run: |
+          set -euo pipefail
           caps --strict --ci
           calcit calcit.cirru edit format
-          git diff --exit-code -- calcit.cirru
+          if ! git diff --exit-code --quiet -- calcit.cirru; then
+            echo '::error file=calcit.cirru::Snapshot is not canonical. With Calcit 0.30.1, run calcit calcit.cirru edit format and inspect definitions through calcit query def.'
+            exit 1
+          fi
           calcit calcit.cirru --check-only --all-defs
-          calcit calcit.cirru fix --workflow strict --verify --format json
+          calcit calcit.cirru fix --workflow strict --verify --format json | jq -e 'if .data.workflow.status? == "passed" and .diagnostics? == [] then true else ., false end'
           calcit calcit.cirru analyze weak-types --only coverage --summary-only --format json
           calcit calcit.cirru analyze weak-types --only schema-dynamic,code-dynamic --intent unresolved --summary-only --format json
           calcit calcit.cirru analyze weak-types --only deprecated-call --summary-only --format json
