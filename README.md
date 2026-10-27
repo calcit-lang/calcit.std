@@ -8,7 +8,7 @@
 
 当前源码要求的 Calcit 版本与模块版本以 `deps.cirru` 为准，CI 使用同一 Calcit 版本。下游固定已发布的精确模块 tag，并在目标机器构建 native dylib；main 上已合并的改动不代表旧 tag 也包含这些改动。
 
-使用者影响：本轮源码声明正式 Calcit `0.30.1`，不改公开 API、返回类型、文件系统/进程/定时器行为、native ABI 或 Rust 依赖；消费者应固定正式模块 tag，并在目标机器构建匹配的 dylib。旧名称的弃用迁移窗口仍保留，不因工具链更新删除兼容入口。模块 `0.2.43` 和 `0.2.44` 均已发布，原 tag 的内容和工具链声明保持不变；本轮测试源码维护不覆盖旧 tag。
+使用者影响：0.2.45 候选声明正式 Calcit `0.31.0`，不改公开 API、返回类型、文件系统/进程/定时器行为、native ABI 或 Rust 依赖；消费者应固定正式模块 tag，并在目标机器构建匹配的 dylib。旧名称的弃用迁移窗口仍保留，不因工具链更新删除兼容入口。模块 `0.2.43` 和 `0.2.44` 均已发布，原 tag 的内容和工具链声明保持不变；本候选不覆盖旧 tag。
 
 当前源码使用正式 Calcit `0.31.0`，不再依赖 alpha CLI；std 是 native 模块，不依赖 `@calcit/procs`，不为版本配对额外添加 npm 工具链。正式版本兼容性以目标平台实际 dylib/异步验收为准，Linux CI 通过不等于全部平台已验收。进程目录默认值使用
 公开 Option 方法 `.unwrap-or`，随机测试使用 `.some?`，不再直接调用
@@ -16,9 +16,13 @@
 CI 使用严格入口/完整公开命名空间检查和当前 weak-types 视图，
 不再调用已弃用的 `analyze quality`；保留原 Rust、文件系统、dylib 和异步回归。
 
-本轮只将文件系统和随机测试入口的三处旧 `count` 改为 `.len`，
+此前已合并的文件系统和随机测试入口将三处旧 `count` 改为 `.len`，
 参数分别保留原 String、List<String> 和 String；不改变断言、公开 schema、
-FFI contract、生成 adapter、Rust 源码或 Cargo 依赖，也不随此改动发布新 tag。
+FFI 签名与 ABI、adapter 实现、Rust 业务源码或 Cargo 依赖。本候选另外将泛型 `rand-nth` 的
+List 判空和长度读取改为 `.empty?` / `.len`，保留空列表返回 `Option :none`、
+随机调用次数、原泛型参数与返回关系；不改随机区间或取值逻辑。
+模块与 Cargo 包版本配对为 0.2.45，原生成器同步 managed 产物的包版本与摘要；
+Rust bindings 仅版本注释变化，执行代码不变。发布须待精确完整 CI、评审和 main 验证通过。
 原 canonical 检查保持 fail-closed 并给出查询提示，完整 strict 显式要求通过且无诊断。
 不新增校验脚本、预算或 npm/JS runtime；std 仍只按 native 目标验收。
 

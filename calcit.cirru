@@ -584,9 +584,9 @@
         'rand-nth $ %{} 'CodeEntry
           :doc "||Randomly select one element from a list. Returns (Option :none) when the list is empty."
           :code $ quote $ defn rand-nth (xs)
-            if (&list:empty? xs) (Option :none)
+            if (.empty? xs) (Option :none)
               get xs $ rand-int
-                Option :some $ &list:count xs
+                Option :some $ .len xs
                 Option :none
           :examples $ [] $ quote
             rand-nth $ [] 1 2 3 4 5
