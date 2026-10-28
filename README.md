@@ -4,6 +4,14 @@
 >
 > Standard native module for Calcit on the Rust runtime.
 
+### 0.2.46 候选：Calcit 0.32.0
+
+使用者影响：本候选要求 Calcit 0.32.0，类型标注改用新的紧凑语法；旧 CLI 消费者应保留原 tag。公开 API、失败行为、原生 ABI 和 Rust 依赖不变。下游应固定验收后发布的新 tag，重新构建目标平台 dylib，不能把候选当作已发布版本。
+
+通过官方 `edit format` 迁移 Snapshot 标注及 9 处附带测试标注；65 个定义的实现和语义 schema 保持一致，原断言不变。模块与 Cargo 包同步为 0.2.46，managed FFI 产物由原生成器更新版本与摘要。保留完整 strict、零类型债务、Rust、dylib、异步及文档门禁；不新增 npm runtime。
+
+以下是先前版本的迁移记录；当前版本以 `deps.cirru` 为准。
+
 ### 版本与工具链
 
 当前源码要求的 Calcit 版本与模块版本以 `deps.cirru` 为准，CI 使用同一 Calcit 版本。下游固定已发布的精确模块 tag，并在目标机器构建 native dylib；main 上已合并的改动不代表旧 tag 也包含这些改动。

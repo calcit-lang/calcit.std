@@ -17,26 +17,23 @@
         'Date0 $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Date0 (:date 'Number)
           :examples $ []
-          :schema $ :: 'Enum
+          :schema $ quote Enum
         'add-duration $ %{} 'CodeEntry
           :doc "|Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc). Example: (add-duration (get-time!) 7 :days)"
           :code $ quote $ defn add-duration (date n k)
             Date0 :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |add_duration (:date date) n k
           :examples $ [] $ quote
             add-duration (get-time!) 7 :days
-          :schema $ :: 'Fn $ {} (:return 'calcit.std.date/Date0)
-            :args $ [] 'calcit.std.date/Date0 'Number 'Tag
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn calcit.std.date/Date0 Number Tag (-> calcit.std.date/Date0) (:features :js-ffi)
         'extract-time $ %{} 'CodeEntry
           :doc "|Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields. Example: (extract-time (get-time!))"
           :code $ quote $ defn extract-time (x)
             decode-tag-number-map $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |extract_time $ :date x
           :examples $ [] $ quote
             extract-time $ get-time!
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'calcit.std.date/Date0
-            :features $ #{} :js-ffi
-            :return $ :: 'Map 'Tag 'Number
+          :schema $ quote $ Fn calcit.std.date/Date0
+            -> $ Map Tag Number
+            :features :js-ffi
           :tests $ [] $ %{} 'TestEntry (:name |checked-tag-number-map)
             :code $ quote $ let
                 parts $ calcit.std.date/extract-time $ calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
@@ -50,8 +47,7 @@
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |format_time (:date time) format
           :examples $ [] $ quote
             format-time (get-time!) (Option :some |%Y-%m-%d)
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'calcit.std.date/Date0 $ :: 'calcit.core/Option 'String
+          :schema $ quote $ Fn calcit.std.date/Date0 (calcit.core/Option String) (-> String)
           :tests $ [] $ %{} 'TestEntry (:name |checked-string-format)
             :code $ quote $ assert= |2014-11-28
               calcit.std.date/format-time (calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z") (Option :some |%Y-%m-%d)
@@ -68,9 +64,7 @@
               (:none) (raise "|cannot construct")
               _ $ raise |unreachable!
           :examples $ [] $ quote (from-ymd 2024 1 15)
-          :schema $ :: 'Fn $ {} (:return 'calcit.std.date/Date0)
-            :args $ [] 'Number 'Number 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number Number Number (-> calcit.std.date/Date0) (:features :js-ffi)
         'from-ywd $ %{} 'CodeEntry
           :doc "|Create Date object from year, week, day. Args: year, week (1-53), day (1-7, 1=Monday). Example: (from-ywd 2024 1 1)"
           :code $ quote $ defn from-ywd (y w d)
@@ -83,25 +77,20 @@
               (:none) (raise "|cannot construct")
               _ $ raise |unreachable!
           :examples $ [] $ quote (from-ywd 2024 1 1)
-          :schema $ :: 'Fn $ {} (:return 'calcit.std.date/Date0)
-            :args $ [] 'Number 'Number 'Number
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number Number Number (-> calcit.std.date/Date0) (:features :js-ffi)
         'get-time! $ %{} 'CodeEntry
           :doc "|Get current system time as a Date object. Example: (get-time!)"
           :code $ quote $ defn get-time! ()
             Date0 :date $ decode-number $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |now_bang
           :examples $ [] $ quote (get-time!)
-          :schema $ :: 'Fn $ {} (:return 'calcit.std.date/Date0)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> calcit.std.date/Date0) (:features :js-ffi)
         'get-timestamp $ %{} 'CodeEntry
           :doc "|Get timestamp (milliseconds) from Date object. Example: (get-timestamp (get-time!))"
           :code $ quote $ defn get-timestamp (date)
             decode-number $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |get_timestamp $ :date date
           :examples $ [] $ quote
             get-timestamp $ get-time!
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'calcit.std.date/Date0
+          :schema $ quote $ Fn calcit.std.date/Date0 (-> Number)
           :tests $ [] $ %{} 'TestEntry (:name |checked-number-timestamp)
             :code $ quote $ assert= 1417176009000
               calcit.std.date/get-timestamp $ calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
@@ -111,9 +100,7 @@
           :code $ quote $ defn parse-time (time format)
             Date0 :date $ decode-number $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |parse_time time format
           :examples $ [] $ quote (parse-time "|2024-01-01 12:00:00 +00:00" "|%Y-%m-%d %H:%M:%S %z")
-          :schema $ :: 'Fn $ {} (:return 'calcit.std.date/Date0)
-            :args $ [] 'String 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String String (-> calcit.std.date/Date0) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.date
           :require
@@ -126,9 +113,7 @@
           :code $ quote $ defn append-file! (name content)
             decode-unit $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |append_file name content
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'String 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String String (-> Unit) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-unit-append)
             :code $ quote $ let
                 path |target/std-proofs/append-file.txt
@@ -142,9 +127,7 @@
           :code $ quote $ defn check-write-file! (name content)
             decode-bool $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |check_write_file name content
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'String 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String String (-> Bool) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-bool-result)
             :code $ quote $ let
                 path |target/std-proofs/check-write.txt
@@ -159,9 +142,7 @@
           :code $ quote $ defn create-dir! (name)
             decode-unit $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |create_dir name
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String (-> Unit) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-unit-create-dir)
             :code $ quote $ let
                 path |target/std-proofs/create-dir-once
@@ -173,18 +154,15 @@
           :code $ quote $ defn create-dir-all! (name)
             decode-unit $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |create_dir_all name
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String (-> Unit) (:features :js-ffi)
         'glob! $ %{} 'CodeEntry
           :doc "|Find files matching the glob pattern. Returns a list of matching file paths. Example: (glob! \"src/*.rs\")"
           :code $ quote $ defn glob! (name)
             decode-string-list $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |glob_call name
           :examples $ [] $ quote (glob! |src/**/*.rs)
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'String
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'String
+          :schema $ quote $ Fn String
+            -> $ List String
+            :features :js-ffi
           :tests $ [] $ %{} 'TestEntry (:name |checked-string-list)
             :code $ quote $ assert= ([] |tests/fixtures/read-contracts/hello.txt) (calcit.std.fs/glob! |tests/fixtures/read-contracts/*.txt)
             :tags $ #{} :filesystem :unit
@@ -193,9 +171,7 @@
           :code $ quote $ defn path-exists? (name)
             decode-bool $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |path_exists name
           :examples $ [] $ quote (path-exists? |file.txt)
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String (-> Bool) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-bool-result)
             :code $ quote $ do
               assert= true $ calcit.std.fs/path-exists? |tests/fixtures/read-contracts/hello.txt
@@ -206,10 +182,9 @@
           :code $ quote $ defn read-dir (name)
             decode-string-list $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |read_dir name
           :examples $ [] $ quote (calcit.std.fs/read-dir |src)
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'String
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'String
+          :schema $ quote $ Fn String
+            -> $ List String
+            :features :js-ffi
           :tests $ []
             %{} 'TestEntry (:name |lists-direct-children)
               :code $ quote $ let
@@ -223,9 +198,7 @@
                   failed $ ref false
                 try (calcit.std.fs/read-dir |tests/fixtures/read-contracts/missing.txt)
                   fn (message)
-                    hint-fn $ {}
-                      :args $ [] 'String
-                      :return $ :: 'List 'String
+                    hint-fn $ Fn String $ -> (List String)
                     assert= true $ message.includes? |read_dir_calcit_ffi_v1
                     reset! failed true
                     []
@@ -235,10 +208,9 @@
           :doc "|兼容入口，请改用 read-dir；读取失败仍抛错，结果顺序不保证。只在发布版消费者迁移及相关门禁完成后退场，不作为新代码首选。"
           :code $ quote $ def read-dir! calcit.std.fs/read-dir
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'String
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'String
+          :schema $ quote $ Fn String
+            -> $ List String
+            :features :js-ffi
           :tags $ #{} :deprecated
           :tests $ [] $ %{} 'TestEntry (:name |legacy-directory-read)
             :code $ quote $ let
@@ -252,9 +224,7 @@
           :code $ quote $ defn read-file (name)
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |read_file name
           :examples $ [] $ quote (calcit.std.fs/read-file |README.md)
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String (-> String) (:features :js-ffi)
           :tests $ []
             %{} 'TestEntry (:name |reads-utf8-text)
               :code $ quote $ assert= "|Calcit 😀 native read\n" (calcit.std.fs/read-file |tests/fixtures/read-contracts/hello.txt)
@@ -264,9 +234,7 @@
                   failed $ ref false
                 try (calcit.std.fs/read-file |tests/fixtures/read-contracts/missing.txt)
                   fn (message)
-                    hint-fn $ {}
-                      :args $ [] 'String
-                      :return 'String
+                    hint-fn $ Fn String $ -> String
                     assert= true $ message.includes? |read_file_calcit_ffi_v1
                     reset! failed true
                     , |ignored
@@ -276,9 +244,7 @@
           :doc "|兼容入口，请改用 read-file；读取失败仍抛错。只在发布版消费者迁移及相关门禁完成后退场，不作为新代码首选。"
           :code $ quote $ def read-file! calcit.std.fs/read-file
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String (-> String) (:features :js-ffi)
           :tags $ #{} :deprecated
           :tests $ [] $ %{} 'TestEntry (:name |legacy-call-and-callback)
             :code $ quote $ let
@@ -294,10 +260,9 @@
             decode-unit $ &blocking-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |read_file_by_line name cb
           :examples $ [] $ quote
             read-file-by-line! |Cargo.toml $ fn (line) &unit
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'String $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ [] 'String
+          :schema $ quote $ Fn String
+            Fn String $ -> Unit
+            -> Unit
           :tests $ [] $ %{} 'TestEntry (:name |checked-unit-callback-result)
             :code $ quote $ let
                 *count $ ref 0
@@ -310,9 +275,7 @@
           :code $ quote $ defn rename! (from to)
             decode-unit $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rename_path from to
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'String 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String String (-> Unit) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-unit-rename)
             :code $ quote $ let
                 from |target/std-proofs/rename-from.txt
@@ -328,10 +291,9 @@
           :code $ quote $ defn walk-dir (name)
             decode-string-list $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |walk_dir name
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'String
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'String
+          :schema $ quote $ Fn String
+            -> $ List String
+            :features :js-ffi
           :tests $ []
             %{} 'TestEntry (:name |lists-recursive-files)
               :code $ quote $ let
@@ -345,9 +307,7 @@
                   failed $ ref false
                 try (calcit.std.fs/walk-dir |tests/fixtures/read-contracts/missing.txt)
                   fn (message)
-                    hint-fn $ {}
-                      :args $ [] 'String
-                      :return $ :: 'List 'String
+                    hint-fn $ Fn String $ -> (List String)
                     assert= true $ message.includes? |walk_dir_calcit_ffi_v1
                     reset! failed true
                     []
@@ -357,10 +317,9 @@
           :doc "|兼容入口，请改用 walk-dir；遍历失败仍抛错，结果顺序不保证。只在发布版消费者迁移及相关门禁完成后退场，不作为新代码首选。"
           :code $ quote $ def walk-dir! calcit.std.fs/walk-dir
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'String
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'String
+          :schema $ quote $ Fn String
+            -> $ List String
+            :features :js-ffi
           :tags $ #{} :deprecated
           :tests $ [] $ %{} 'TestEntry (:name |legacy-recursive-read)
             :code $ quote $ let
@@ -374,9 +333,7 @@
           :code $ quote $ defn write-file! (name content)
             decode-unit $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |write_file name content
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'String 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String String (-> Unit) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-unit-write)
             :code $ quote $ let
                 path |target/std-proofs/write-file.txt
@@ -397,9 +354,7 @@
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |md5 s
           :examples $ [] $ quote (md5 |hello)
           :ffi $ {} (:backend :native) (:invoke :sync) (:kind :pure-function) (:symbol |md5) (:transport :edn-buffer-v1)
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn String (-> String) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-empty-digest)
             :code $ quote $ assert= |d41d8cd98f00b204e9800998ecf8427e (calcit.std.hash/md5 |)
             :tags $ #{} :unit
@@ -415,8 +370,7 @@
           :code $ quote $ defn join-path (& xs)
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |join_path & xs
           :examples $ [] $ quote (join-path |/home |user |documents |file.txt)
-          :schema $ :: 'Fn $ {} (:rest 'String) (:return 'String)
-            :args $ []
+          :schema $ quote $ Fn & String (-> String)
           :tests $ [] $ %{} 'TestEntry (:name |checked-join)
             :code $ quote $ assert= |a/b/c.txt (calcit.std.path/join-path |a |b |c.txt)
             :tags $ #{} :unit
@@ -425,8 +379,7 @@
           :code $ quote $ defn path-basename (x)
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |path_basename x
           :examples $ [] $ quote (path-basename |/home/user/file.txt)
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String
+          :schema $ quote $ Fn String (-> String)
           :tests $ [] $ %{} 'TestEntry (:name |checked-basename)
             :code $ quote $ assert= |c.txt (calcit.std.path/path-basename |a/b/c.txt)
             :tags $ #{} :unit
@@ -435,8 +388,7 @@
           :code $ quote $ defn path-dirname (x)
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |path_dirname x
           :examples $ [] $ quote (path-dirname |/home/user/file.txt)
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String
+          :schema $ quote $ Fn String (-> String)
           :tests $ [] $ %{} 'TestEntry (:name |checked-dirname)
             :code $ quote $ assert= |a/b (calcit.std.path/path-dirname |a/b/c.txt)
             :tags $ #{} :unit
@@ -450,7 +402,7 @@
         'ProcessOutput $ %{} 'CodeEntry (:doc "|A streamed process output event.")
           :code $ quote $ defenum ProcessOutput (:stdout 'String) (:stderr 'String)
           :examples $ []
-          :schema $ :: 'Enum
+          :schema $ quote Enum
         'execute! $ %{} 'CodeEntry
           :doc "||Execute a command from a List<String>. The optional working directory defaults to ./; pass (Option :some path) to override it. Returns [stdout stderr]."
           :code $ quote $ defn execute! (command dir)
@@ -458,10 +410,9 @@
             decode-string-list $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (.unwrap-or dir |./) command
           :examples $ [] $ quote
             execute! ([] |ls |-la) (Option :none)
-          :schema $ :: 'Fn $ {}
-            :args $ [] (:: 'List 'String) (:: 'calcit.core/Option 'String)
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'String
+          :schema $ quote $ Fn (List String) (calcit.core/Option String)
+            -> $ List String
+            :features :js-ffi
           :tests $ [] $ %{} 'TestEntry (:name |checked-string-list)
             :code $ quote $ assert= ([] "|hi\n" |)
               calcit.std.process/execute! ([] |echo |hi) (Option :none)
@@ -473,11 +424,10 @@
             let
                 task $ on-ctrl-c $ fn () (println |Exiting...)
               task.cancel-with! :example-complete
-          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
-            :args $ [] $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn
+            Fn $ -> Unit
+            -> calcit.core/FfiTask
+            :features :js-ffi
           :tags $ #{} :deprecated
           :tests $ [] $ %{} 'TestEntry (:name |same-callable)
             :code $ quote $ assert= on-ctrl-c calcit.std.process/on-ctrl-c!
@@ -490,11 +440,10 @@
             let
                 task $ on-ctrl-c! $ fn () (println |Exiting...)
               task.cancel-with! :example-complete
-          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
-            :args $ [] $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn
+            Fn $ -> Unit
+            -> calcit.core/FfiTask
+            :features :js-ffi
         'stream! $ %{} 'CodeEntry
           :doc "|Start a process and stream tagged stdout/stderr events to callback. Runs asynchronously."
           :code $ quote $ defn stream! (command f dir)
@@ -505,12 +454,11 @@
               [] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2"
               fn (event) (println |received-ProcessOutput event)
               Option :none
-          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
-            :args $ [] (:: 'List 'String)
-              :: 'Fn $ {} (:return 'Unit)
-                :args $ [] 'calcit.std.process/ProcessOutput
-              :: 'calcit.core/Option 'String
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (List String)
+            Fn calcit.std.process/ProcessOutput $ -> Unit
+            calcit.core/Option String
+            -> calcit.core/FfiTask
+            :features :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.process
           :require
@@ -524,9 +472,7 @@
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |call_nanoid size chars
           :examples $ [] $ quote
             nanoid! (Option :some 10) (Option :none)
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] (:: 'calcit.core/Option 'Number) (:: 'calcit.core/Option 'String)
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (calcit.core/Option Number) (calcit.core/Option String) (-> String) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-length)
             :code $ quote $ assert= 8
               (calcit.std.rand/nanoid! (Option :some 8) (Option :none))
@@ -538,9 +484,7 @@
             decode-number $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand from to
           :examples $ [] $ quote
             rand (Option :some 10) (Option :some 100)
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] (:: 'calcit.core/Option 'Number) (:: 'calcit.core/Option 'Number)
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (calcit.core/Option Number) (calcit.core/Option Number) (-> Number) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-number-range)
             :code $ quote $ let
                 value $ calcit.std.rand/rand (Option :some 1) (Option :some 2)
@@ -552,16 +496,13 @@
               Option :some $ &- y x
               Option :none
           :examples $ [] $ quote (rand-between 10 20)
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number 'Number
+          :schema $ quote $ Fn Number Number (-> Number)
         'rand-hex-color! $ %{} 'CodeEntry
           :doc "|Generate random hexadecimal color string in format #rrggbb. Example: (rand-hex-color!)"
           :code $ quote $ defn rand-hex-color! ()
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand_hex_color
           :examples $ [] $ quote (rand-hex-color!)
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> String) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-hex-color)
             :code $ quote $ let
                 color $ calcit.std.rand/rand-hex-color!
@@ -574,9 +515,7 @@
             decode-number $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand_int from to
           :examples $ [] $ quote
             rand-int (Option :some 100) (Option :none)
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] (:: 'calcit.core/Option 'Number) (:: 'calcit.core/Option 'Number)
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (calcit.core/Option Number) (calcit.core/Option Number) (-> Number) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-number-range)
             :code $ quote $ assert= 5
               calcit.std.rand/rand-int (Option :some 5) (Option :some 6)
@@ -590,10 +529,9 @@
                 Option :none
           :examples $ [] $ quote
             rand-nth $ [] 1 2 3 4 5
-          :schema $ :: 'Fn $ {}
-            :args $ [] $ :: 'List 'T
-            :generics $ [] 'T
-            :return $ :: 'calcit.core/Option 'T
+          :schema $ quote $ Fn (List T)
+            -> $ calcit.core/Option T
+            :generics T
         'rand-shift $ %{} 'CodeEntry
           :doc "|Generate random float within center ± shift range."
           :code $ quote $ defn rand-shift (x y)
@@ -602,8 +540,7 @@
                 Option :some $ &* 2 y
                 Option :none
           :examples $ [] $ quote (rand-shift 10 2)
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number 'Number
+          :schema $ quote $ Fn Number Number (-> Number)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.rand
           :require
@@ -614,18 +551,15 @@
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (run-tests) (try-demos)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (run-tests) (println "|reload not handled yet") &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
         'run-tests $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn run-tests () (fs/main!) (date/main!) (random/main!) (test-path)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
         'test-path $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn test-path ()
             assert= |a/b $ join-path |a |b
@@ -635,32 +569,27 @@
             assert= |c $ path-basename |a/b/c
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'try-ctrlc! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn try-ctrlc! ()
             on-ctrl-c! $ fn () (println "|TODO handler...") &unit
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
         'try-demos $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn try-demos ()
             println $ md5 |
             println $ md5 |5
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
         'try-time! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn try-time! ()
             set-timeout! 4000 $ fn () (println |doing) &unit
             set-interval! 2000 $ fn () (println "|DO Do Do") &unit
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test
           :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.rand :as random)
@@ -686,14 +615,11 @@
               Option :some "|%Y-%m-%d %H-%M"
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (main!)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test.date
           :require $ calcit.std.date :refer $ parse-time format-time get-time! extract-time from-ymd from-ywd add-duration get-timestamp
@@ -719,8 +645,7 @@
             check-write-file! |target/dir8/dir9/file.text |TODO
             append-file! |target/dir8/dir9/file.text $ str &newline "|NEWLINE TODO"
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test.fs
           :require
@@ -738,8 +663,7 @@
               Option :none
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
+          :schema $ quote $ Fn (-> Unit)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test.process
           :require $ calcit.std.process :refer $ stream! ProcessOutput
@@ -780,9 +704,7 @@
             println $ rand-hex-color!
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test.rand
           :require $ calcit.std.rand :refer $ rand rand-int rand-shift rand-nth rand-between nanoid! rand-hex-color!
@@ -795,11 +717,10 @@
             let
                 task $ set-interval 10 $ fn () (println |tick)
               task.cancel-with! :example-complete
-          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
-            :args $ [] 'Number $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number
+            Fn $ -> Unit
+            -> calcit.core/FfiTask
+            :features :js-ffi
           :tags $ #{} :deprecated
           :tests $ [] $ %{} 'TestEntry (:name |same-callable)
             :code $ quote $ assert= set-interval calcit.std.time/set-interval!
@@ -812,11 +733,10 @@
             let
                 task $ set-interval! 10 $ fn () (println |tick)
               task.cancel-with! :example-complete
-          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
-            :args $ [] 'Number $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number
+            Fn $ -> Unit
+            -> calcit.core/FfiTask
+            :features :js-ffi
         'set-timeout $ %{} 'CodeEntry
           :doc "|兼容入口，请改用 set-timeout!；保留同一函数引用、callback 和取消语义。发布版消费者迁移完成前不删除。"
           :code $ quote $ def set-timeout calcit.std.time/set-timeout!
@@ -824,11 +744,10 @@
             let
                 task $ set-timeout 10 $ fn () (println |timeout)
               task.cancel-with! :example-complete
-          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
-            :args $ [] 'Number $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number
+            Fn $ -> Unit
+            -> calcit.core/FfiTask
+            :features :js-ffi
           :tags $ #{} :deprecated
           :tests $ [] $ %{} 'TestEntry (:name |same-callable)
             :code $ quote $ assert= set-timeout calcit.std.time/set-timeout!
@@ -841,11 +760,10 @@
             let
                 task $ set-timeout! 10 $ fn () (println |timeout)
               task.cancel-with! :example-complete
-          :schema $ :: 'Fn $ {} (:return 'calcit.core/FfiTask)
-            :args $ [] 'Number $ :: 'Fn
-              {} (:return 'Unit)
-                :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Number
+            Fn $ -> Unit
+            -> calcit.core/FfiTask
+            :features :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.time
           :require
@@ -860,10 +778,8 @@
               (:err message)
                 raise $ str "|FFI result decode failed: " message
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{}
-            :expansion $ :: 'Expr 'Bool
-            :required $ [] 'Syntax
+          :schema $ quote $ Macro Syntax
+            -> $ Expr Bool
           :tests $ []
             %{} 'TestEntry (:name |accepts-bool)
               :code $ quote $ assert= true (decode-bool true)
@@ -873,9 +789,7 @@
                   failed $ ref false
                 try (decode-bool |true)
                   fn (message)
-                    hint-fn $ {}
-                      :args $ [] 'String
-                      :return 'Bool
+                    hint-fn $ Fn String $ -> Bool
                     assert= true $ message.includes? "|FFI result decode failed"
                     reset! failed true
                     , false
@@ -888,10 +802,8 @@
               (:err message)
                 raise $ str "|FFI result decode failed: " message
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{}
-            :expansion $ :: 'Expr 'Number
-            :required $ [] 'Syntax
+          :schema $ quote $ Macro Syntax
+            -> $ Expr Number
           :tests $ []
             %{} 'TestEntry (:name |accepts-number)
               :code $ quote $ assert= 3 (decode-number 3)
@@ -901,9 +813,7 @@
                   failed $ ref false
                 try (decode-number |3)
                   fn (message)
-                    hint-fn $ {}
-                      :args $ [] 'String
-                      :return 'Number
+                    hint-fn $ Fn String $ -> Number
                     assert= true $ message.includes? "|FFI result decode failed"
                     reset! failed true
                     , 0
@@ -916,10 +826,8 @@
               (:err message)
                 raise $ str "|FFI result decode failed: " message
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{}
-            :expansion $ :: 'Expr 'String
-            :required $ [] 'Syntax
+          :schema $ quote $ Macro Syntax
+            -> $ Expr String
           :tests $ []
             %{} 'TestEntry (:name |accepts-string)
               :code $ quote $ assert= |abc (decode-string |abc)
@@ -929,9 +837,7 @@
                   failed $ ref false
                 try (decode-string 1)
                   fn (message)
-                    hint-fn $ {}
-                      :args $ [] 'String
-                      :return 'String
+                    hint-fn $ Fn String $ -> String
                     assert= true $ message.includes? "|FFI result decode failed"
                     reset! failed true
                     , |
@@ -945,10 +851,8 @@
               (:err message)
                 raise $ str "|FFI result decode failed: " message
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{}
-            :expansion $ :: 'Expr $ :: 'List 'String
-            :required $ [] 'Syntax
+          :schema $ quote $ Macro Syntax
+            -> $ Expr $ List String
           :tests $ []
             %{} 'TestEntry (:name |accepts-string-list)
               :code $ quote $ assert= ([] |a |b)
@@ -960,9 +864,7 @@
                 try
                   decode-string-list $ [] |a 1
                   fn (message)
-                    hint-fn $ {}
-                      :args $ [] 'String
-                      :return $ :: 'List 'String
+                    hint-fn $ Fn String $ -> (List String)
                     assert= true $ message.includes? "|FFI result decode failed"
                     reset! failed true
                     []
@@ -976,10 +878,8 @@
               (:err message)
                 raise $ str "|FFI result decode failed: " message
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{}
-            :expansion $ :: 'Expr $ :: 'Map 'Tag 'Number
-            :required $ [] 'Syntax
+          :schema $ quote $ Macro Syntax
+            -> $ Expr $ Map Tag Number
           :tests $ []
             %{} 'TestEntry (:name |accepts-tag-number-map)
               :code $ quote $ assert=
@@ -992,9 +892,7 @@
                 try
                   decode-tag-number-map $ {} $ :a |one
                   fn (message)
-                    hint-fn $ {}
-                      :args $ [] 'String
-                      :return $ :: 'Map 'Tag 'Number
+                    hint-fn $ Fn String $ -> (Map Tag Number)
                     assert= true $ message.includes? "|FFI result decode failed"
                     reset! failed true
                     {}
@@ -1006,10 +904,8 @@
                 unit-raw% ~raw
               if (nil? unit-raw%) &unit $ raise $ str "|FFI result decode failed: expected nil for Unit, got " unit-raw%
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{}
-            :expansion $ :: 'Expr 'Unit
-            :required $ [] 'Syntax
+          :schema $ quote $ Macro Syntax
+            -> $ Expr Unit
           :tests $ []
             %{} 'TestEntry (:name |accepts-nil)
               :code $ quote $ assert= true
@@ -1020,9 +916,7 @@
                   failed $ ref false
                 try (decode-unit |done)
                   fn (message)
-                    hint-fn $ {}
-                      :args $ [] 'String
-                      :return 'Unit
+                    hint-fn $ Fn String $ -> Unit
                     assert= true $ message.includes? "|FFI result decode failed"
                     reset! failed true
                     , &unit
@@ -1034,22 +928,19 @@
                 os $ &get-os
               if (= os :macos) |.dylib $ if (= os :windows) |.dll |.so
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{} :platform-read
-            :expansion $ :: 'Expr 'String
-            :required $ []
+          :schema $ quote $ Macro
+            -> $ Expr String
+            :capabilities :platform-read
         'get-dylib-path $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn get-dylib-path (p)
             str (or-current-path calcit-dirname) p $ get-dylib-ext
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String
+          :schema $ quote $ Fn String (-> String)
         'or-current-path $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn or-current-path (p)
             if (blank? p) |. p
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String
+          :schema $ quote $ Fn String (-> String)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.util
           :require $ calcit.std.$meta :refer $ calcit-dirname
