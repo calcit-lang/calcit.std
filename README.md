@@ -1,62 +1,56 @@
-## Calcit STD
+# Calcit STD
 
-> Calcit 在 Rust runtime 上的标准原生模块。
->
-> Standard native module for Calcit on the Rust runtime.
+Calcit Rust runtime 的标准原生模块。
 
-### 0.2.46 候选：Calcit 0.32.0
+## 对使用者的影响
 
-使用者影响：本候选要求 Calcit 0.32.0，类型标注改用新的紧凑语法；旧 CLI 消费者应保留原 tag。公开 API、失败行为、原生 ABI 和 Rust 依赖不变。下游应固定验收后发布的新 tag，重新构建目标平台 dylib，不能把候选当作已发布版本。
+**0.2.47 候选配对正式 Calcit 0.32.1**。下游需固定验收后实际发布的新 tag，并在目标平台重新构建 dylib；候选不等于已发布版本，旧 tag 不移动。
+这是 native 模块，不添加 npm runtime 或 JS 工具链，也不承诺仅凭 Linux CI 覆盖所有平台 ABI。
 
-CLI 兼容性注意：Calcit 0.32.0 的 native `identical?` 对 List、Map、Set、Struct、Enum（包括 Option/Result）等容器改为身份比较，与 JS 对齐。消费者若比较内容，应使用 `=`；两次独立 `first`/`get` 返回的 Option 也不能当作同一对象。确实需要元素身份比较时先解包，再比较元素。这里“API 不变”仅指本模块，不代表 CLI 升级没有运行语义变化，参见[精确 0.32.0 迁移说明](https://github.com/calcit-lang/calcit/blob/0.32.0/docs/run/upgrade.md)。
+本轮 Snapshot、65 个定义的实现和语义 schema、原断言、Rust 业务逻辑与依赖保持。
+模块/Cargo 版本配对更新，原 `calcit-bindgen 0.1.1` 重新生成管理产物的包版本和摘要；Rust adapter 仅版本注释变化，不手改生成文件。
+不修改文件系统、进程、定时器、返回类型、C-safe ABI 协议或失败行为，不新增改写规则、预算和校验脚本。
 
-通过官方 `edit format` 迁移 Snapshot 标注及 9 处附带测试标注；65 个定义的实现和语义 schema 保持一致，原断言不变。模块与 Cargo 包同步为 0.2.46，managed FFI 产物由原生成器更新版本与摘要。保留完整 strict、零类型债务、Rust、dylib、异步及文档门禁；不新增 npm runtime。
+从 0.31 或更早版本升级的消费者仍需注意 0.32 的 native `identical?` 对容器采用身份比较，与 JS 对齐；比较内容使用 `=`。
+独立 first/get 得到的 Option 不代表相同包装对象，必要时先解包再比较元素身份，详见 [0.32 迁移说明](https://github.com/calcit-lang/calcit/blob/0.32.0/docs/run/upgrade.md)。
 
-以下是先前版本的迁移记录；当前版本以 `deps.cirru` 为准。
+## 工具链与验证
 
-### 版本与工具链
+精确 CLI/模块版本见 `deps.cirru`，安装构建使用 `--locked`，不在消费者安装时隐式修改 Cargo.lock。
+旧兼容别名和弃用迁移窗口保留，不因本次 patch 配对删除仍被下游使用的入口。
 
-当前源码要求的 Calcit 版本与模块版本以 `deps.cirru` 为准，CI 使用同一 Calcit 版本。下游固定已发布的精确模块 tag，并在目标机器构建 native dylib；main 上已合并的改动不代表旧 tag 也包含这些改动。
+本地已通过原门禁：Rust fmt、12 项 Rust 测试、严格 clippy、release dylib、38 个 C-safe 导出符号、Caps strict、67 个全定义、完整 strict、53 个公开定义及 stream-process 入口检查。
+65 个源码定义均为完整类型，未解决 Dynamic/弃用调用为零；不以这些计数代替严格检查。
+原17项文件系统附带测试、3项生命周期别名测试、六种非法读取参数在 FFI 前被拒绝、文档与异步示例、原定时器/进程取消/Ctrl+C 回归，以及独立新夹具中的默认 native 回归通过。
+这些运行证据限定于实际构建平台；Linux 结果以候选精确提交的原 CI 为准。
 
-使用者影响：0.2.45 候选声明正式 Calcit `0.31.0`，不改公开 API、返回类型、文件系统/进程/定时器行为、native ABI 或 Rust 依赖；消费者应固定正式模块 tag，并在目标机器构建匹配的 dylib。旧名称的弃用迁移窗口仍保留，不因工具链更新删除兼容入口。模块 `0.2.43` 和 `0.2.44` 均已发布，原 tag 的内容和工具链声明保持不变；本候选不覆盖旧 tag。
-
-当前源码使用正式 Calcit `0.31.0`，不再依赖 alpha CLI；std 是 native 模块，不依赖 `@calcit/procs`，不为版本配对额外添加 npm 工具链。正式版本兼容性以目标平台实际 dylib/异步验收为准，Linux CI 通过不等于全部平台已验收。进程目录默认值使用
-公开 Option 方法 `.unwrap-or`，随机测试使用 `.some?`，不再直接调用
-内部 `option:*` 兼容 helper；原有默认值、错误和生命周期合同不变。
-CI 使用严格入口/完整公开命名空间检查和当前 weak-types 视图，
-不再调用已弃用的 `analyze quality`；保留原 Rust、文件系统、dylib 和异步回归。
-
-此前已合并的文件系统和随机测试入口将三处旧 `count` 改为 `.len`，
-参数分别保留原 String、List<String> 和 String；不改变断言、公开 schema、
-FFI 签名与 ABI、adapter 实现、Rust 业务源码或 Cargo 依赖。本候选另外将泛型 `rand-nth` 的
-List 判空和长度读取改为 `.empty?` / `.len`，保留空列表返回 `Option :none`、
-随机调用次数、原泛型参数与返回关系；不改随机区间或取值逻辑。
-模块与 Cargo 包版本配对为 0.2.45，原生成器同步 managed 产物的包版本与摘要；
-Rust bindings 仅版本注释变化，执行代码不变。发布须待精确完整 CI、评审和 main 验证通过。
-原 canonical 检查保持 fail-closed 并给出查询提示，完整 strict 显式要求通过且无诊断。
-不新增校验脚本、预算或 npm/JS runtime；std 仍只按 native 目标验收。
-
-安装脚本与 CI 的 release 构建均使用 `--locked`，不在安装时隐式调整 Cargo.lock。
-若发布锁文件需要更新，构建会失败，维护者应在源码中审阅更新后重新发布；
-不改 dylib 文件名、复制目标或平台逻辑。下游现有原生构建验收暂不因此删除。
-
-同步读取首选 `read-file/read-dir/walk-dir`；旧 `read-file!/read-dir!/walk-dir!` 保留原有迁移窗口。异步示例使用资源生命周期方法 `.cancel-with!`，具体取消合同见 [native capabilities](docs/native-capabilities.md#blocking-and-asynchronous-work)。发布前仍需运行附带文件系统测试及实际 dylib/异步回归。
-
-启动定时任务和注册 Ctrl+C 订阅首选 `set-timeout!`、`set-interval!`、`on-ctrl-c!`。
-旧无 `!` 名称保留为带弃用提示的同一函数引用；参数、返回的 `FfiTask`、callback、
-取消和退出策略不变。可在人工审阅后改名，再运行原异步回归；不需要修改 native symbol，
-也不能把 `!` 理解为新的错误处理或自动取消策略。
-
-历史版本 `0.2.37` 对应 Calcit `0.28.0`，`0.2.36` 对应 `0.28.0-alpha.3`；这些 tag 保持原内容。升级时阅读目标 tag 的说明，不把当前 main 的验证结果当作旧版本的契约。
-
-### Usages
-
-Install to `~/.config/calcit/modules/`, compile and provide dylib file:
-
-```bash
-cargo build --release
-mkdir -p dylibs/ && cp -v target/release/libcalcit_std.dylib dylibs/ # supported macos only
+```sh
+caps --strict --ci
+cargo fmt --check
+cargo test --locked
+cargo clippy --locked --all-targets -- -D warnings
+bash build.sh
+calcit --check-only --all-defs
+calcit fix --workflow strict --verify
+calcit test --tag filesystem --require-match
+calcit test --tag lifecycle --require-match
+bash scripts/check-c-safe-ffi.sh
+bash scripts/check-c-safe-async.sh
 ```
+
+默认 `calcit calcit.cirru` 还运行原文件系统/日期/随机/路径回归和 Demo；其文件夹操作写入测试用的 target 路径，重复运行应准备干净测试夹具。
+完整原门禁、FFI contract check、文档/示例与负参数检查见 [工作流](.github/workflows/check.yaml)，没有新增验证入口。
+
+## Usages
+
+在目标平台安装并构建 native dylib：
+
+```sh
+caps --strict --ci
+bash build.sh
+```
+
+原构建脚本使用 release/locked，并复制当前平台的库到 `dylibs`；macOS 为 `.dylib`，Linux 为 `.so`。
 
 全部 30 个同步原生方法使用 C-safe buffer protocol v1。`read-file-by-line!`
 使用 blocking protocol v1，因此回调始终在 Calcit host 线程执行，不会让 Rust
@@ -131,15 +125,23 @@ Providing:
 
 ```cirru.no-check
 calcit.std.fs/read-file a
+
 calcit.std.fs/write-file! a b
+
 calcit.std.fs/append-file! a b
+
 calcit.std.fs/check-write-file! a b
+
 calcit.std.fs/path-exists? a
+
 calcit.std.fs/read-dir a
+
 calcit.std.fs/walk-dir a
+
 calcit.std.fs/glob! |src/*.rs
 
 calcit.std.fs/create-dir! path
+
 calcit.std.fs/create-dir-all! path
 
 calcit.std.fs/rename! from to
@@ -166,10 +168,9 @@ calcit calcit.cirru test --tag filesystem --require-match
 ```cirru.no-check
 calcit.std.process/execute! ([] |ls |-la) (Option :none)
 
-def process-task $ calcit.std.process/stream!
-  [] |sh |-c "|printf 'ready\\n'; exec sleep 5"
+def process-task $ calcit.std.process/stream! ([] |sh |-c "|printf 'ready\\n'; exec sleep 5")
   fn (event) (println event)
-  , (Option :none)
+  Option :none
 
 process-task.cancel-with! :shutdown
 ```
@@ -177,7 +178,8 @@ process-task.cancel-with! :shutdown
 JSON parsing and serialization now use the Calcit core APIs directly:
 
 ```cirru
-json-stringify $ {} (:answer 42)
+json-stringify $ {} $ :answer 42
+
 json-parse "|{\"a\": [1, 2], \"b\": 3}"
 ```
 
@@ -189,49 +191,60 @@ Date values are represented as `%{} Date0 {:date <timestamp-ms>}`:
 
 ```cirru
 calcit.std.date/get-time!
-; %{} Date0 (:date 1735689600000)
+
+; %{} Date0 $ :date 1735689600000
 
 calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
 
 calcit.std.date/format-time (calcit.std.date/get-time!) (Option :some "|%Y-%m-%d %H:%M:%S %z")
 
 calcit.std.date/extract-time $ calcit.std.date/get-time!
+
 ; {} (:minute 6) (:hour 16) (:month 11) (:second 48) (:day 10)
 
 calcit.std.date/from-ymd 2021 11 11
-; %{} Date0 (:date 1636560000000)
+
+; %{} Date0 $ :date 1636560000000
+
 calcit.std.date/from-ywd 2021 45 6
-; %{} Date0 (:date 1636732800000)
+
+; %{} Date0 $ :date 1636732800000
 
 calcit.std.date/add-duration (calcit.std.date/get-time!) 4 :days
 ```
 
 ```cirru
 calcit.std.rand/rand (Option :none) (Option :none)
+
 calcit.std.rand/rand (Option :some 10) (Option :none)
+
 calcit.std.rand/rand (Option :some 10) (Option :some 100) (; "from 10 to 100")
 
 calcit.std.rand/rand-int (Option :none) (Option :none)
+
 calcit.std.rand/rand-int (Option :some 10) (Option :none)
+
 calcit.std.rand/rand-int (Option :some 10) (Option :some 100) (; "from 10 to 100")
 
-calcit.std.rand/rand-nth ([] 1 2 3)
-calcit.std.rand/rand-shift 10 4 (; "10+-4")
+calcit.std.rand/rand-nth $ [] 1 2 3
+
+calcit.std.rand/rand-shift 10 4 $ ; 10+-4
+
 calcit.std.rand/rand-between 10 20
 
 calcit.std.rand/nanoid! (Option :none) (Option :none)
+
 calcit.std.rand/nanoid! (Option :some 9) (Option :none)
-calcit.std.rand/nanoid! (Option :some 9) (Option :some |abcd) (; "charset")
+
+calcit.std.rand/nanoid! (Option :some 9) (Option :some |abcd) (; charset)
 
 calcit.std.rand/rand-hex-color!
 ```
 
 ```cirru.no-check
-def timeout-task $ calcit.std.time/set-timeout! 1000 $ fn ()
-  println |timeout
+def timeout-task $ calcit.std.time/set-timeout! 1000 $ fn () (println |timeout)
 
-def interval-task $ calcit.std.time/set-interval! 1000 $ fn ()
-  println |repeated
+def interval-task $ calcit.std.time/set-interval! 1000 $ fn () (println |repeated)
 
 interval-task.cancel-with! :shutdown
 ```
@@ -244,9 +257,11 @@ calcit.std.hash/md5 |content
 calcit.std.path/join-path |a |b |c
 
 calcit.std.path/path-dirname |a/b/c
+
 ; |a/b
 
 calcit.std.path/path-basename |a/b/c
+
 ; |c
 ```
 
