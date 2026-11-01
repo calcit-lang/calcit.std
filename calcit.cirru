@@ -15,9 +15,9 @@
     'calcit.std.date $ %{} 'FileEntry
       :defs $ {}
         'Date0 $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct Date0 (:date 'Number)
+          :code $ quote $ defstruct Date0 (:date Number)
           :examples $ []
-          :schema $ quote Enum
+          :schema $ quote StructDef
         'add-duration $ %{} 'CodeEntry
           :doc "|Add duration to Date object. Args: date object, numeric value, time unit (:days, :hours, :minutes, :seconds, etc). Example: (add-duration (get-time!) 7 :days)"
           :code $ quote $ defn add-duration (date n k)
@@ -400,7 +400,7 @@
     'calcit.std.process $ %{} 'FileEntry
       :defs $ {}
         'ProcessOutput $ %{} 'CodeEntry (:doc "|A streamed process output event.")
-          :code $ quote $ defenum ProcessOutput (:stdout 'String) (:stderr 'String)
+          :code $ quote $ defenum ProcessOutput (:stdout String) (:stderr String)
           :examples $ []
           :schema $ quote Enum
         'execute! $ %{} 'CodeEntry
@@ -846,7 +846,7 @@
         'decode-string-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro decode-string-list (raw)
             quasiquote $ match
-              try-decode-map-as ~raw $ :: 'List 'String
+              try-decode-map-as ~raw $ quote $ List String
               (:ok value) value
               (:err message)
                 raise $ str "|FFI result decode failed: " message
@@ -873,7 +873,7 @@
         'decode-tag-number-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro decode-tag-number-map (raw)
             quasiquote $ match
-              try-decode-map-as ~raw $ :: 'Map 'Tag 'Number
+              try-decode-map-as ~raw $ quote $ Map Tag Number
               (:ok value) value
               (:err message)
                 raise $ str "|FFI result decode failed: " message
