@@ -4,12 +4,14 @@ Calcit Rust runtime 的标准原生模块。
 
 ## 对使用者的影响
 
-**0.2.47 候选配对正式 Calcit 0.32.1**。下游需固定验收后实际发布的新 tag，并在目标平台重新构建 dylib；候选不等于已发布版本，旧 tag 不移动。
+**0.2.48 候选配对正式 Calcit 0.34.0**。下游需固定验收后实际发布的新 tag，并在目标平台重新构建 dylib；候选不等于已发布版本，旧 tag 不移动。
 这是 native 模块，不添加 npm runtime 或 JS 工具链，也不承诺仅凭 Linux CI 覆盖所有平台 ABI。
 
-本轮 Snapshot、65 个定义的实现和语义 schema、原断言、Rust 业务逻辑与依赖保持。
-模块/Cargo 版本配对更新，原 `calcit-bindgen 0.1.1` 重新生成管理产物的包版本和摘要；Rust adapter 仅版本注释变化，不手改生成文件。
-不修改文件系统、进程、定时器、返回类型、C-safe ABI 协议或失败行为，不新增改写规则、预算和校验脚本。
+声明采用 0.34.0 的类型写法：`Date0` 字段和 `ProcessOutput` payload 使用裸类型名，
+两个解码宏的复合目标使用 `quote`；`Date0` 定义本身的 schema 修正为 `StructDef`。
+日期值、进程事件、解码结果和失败行为沿用原合同，Rust 业务逻辑与依赖版本保持。
+模块/Cargo 版本配对更新，使用原 `calcit-bindgen 0.1.1` 重新生成管理产物；FFI contract diff 无变化。
+C-safe ABI、原断言和门禁保持，不增加校验脚本。
 
 从 0.31 或更早版本升级的消费者仍需注意 0.32 的 native `identical?` 对容器采用身份比较，与 JS 对齐；比较内容使用 `=`。
 独立 first/get 得到的 Option 不代表相同包装对象，必要时先解包再比较元素身份，详见 [0.32 迁移说明](https://github.com/calcit-lang/calcit/blob/0.32.0/docs/run/upgrade.md)。
@@ -19,10 +21,10 @@ Calcit Rust runtime 的标准原生模块。
 精确 CLI/模块版本见 `deps.cirru`，安装构建使用 `--locked`，不在消费者安装时隐式修改 Cargo.lock。
 旧兼容别名和弃用迁移窗口保留，不因本次 patch 配对删除仍被下游使用的入口。
 
-本地已通过原门禁：Rust fmt、12 项 Rust 测试、严格 clippy、release dylib、38 个 C-safe 导出符号、Caps strict、67 个全定义、完整 strict、53 个公开定义及 stream-process 入口检查。
-65 个源码定义均为完整类型，未解决 Dynamic/弃用调用为零；不以这些计数代替严格检查。
-原17项文件系统附带测试、3项生命周期别名测试、六种非法读取参数在 FFI 前被拒绝、文档与异步示例、原定时器/进程取消/Ctrl+C 回归，以及独立新夹具中的默认 native 回归通过。
-这些运行证据限定于实际构建平台；Linux 结果以候选精确提交的原 CI 为准。
+原工作流覆盖 Rust fmt/test/clippy、release dylib 和 C-safe 导出，Caps strict、全定义及完整 strict，
+公开 namespace 和 stream-process 入口检查，以及完整类型、未解决 Dynamic 和弃用调用视图。
+运行门禁继续覆盖文件系统和生命周期附带测试、非法读取参数拒绝、文档与异步示例、定时器/进程取消/Ctrl+C 和默认 native 回归。
+验收结果以候选精确提交及实际构建平台为准；macOS 本地通过不能代替 Linux CI 或其他平台 ABI 验收。
 
 ```sh
 caps --strict --ci
