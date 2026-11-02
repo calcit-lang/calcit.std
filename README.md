@@ -4,11 +4,11 @@ Calcit Rust runtime 的标准原生模块。
 
 ## 对使用者的影响
 
-**0.2.48 候选配对正式 Calcit 0.34.0**。下游需固定验收后实际发布的新 tag，并在目标平台重新构建 dylib；候选不等于已发布版本，旧 tag 不移动。
+**0.2.49 候选配对正式 Calcit 0.34.2**。下游需固定验收后实际发布的新 tag，并在目标平台重新构建 dylib；候选不等于已发布版本，旧 tag 不移动。
 这是 native 模块，不添加 npm runtime 或 JS 工具链，也不承诺仅凭 Linux CI 覆盖所有平台 ABI。
 
-声明采用 0.34.0 的类型写法：`Date0` 字段和 `ProcessOutput` payload 使用裸类型名，
-两个解码宏的复合目标使用 `quote`；`Date0` 定义本身的 schema 修正为 `StructDef`。
+本轮 Snapshot 字节不变，保持现有类型写法：`Date0` 字段和 `ProcessOutput` payload 使用裸类型名，
+两个解码宏的复合目标使用 `quote`，`Date0` 定义本身为 `StructDef`。
 日期值、进程事件、解码结果和失败行为沿用原合同，Rust 业务逻辑与依赖版本保持。
 模块/Cargo 版本配对更新，使用原 `calcit-bindgen 0.1.1` 重新生成管理产物；FFI contract diff 无变化。
 C-safe ABI、原断言和门禁保持，不增加校验脚本。
