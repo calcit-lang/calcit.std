@@ -402,7 +402,7 @@
         'ProcessOutput $ %{} 'CodeEntry (:doc "|A streamed process output event.")
           :code $ quote $ defenum ProcessOutput (:stdout String) (:stderr String)
           :examples $ []
-          :schema $ quote Enum
+          :schema $ quote EnumDef
         'execute! $ %{} 'CodeEntry
           :doc "||Execute a command from a List<String>. The optional working directory defaults to ./; pass (Option :some path) to override it. Returns [stdout stderr]."
           :code $ quote $ defn execute! (command dir)
