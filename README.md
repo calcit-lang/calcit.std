@@ -4,16 +4,15 @@ Calcit Rust runtime 的标准原生模块。
 
 ## 对使用者的影响
 
-**0.2.50 候选配对正式 Calcit 0.34.2**。下游需固定验收后实际发布的新 tag，并在目标平台重新构建 dylib；候选不等于已发布版本，旧 tag 不移动。
+**0.2.51 候选配对正式 Calcit 0.35.0**。下游需固定验收后实际发布的新 tag，并在目标平台重新构建 dylib；候选不等于已发布版本，旧 tag 不移动。
 这是 native 模块，不添加 npm runtime 或 JS 工具链，也不承诺仅凭 Linux CI 覆盖所有平台 ABI。
 
-本轮仅纠正 `ProcessOutput` 定义自身的元数据：`Enum` → `EnumDef`。它由 `defenum` 定义，
-不是一个已构造的枚举值。`:stdout String` / `:stderr String` payload、进程输出回调、
-日期值、解码结果与失败行为保持，不给开放数据补推测性 union。
+本轮通过官方格式化器迁移两个解码函数中类型专用位置的复合类型语法，配对正式 0.35.0。
+`:stdout String` / `:stderr String` payload、进程输出回调、日期值、解码结果与失败行为保持；
+现有具体集合与零 Dynamic 合同保留，不给开放数据补推测性 union。
 
-官方 program-diff 确认 Snapshot 只有这一个 schema 变化，没有运行代码或原测试变化。
-模块/Cargo 版本配对更新；原 `calcit-bindgen 0.1.1` 重建受管理产物，仅版本来源信息与摘要更新，
-FFI contract diff 兼容、无接口变化。Rust 业务逻辑与依赖版本、C-safe ABI、原断言和门禁保持，
+模块/Cargo 版本配对更新；受管理产物继续由原 `calcit-bindgen 0.1.1` 生成并检查。
+Rust 业务逻辑与依赖版本、C-safe ABI、原断言和门禁保持，
 不增加校验脚本或编译器改写规则，不发布 crates.io，也不部署应用。
 
 从 0.31 或更早版本升级的消费者仍需注意 0.32 的 native `identical?` 对容器采用身份比较，与 JS 对齐；比较内容使用 `=`。

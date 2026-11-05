@@ -846,7 +846,7 @@
         'decode-string-list $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro decode-string-list (raw)
             quasiquote $ match
-              try-decode-map-as ~raw $ quote $ List String
+              try-decode-map-as ~raw $ List String
               (:ok value) value
               (:err message)
                 raise $ str "|FFI result decode failed: " message
@@ -873,7 +873,7 @@
         'decode-tag-number-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro decode-tag-number-map (raw)
             quasiquote $ match
-              try-decode-map-as ~raw $ quote $ Map Tag Number
+              try-decode-map-as ~raw $ Map Tag Number
               (:ok value) value
               (:err message)
                 raise $ str "|FFI result decode failed: " message
