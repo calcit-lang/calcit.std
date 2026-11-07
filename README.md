@@ -4,10 +4,10 @@ Calcit Rust runtime 的标准原生模块。
 
 ## 对使用者的影响
 
-**0.2.52 候选配对正式 Calcit 0.35.1**。下游需固定验收后实际发布的新 tag，并在目标平台重新构建 dylib；候选不等于已发布版本，旧 tag 不移动。
+**0.2.53 候选配对正式 Calcit 0.37.0**。下游需固定验收后实际发布的新 tag，并在目标平台重新构建 dylib；候选不等于已发布版本，旧 tag 不移动。
 这是 native 模块，不添加 npm runtime 或 JS 工具链，也不承诺仅凭 Linux CI 覆盖所有平台 ABI。
 
-本轮仅配对正式 0.35.1，Snapshot 和 Rust 业务代码未改。此前 0.35.0 已完成两个解码函数的复合类型语法迁移。
+本轮将 `join-path` 的可变参数标注迁移到 `(& String)`。调用方式和路径拼接行为沿用原版本。
 `:stdout String` / `:stderr String` payload、进程输出回调、日期值、解码结果与失败行为保持；
 现有具体集合与零 Dynamic 合同保留，不给开放数据补推测性 union。
 

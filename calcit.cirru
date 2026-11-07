@@ -370,7 +370,7 @@
           :code $ quote $ defn join-path (& xs)
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |join_path & xs
           :examples $ [] $ quote (join-path |/home |user |documents |file.txt)
-          :schema $ quote $ Fn & String (-> String)
+          :schema $ quote $ Fn (& String) (-> String)
           :tests $ [] $ %{} 'TestEntry (:name |checked-join)
             :code $ quote $ assert= |a/b/c.txt (calcit.std.path/join-path |a |b |c.txt)
             :tags $ #{} :unit
