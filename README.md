@@ -4,7 +4,7 @@ Calcit Rust runtime 的标准原生模块。
 
 ## 对使用者的影响
 
-**0.2.53 候选配对正式 Calcit 0.37.0**。下游需固定验收后实际发布的新 tag，并在目标平台重新构建 dylib；候选不等于已发布版本，旧 tag 不移动。
+**仓库使用正式 Calcit 0.38.0 验证**。下游仍应固定已发布的 Std tag，并在目标平台构建 dylib。
 这是 native 模块，不添加 npm runtime 或 JS 工具链，也不承诺仅凭 Linux CI 覆盖所有平台 ABI。
 
 本轮将 `join-path` 的可变参数标注迁移到 `(& String)`。调用方式和路径拼接行为沿用原版本。
