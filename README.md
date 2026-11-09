@@ -4,16 +4,10 @@ Calcit Rust runtime 的标准原生模块。
 
 ## 对使用者的影响
 
-**仓库使用正式 Calcit 0.38.0 验证**。下游仍应固定已发布的 Std tag，并在目标平台构建 dylib。
-这是 native 模块，不添加 npm runtime 或 JS 工具链，也不承诺仅凭 Linux CI 覆盖所有平台 ABI。
+候选模块 **0.2.54** 配对正式 Calcit **0.40.0**。下游应使用对应的正式 Std tag，并在目标平台重新构建 dylib。
 
-本轮将 `join-path` 的可变参数标注迁移到 `(& String)`。调用方式和路径拼接行为沿用原版本。
-`:stdout String` / `:stderr String` payload、进程输出回调、日期值、解码结果与失败行为保持；
-现有具体集合与零 Dynamic 合同保留，不给开放数据补推测性 union。
-
-模块/Cargo 版本配对更新；受管理产物继续由原 `calcit-bindgen 0.1.1` 生成并检查。
-Rust 业务逻辑与依赖版本、C-safe ABI、原断言和门禁保持，
-不增加校验脚本或编译器改写规则，不发布 crates.io，也不部署应用。
+`join-path` 继续接收变长 String 参数。进程输出、日期和文件系统接口沿用现有类型。
+`calcit-bindgen 0.1.1` 随模块版本重新生成 MD5 绑定，接口差异检查确认 C-safe ABI 兼容。
 
 从 0.31 或更早版本升级的消费者仍需注意 0.32 的 native `identical?` 对容器采用身份比较，与 JS 对齐；比较内容使用 `=`。
 独立 first/get 得到的 Option 不代表相同包装对象，必要时先解包再比较元素身份，详见 [0.32 迁移说明](https://github.com/calcit-lang/calcit/blob/0.32.0/docs/run/upgrade.md)。
