@@ -4,7 +4,7 @@ Calcit Rust runtime 的标准原生模块。
 
 ## 对使用者的影响
 
-候选模块 **0.2.54** 配对正式 Calcit **0.40.0**。下游应使用对应的正式 Std tag，并在目标平台重新构建 dylib。
+候选模块 **0.2.55** 配对正式 Calcit **0.41.0**。下游应使用对应的正式 Std tag，并在目标平台重新构建 dylib。
 
 `join-path` 继续接收变长 String 参数。进程输出、日期和文件系统接口沿用现有类型。
 `calcit-bindgen 0.1.1` 随模块版本重新生成 MD5 绑定，接口差异检查确认 C-safe ABI 兼容。
