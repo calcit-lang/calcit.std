@@ -24,33 +24,33 @@
             Date0 :date $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |add_duration (:date date) n k
           :examples $ [] $ quote
             add-duration (get-time!) 7 :days
-          :schema $ quote $ Fn calcit.std.date/Date0 Number Tag (-> calcit.std.date/Date0) (:features :js-ffi)
+          :schema $ quote $ Fn Date0 Number Tag (-> Date0) (:features :js-ffi)
         'extract-time $ %{} 'CodeEntry
           :doc "|Extract time components from Date object. Returns a Map with :year, :month, :day, :hour, :minute, :second fields. Example: (extract-time (get-time!))"
           :code $ quote $ defn extract-time (x)
             decode-tag-number-map $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |extract_time $ :date x
           :examples $ [] $ quote
             extract-time $ get-time!
-          :schema $ quote $ Fn calcit.std.date/Date0
+          :schema $ quote $ Fn Date0
             -> $ Map Tag Number
             :features :js-ffi
           :tests $ [] $ %{} 'TestEntry (:name |checked-tag-number-map)
             :code $ quote $ let
                 parts $ calcit.std.date/extract-time $ calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
-              assert= (Option :some 2014) (get parts :year)
-              assert= (Option :some 11) (get parts :month)
-              assert= (Option :some 28) (get parts :day)
+              assert= (Some 2014) (get parts :year)
+              assert= (Some 11) (get parts :month)
+              assert= (Some 28) (get parts :day)
             :tags $ #{} :unit
         'format-time $ %{} 'CodeEntry
           :doc "||Format Date object to string. The optional format is Option<String>; (Option :none) uses ISO format, for example (format-time (get-time!) (Option :some \"|%Y-%m-%d\"))."
           :code $ quote $ defn format-time (time format)
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |format_time (:date time) format
           :examples $ [] $ quote
-            format-time (get-time!) (Option :some |%Y-%m-%d)
-          :schema $ quote $ Fn calcit.std.date/Date0 (calcit.core/Option String) (-> String)
+            format-time (get-time!) (Some |%Y-%m-%d)
+          :schema $ quote $ Fn Date0 (Option String) (-> String)
           :tests $ [] $ %{} 'TestEntry (:name |checked-string-format)
             :code $ quote $ assert= |2014-11-28
-              calcit.std.date/format-time (calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z") (Option :some |%Y-%m-%d)
+              calcit.std.date/format-time (calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z") (Some |%Y-%m-%d)
             :tags $ #{} :unit
         'from-ymd $ %{} 'CodeEntry
           :doc "|Create Date object from year, month, day. Args: year, month (1-12), day (1-31). Example: (from-ymd 2024 1 15)"
@@ -64,7 +64,7 @@
               (:none) (raise "|cannot construct")
               _ $ raise |unreachable!
           :examples $ [] $ quote (from-ymd 2024 1 15)
-          :schema $ quote $ Fn Number Number Number (-> calcit.std.date/Date0) (:features :js-ffi)
+          :schema $ quote $ Fn Number Number Number (-> Date0) (:features :js-ffi)
         'from-ywd $ %{} 'CodeEntry
           :doc "|Create Date object from year, week, day. Args: year, week (1-53), day (1-7, 1=Monday). Example: (from-ywd 2024 1 1)"
           :code $ quote $ defn from-ywd (y w d)
@@ -77,20 +77,20 @@
               (:none) (raise "|cannot construct")
               _ $ raise |unreachable!
           :examples $ [] $ quote (from-ywd 2024 1 1)
-          :schema $ quote $ Fn Number Number Number (-> calcit.std.date/Date0) (:features :js-ffi)
+          :schema $ quote $ Fn Number Number Number (-> Date0) (:features :js-ffi)
         'get-time! $ %{} 'CodeEntry
           :doc "|Get current system time as a Date object. Example: (get-time!)"
           :code $ quote $ defn get-time! ()
             Date0 :date $ decode-number $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |now_bang
           :examples $ [] $ quote (get-time!)
-          :schema $ quote $ Fn (-> calcit.std.date/Date0) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Date0) (:features :js-ffi)
         'get-timestamp $ %{} 'CodeEntry
           :doc "|Get timestamp (milliseconds) from Date object. Example: (get-timestamp (get-time!))"
           :code $ quote $ defn get-timestamp (date)
             decode-number $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |get_timestamp $ :date date
           :examples $ [] $ quote
             get-timestamp $ get-time!
-          :schema $ quote $ Fn calcit.std.date/Date0 (-> Number)
+          :schema $ quote $ Fn Date0 (-> Number)
           :tests $ [] $ %{} 'TestEntry (:name |checked-number-timestamp)
             :code $ quote $ assert= 1417176009000
               calcit.std.date/get-timestamp $ calcit.std.date/parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
@@ -100,7 +100,7 @@
           :code $ quote $ defn parse-time (time format)
             Date0 :date $ decode-number $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |parse_time time format
           :examples $ [] $ quote (parse-time "|2024-01-01 12:00:00 +00:00" "|%Y-%m-%d %H:%M:%S %z")
-          :schema $ quote $ Fn String String (-> calcit.std.date/Date0) (:features :js-ffi)
+          :schema $ quote $ Fn String String (-> Date0) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.date
           :require
@@ -409,13 +409,13 @@
             assert "|command in list" $ and (list? command) (every? command string?)
             decode-string-list $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (.unwrap-or dir |./) command
           :examples $ [] $ quote
-            execute! ([] |ls |-la) (Option :none)
-          :schema $ quote $ Fn (List String) (calcit.core/Option String)
+            execute! ([] |ls |-la) None
+          :schema $ quote $ Fn (List String) (Option String)
             -> $ List String
             :features :js-ffi
           :tests $ [] $ %{} 'TestEntry (:name |checked-string-list)
             :code $ quote $ assert= ([] "|hi\n" |)
-              calcit.std.process/execute! ([] |echo |hi) (Option :none)
+              calcit.std.process/execute! ([] |echo |hi) None
             :tags $ #{} :unit
         'on-ctrl-c $ %{} 'CodeEntry
           :doc "|兼容入口，请改用 on-ctrl-c!；保留同一函数引用、callback 和取消语义。发布版消费者迁移完成前不删除。"
@@ -426,7 +426,7 @@
               task.cancel-with! :example-complete
           :schema $ quote $ Fn
             Fn $ -> Unit
-            -> calcit.core/FfiTask
+            -> FfiTask
             :features :js-ffi
           :tags $ #{} :deprecated
           :tests $ [] $ %{} 'TestEntry (:name |same-callable)
@@ -442,7 +442,7 @@
               task.cancel-with! :example-complete
           :schema $ quote $ Fn
             Fn $ -> Unit
-            -> calcit.core/FfiTask
+            -> FfiTask
             :features :js-ffi
         'stream! $ %{} 'CodeEntry
           :doc "|Start a process and stream tagged stdout/stderr events to callback. Runs asynchronously."
@@ -453,11 +453,11 @@
             stream!
               [] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2"
               fn (event) (println |received-ProcessOutput event)
-              Option :none
+              , None
           :schema $ quote $ Fn (List String)
-            Fn calcit.std.process/ProcessOutput $ -> Unit
-            calcit.core/Option String
-            -> calcit.core/FfiTask
+            Fn ProcessOutput $ -> Unit
+            Option String
+            -> FfiTask
             :features :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.process
@@ -471,11 +471,11 @@
           :code $ quote $ defn nanoid! (size chars)
             decode-string $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |call_nanoid size chars
           :examples $ [] $ quote
-            nanoid! (Option :some 10) (Option :none)
-          :schema $ quote $ Fn (calcit.core/Option Number) (calcit.core/Option String) (-> String) (:features :js-ffi)
+            nanoid! (Some 10) None
+          :schema $ quote $ Fn (Option Number) (Option String) (-> String) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-length)
             :code $ quote $ assert= 8
-              (calcit.std.rand/nanoid! (Option :some 8) (Option :none))
+              (calcit.std.rand/nanoid! (Some 8) None)
                 , .len
             :tags $ #{} :unit
         'rand $ %{} 'CodeEntry
@@ -483,18 +483,18 @@
           :code $ quote $ defn rand (from to)
             decode-number $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand from to
           :examples $ [] $ quote
-            rand (Option :some 10) (Option :some 100)
-          :schema $ quote $ Fn (calcit.core/Option Number) (calcit.core/Option Number) (-> Number) (:features :js-ffi)
+            rand (Some 10) (Some 100)
+          :schema $ quote $ Fn (Option Number) (Option Number) (-> Number) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-number-range)
             :code $ quote $ let
-                value $ calcit.std.rand/rand (Option :some 1) (Option :some 2)
+                value $ calcit.std.rand/rand (Some 1) (Some 2)
               assert= true $ and (>= value 1) (< value 2)
             :tags $ #{} :unit
         'rand-between $ %{} 'CodeEntry (:doc "|Generate random float between from and to.")
           :code $ quote $ defn rand-between (x y)
             &+ x $ rand
-              Option :some $ &- y x
-              Option :none
+              Some $ &- y x
+              , None
           :examples $ [] $ quote (rand-between 10 20)
           :schema $ quote $ Fn Number Number (-> Number)
         'rand-hex-color! $ %{} 'CodeEntry
@@ -514,31 +514,30 @@
           :code $ quote $ defn rand-int (from to)
             decode-number $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |rand_int from to
           :examples $ [] $ quote
-            rand-int (Option :some 100) (Option :none)
-          :schema $ quote $ Fn (calcit.core/Option Number) (calcit.core/Option Number) (-> Number) (:features :js-ffi)
+            rand-int (Some 100) None
+          :schema $ quote $ Fn (Option Number) (Option Number) (-> Number) (:features :js-ffi)
           :tests $ [] $ %{} 'TestEntry (:name |checked-number-range)
             :code $ quote $ assert= 5
-              calcit.std.rand/rand-int (Option :some 5) (Option :some 6)
+              calcit.std.rand/rand-int (Some 5) (Some 6)
             :tags $ #{} :unit
         'rand-nth $ %{} 'CodeEntry
           :doc "||Randomly select one element from a list. Returns (Option :none) when the list is empty."
           :code $ quote $ defn rand-nth (xs)
-            if (.empty? xs) (Option :none)
-              get xs $ rand-int
-                Option :some $ .len xs
-                Option :none
+            if (.empty? xs) None $ get xs $ rand-int
+              Some $ .len xs
+              , None
           :examples $ [] $ quote
             rand-nth $ [] 1 2 3 4 5
           :schema $ quote $ Fn (List T)
-            -> $ calcit.core/Option T
+            -> $ Option T
             :generics T
         'rand-shift $ %{} 'CodeEntry
           :doc "|Generate random float within center ± shift range."
           :code $ quote $ defn rand-shift (x y)
             &+ (&- x y)
               rand
-                Option :some $ &* 2 y
-                Option :none
+                Some $ &* 2 y
+                , None
           :examples $ [] $ quote (rand-shift 10 2)
           :schema $ quote $ Fn Number Number (-> Number)
       :ns $ %{} 'NsEntry (:doc |)
@@ -602,17 +601,17 @@
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (println &newline "|%%%% test date")
             println "|GET TIME" $ get-time!
-            echo |time: $ format-time (get-time!) (Option :some "|%Y-%m-%d %H:%M:%S %z")
+            echo |time: $ format-time (get-time!) (Some "|%Y-%m-%d %H:%M:%S %z")
             assert= 1417176009000 $ get-timestamp $ parse-time "|2014-11-28 21:00:09 +09:00" "|%Y-%m-%d %H:%M:%S %z"
             dbg $ extract-time $ get-time!
             dbg $ from-ymd 2021 11 11
             dbg $ from-ywd 2021 45 6
-            dbg $ format-time (from-ywd 2022 1 2) (Option :some "|%Y-%m-%d %H-%M")
+            dbg $ format-time (from-ywd 2022 1 2) (Some "|%Y-%m-%d %H-%M")
             println $ format-time
               add-duration
                 add-duration (get-time!) 1 :hours
                 , 2 :minutes
-              Option :some "|%Y-%m-%d %H-%M"
+              Some "|%Y-%m-%d %H-%M"
             , &unit
           :examples $ []
           :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
@@ -636,7 +635,7 @@
               println |lines @*c
             println (path-exists? |README.md) (path-exists? |build.js)
             println $ calcit.std.fs/read-dir |./
-            println |dirs: $ execute! ([] |ls) (Option :none)
+            println |dirs: $ execute! ([] |ls) None
             println "|all paths size:" $ .len $ calcit.std.fs/walk-dir |target
             println "|rs files:" $ glob! |src/*.rs
             create-dir! |target/dir1
@@ -660,7 +659,7 @@
             stream!
               [] |sh |-c "|printf 'out-1\\n'; sleep 0.2; printf 'err-1\\n' >&2; sleep 0.2; printf 'out-2\\n'; sleep 0.2; printf 'err-2\\n' >&2"
               fn (event) (println |received-ProcessOutput event) &unit
-              Option :none
+              , None
             , &unit
           :examples $ []
           :schema $ quote $ Fn (-> Unit)
@@ -672,16 +671,13 @@
         %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (println "|%%%%%% test random")
             assert-detect identity $ .some? $ rand-nth (range 10)
-            assert= (Option :none)
-              rand-nth $ take (range 1) 0
+            assert= None $ rand-nth $ take (range 1) 0
+            assert-detect identity $ <= 0 (rand None None) 100
             assert-detect identity $ <= 0
-              rand (Option :none) (Option :none)
-              , 100
-            assert-detect identity $ <= 0
-              rand (Option :some 10) (Option :none)
+              rand (Some 10) None
               , 10
             assert-detect identity $ <= 20
-              rand (Option :some 20) (Option :some 30)
+              rand (Some 20) (Some 30)
               , 30
             assert "|try .rand-shift" $ &let
               x $ rand-shift 10 5
@@ -689,18 +685,16 @@
             assert "|try .rand-between" $ &let
               x $ rand-between 10 5
               and (>= x 5) (<= x 10)
+            assert-detect identity $ <= 0 (rand-int None None) 100
             assert-detect identity $ <= 0
-              rand-int (Option :none) (Option :none)
-              , 100
-            assert-detect identity $ <= 0
-              rand-int (Option :some 10) (Option :none)
+              rand-int (Some 10) None
               , 10
             assert-detect identity $ <= 20
-              rand-int (Option :some 20) (Option :some 30)
+              rand-int (Some 20) (Some 30)
               , 30
             println "|%%%% test id"
-            assert= 9 $ .len $ nanoid! (Option :some 9) (Option :none)
-            assert= |aaaaa $ nanoid! (Option :some 5) (Option :some |a)
+            assert= 9 $ .len $ nanoid! (Some 9) None
+            assert= |aaaaa $ nanoid! (Some 5) (Some |a)
             println $ rand-hex-color!
             , &unit
           :examples $ []
@@ -719,7 +713,7 @@
               task.cancel-with! :example-complete
           :schema $ quote $ Fn Number
             Fn $ -> Unit
-            -> calcit.core/FfiTask
+            -> FfiTask
             :features :js-ffi
           :tags $ #{} :deprecated
           :tests $ [] $ %{} 'TestEntry (:name |same-callable)
@@ -735,7 +729,7 @@
               task.cancel-with! :example-complete
           :schema $ quote $ Fn Number
             Fn $ -> Unit
-            -> calcit.core/FfiTask
+            -> FfiTask
             :features :js-ffi
         'set-timeout $ %{} 'CodeEntry
           :doc "|兼容入口，请改用 set-timeout!；保留同一函数引用、callback 和取消语义。发布版消费者迁移完成前不删除。"
@@ -746,7 +740,7 @@
               task.cancel-with! :example-complete
           :schema $ quote $ Fn Number
             Fn $ -> Unit
-            -> calcit.core/FfiTask
+            -> FfiTask
             :features :js-ffi
           :tags $ #{} :deprecated
           :tests $ [] $ %{} 'TestEntry (:name |same-callable)
@@ -762,7 +756,7 @@
               task.cancel-with! :example-complete
           :schema $ quote $ Fn Number
             Fn $ -> Unit
-            -> calcit.core/FfiTask
+            -> FfiTask
             :features :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.time
