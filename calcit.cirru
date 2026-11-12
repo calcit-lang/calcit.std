@@ -550,15 +550,15 @@
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! () (run-tests) (try-demos)
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (run-tests) (println "|reload not handled yet") &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io)
         'run-tests $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn run-tests () (fs/main!) (date/main!) (random/main!) (test-path)
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io)
         'test-path $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn test-path ()
             assert= |a/b $ join-path |a |b
@@ -574,21 +574,21 @@
             on-ctrl-c! $ fn () (println "|TODO handler...") &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io)
         'try-demos $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn try-demos ()
             println $ md5 |
             println $ md5 |5
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io)
         'try-time! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn try-time! ()
             set-timeout! 4000 $ fn () (println |doing) &unit
             set-interval! 2000 $ fn () (println "|DO Do Do") &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test
           :require (calcit.std.test.fs :as fs) (calcit.std.test.date :as date) (calcit.std.test.rand :as random)
@@ -614,11 +614,11 @@
               Some "|%Y-%m-%d %H-%M"
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (main!)
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test.date
           :require $ calcit.std.date :refer $ parse-time format-time get-time! extract-time from-ymd from-ywd add-duration get-timestamp
@@ -644,7 +644,7 @@
             check-write-file! |target/dir8/dir9/file.text |TODO
             append-file! |target/dir8/dir9/file.text $ str &newline "|NEWLINE TODO"
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test.fs
           :require
@@ -662,7 +662,7 @@
               , None
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test.process
           :require $ calcit.std.process :refer $ stream! ProcessOutput
@@ -698,7 +698,7 @@
             println $ rand-hex-color!
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns calcit.std.test.rand
           :require $ calcit.std.rand :refer $ rand rand-int rand-shift rand-nth rand-between nanoid! rand-hex-color!
