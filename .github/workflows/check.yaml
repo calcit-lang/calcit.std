@@ -76,6 +76,9 @@ jobs:
       - name: Validate definition-attached filesystem contracts
         run: calcit calcit.cirru test --tag filesystem --require-match
 
+      - name: Validate synchronous process output
+        run: calcit calcit.cirru test calcit.std.process/execute! --require-match
+
       - name: Validate lifecycle alias identity
         run: calcit calcit.cirru test --tag lifecycle --require-match
 

@@ -407,16 +407,24 @@
           :doc "||Execute a command from a List<String>. The optional working directory defaults to ./; pass (Option :some path) to override it. Returns [stdout stderr]."
           :code $ quote $ defn execute! (command dir)
             assert "|command in list" $ and (list? command) (every? command string?)
-            decode-string-list $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (.unwrap-or dir |./) command
+            let
+                response $ decode-string-list $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (.unwrap-or dir |./) command
+              assert "|FFI result decode failed: execute! expected stdout and stderr" $ = 2 $ .len response
+              , response
           :examples $ [] $ quote
             execute! ([] |ls |-la) None
           :schema $ quote $ Fn (List String) (Option String)
             -> $ List String
             :features :js-ffi
-          :tests $ [] $ %{} 'TestEntry (:name |checked-string-list)
-            :code $ quote $ assert= ([] "|hi\n" |)
-              calcit.std.process/execute! ([] |echo |hi) None
-            :tags $ #{} :unit
+          :tests $ []
+            %{} 'TestEntry (:name |checked-string-list)
+              :code $ quote $ assert= ([] "|hi\n" |)
+                calcit.std.process/execute! ([] |echo |hi) None
+              :tags $ #{} :unit
+            %{} 'TestEntry (:name |preserves-output-streams-on-nonzero-exit)
+              :code $ quote $ assert= ([] |out |err)
+                calcit.std.process/execute! ([] |sh |-c "|printf out; printf err >&2; exit 7") None
+              :tags $ #{} :unit
         'on-ctrl-c $ %{} 'CodeEntry
           :doc "|兼容入口，请改用 on-ctrl-c!；保留同一函数引用、callback 和取消语义。发布版消费者迁移完成前不删除。"
           :code $ quote $ def on-ctrl-c calcit.std.process/on-ctrl-c!

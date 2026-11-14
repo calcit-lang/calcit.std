@@ -163,6 +163,8 @@ calcit calcit.cirru test --tag filesystem --require-match
 
 部署前固定匹配的已发布 CLI，不把本地 unreleased 编译产物当正式兼容证据。
 
+同步的 `execute!` 返回两个字符串，顺序为 stdout、stderr。没有输出的一项为空字符串，子进程以非零状态退出时仍返回这两项。接收原生返回值时会校验长度和元素类型。
+
 ```cirru.no-check
 calcit.std.process/execute! ([] |ls |-la) (Option :none)
 
