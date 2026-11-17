@@ -433,7 +433,7 @@
                 task $ on-ctrl-c $ fn () (println |Exiting...)
               task.cancel-with! :example-complete
           :schema $ quote $ Fn
-            Fn $ -> Unit
+            Fn (-> Unit) (:features :io :js-ffi :state)
             -> FfiTask
             :features :js-ffi
           :tags $ #{} :deprecated
@@ -449,9 +449,17 @@
                 task $ on-ctrl-c! $ fn () (println |Exiting...)
               task.cancel-with! :example-complete
           :schema $ quote $ Fn
-            Fn $ -> Unit
+            Fn (-> Unit) (:features :io :js-ffi :state)
             -> FfiTask
             :features :js-ffi
+          :tests $ [] $ %{} 'TestEntry (:name |effectful-callback-registers)
+            :code $ quote $ let
+                *seen $ ref 0
+                task $ on-ctrl-c! $ fn () (reset! *seen 1) (println |shutdown) &unit
+              task.cancel-with! :test
+              assert= 0 @*seen
+              , &unit
+            :tags $ #{} :lifecycle :unit
         'stream! $ %{} 'CodeEntry
           :doc "|Start a process and stream tagged stdout/stderr events to callback. Runs asynchronously."
           :code $ quote $ defn stream! (command f dir)
