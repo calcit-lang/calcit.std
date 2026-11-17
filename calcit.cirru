@@ -720,7 +720,7 @@
                 task $ set-interval 10 $ fn () (println |tick)
               task.cancel-with! :example-complete
           :schema $ quote $ Fn Number
-            Fn $ -> Unit
+            Fn (-> Unit) (:features :io :js-ffi :state)
             -> FfiTask
             :features :js-ffi
           :tags $ #{} :deprecated
@@ -736,7 +736,7 @@
                 task $ set-interval! 10 $ fn () (println |tick)
               task.cancel-with! :example-complete
           :schema $ quote $ Fn Number
-            Fn $ -> Unit
+            Fn (-> Unit) (:features :io :js-ffi :state)
             -> FfiTask
             :features :js-ffi
         'set-timeout $ %{} 'CodeEntry
@@ -747,7 +747,7 @@
                 task $ set-timeout 10 $ fn () (println |timeout)
               task.cancel-with! :example-complete
           :schema $ quote $ Fn Number
-            Fn $ -> Unit
+            Fn (-> Unit) (:features :io :js-ffi :state)
             -> FfiTask
             :features :js-ffi
           :tags $ #{} :deprecated
@@ -763,7 +763,7 @@
                 task $ set-timeout! 10 $ fn () (println |timeout)
               task.cancel-with! :example-complete
           :schema $ quote $ Fn Number
-            Fn $ -> Unit
+            Fn (-> Unit) (:features :io :js-ffi :state)
             -> FfiTask
             :features :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
