@@ -454,11 +454,10 @@
             :features :js-ffi
           :tests $ [] $ %{} 'TestEntry (:name |effectful-callback-registers)
             :code $ quote $ let
-                task $ on-ctrl-c! $ fn ()
-                  hint-fn $ Fn (-> Unit) (:features :io :state)
-                  println |shutdown
-                  , &unit
+                *seen $ ref 0
+                task $ on-ctrl-c! $ fn () (reset! *seen 1) (println |shutdown) &unit
               task.cancel-with! :test
+              assert= 0 @*seen
               , &unit
             :tags $ #{} :lifecycle :unit
         'stream! $ %{} 'CodeEntry
