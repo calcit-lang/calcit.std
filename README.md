@@ -4,10 +4,10 @@ Calcit Rust runtime 的标准原生模块。
 
 ## 对使用者的影响
 
-候选模块 **0.2.58** 配对正式 Calcit **0.44.0**。下游应使用对应的正式 Std tag，并在目标平台重新构建 dylib。
+候选模块 **0.2.59** 配对正式 Calcit **0.45.1**；已发布的 0.2.58 仍配对 Calcit 0.44.0。下游应使用对应的正式 Std tag，并在目标平台重新构建 dylib。
 
 `join-path` 继续接收变长 String 参数。进程输出、日期和文件系统接口沿用现有类型。
-`calcit-bindgen 0.1.1` 随模块版本重新生成 MD5 绑定，接口差异检查确认 C-safe ABI 兼容。
+`calcit-bindgen 0.1.13` 随模块版本重新生成 MD5 绑定，接口差异检查确认 C-safe ABI 兼容。
 
 从 0.31 或更早版本升级的消费者仍需注意 0.32 的 native `identical?` 对容器采用身份比较，与 JS 对齐；比较内容使用 `=`。
 独立 first/get 得到的 Option 不代表相同包装对象，必要时先解包再比较元素身份，详见 [0.32 迁移说明](https://github.com/calcit-lang/calcit/blob/0.32.0/docs/run/upgrade.md)。
@@ -95,7 +95,7 @@ between checks; persistent `QUEUE_FULL` fails after the default five-second
 deadline. Terminal `complete` / `fail` events do not use the business
 cancellation predicate, ensuring reliable task cleanup.
 
-`calcit.std.hash/md5` 已使用 `calcit-bindgen 0.1.1` 的 managed Rust adapter，
+`calcit.std.hash/md5` 已使用 `calcit-bindgen 0.1.13` 的 managed Rust adapter，
 不再手写 symbol、arity、EDN codec 或 buffer export。维护者可只读导出类型化
 contract，并检查仓库内 generated artifact 是否过期：
 
@@ -106,7 +106,7 @@ calcit-bindgen check target/ffi-interface/calcit-std-hash.json --out generated/f
 ```
 
 `calcit.std.hash/md5` now uses the managed Rust adapter from
-`calcit-bindgen 0.1.1`; its symbol, arity, EDN codec, and buffer export are no
+`calcit-bindgen 0.1.13`; its symbol, arity, EDN codec, and buffer export are no
 longer handwritten. CI exports the typed contract and rejects stale generated
 artifacts with the commands above.
 
