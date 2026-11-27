@@ -40,14 +40,15 @@ jobs:
           caps --strict --ci
           calcit calcit.cirru edit format
           if ! git diff --exit-code --quiet -- calcit.cirru; then
-            echo '::error file=calcit.cirru::Snapshot is not canonical. With Calcit 0.46.0, run calcit calcit.cirru edit format and inspect definitions through calcit query def.'
+            echo '::error file=calcit.cirru::Snapshot is not canonical. With Calcit 0.47.0, run calcit calcit.cirru edit format and inspect definitions through calcit query def.'
             exit 1
           fi
-          calcit calcit.cirru --check-only --all-defs
+          calcit calcit.cirru --check-only --all-defs --deny-migration-warnings
           calcit calcit.cirru fix --workflow strict --verify --format json | jq -e 'if .data.workflow.status? == "passed" and .diagnostics? == [] then true else ., false end'
           calcit calcit.cirru analyze weak-types --only coverage --summary-only --format json
           calcit calcit.cirru analyze weak-types --only schema-dynamic,code-dynamic --intent unresolved --summary-only --format json
           calcit calcit.cirru analyze weak-types --only deprecated-call --summary-only --format json
+          calcit calcit.cirru analyze weak-types --only legacy-migration --summary-only --format json
           calcit calcit.cirru --check-only --ns calcit.std.fs --ns calcit.std.date --ns calcit.std.hash --ns calcit.std.path --ns calcit.std.process --ns calcit.std.rand --ns calcit.std.time --ns calcit.std.util --format edn
           mkdir -p target/ffi-interface
           calcit calcit.cirru ffi export --format json --ns calcit.std.hash > target/ffi-interface/calcit-std-hash.json
