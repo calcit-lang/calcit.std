@@ -406,7 +406,6 @@
         'execute! $ %{} 'CodeEntry
           :doc "||Execute a command from a List<String>. The optional working directory defaults to ./; pass (Option :some path) to override it. Returns [stdout stderr]."
           :code $ quote $ defn execute! (command dir)
-            assert "|command in list" $ and (list? command) (every? command string?)
             let
                 response $ decode-string-list $ &call-dylib-edn (get-dylib-path |/dylibs/libcalcit_std) |execute_command (.unwrap-or dir |./) command
               assert "|FFI result decode failed: execute! expected stdout and stderr" $ = 2 $ .len response
@@ -463,7 +462,6 @@
         'stream! $ %{} 'CodeEntry
           :doc "|Start a process and stream tagged stdout/stderr events to callback. Runs asynchronously."
           :code $ quote $ defn stream! (command f dir)
-            assert "|command in list" $ and (list? command) (every? command string?)
             ffi:task $ &call-dylib-edn-fn (get-dylib-path |/dylibs/libcalcit_std) |stream_command (.unwrap-or dir |./) command f
           :examples $ [] $ quote
             stream!
